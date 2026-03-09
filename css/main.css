@@ -294,12 +294,12 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -10;
     background-image: url('../src/castlehero.jpg');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    filter: blur(3px);
+    opacity: 0.5;
 }
 
 .hero-bg::before {
@@ -309,7 +309,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(30, 58, 138, 0.6);
+    background: rgba(30, 58, 138, 0.1);
     z-index: 1;
 }
 
@@ -317,12 +317,13 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
+    z-index: -2;
     background: 
-        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.6), transparent),
-        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.4), transparent),
-        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.6), transparent);
+        radial-gradient(2px 2px at 20px 30px, rgb(255, 255, 255), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgb(255, 255, 255), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgb(255, 255, 255), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgb(255, 255, 255), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgb(255, 255, 255), transparent);
     background-repeat: repeat;
     background-size: 200px 100px;
     animation: starsFloat 8s linear infinite;
