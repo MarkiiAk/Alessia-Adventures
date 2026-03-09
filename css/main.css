@@ -295,6 +295,22 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
+    background-image: url('../src/castlehero.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+}
+
+.hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 58, 138, 0.6);
+    z-index: 1;
 }
 
 .stars-layer {
