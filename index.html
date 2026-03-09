@@ -32,11 +32,6 @@
     <meta property="og:type" content="website">
 </head>
 <body>
-    <!-- Audio Player para música Disney -->
-    <audio id="disney-audio" loop preload="auto" style="display: none;">
-        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
-        <!-- Fallback: archivo de prueba, se puede cambiar por música Disney -->
-    </audio>
 
     <!-- Loading Screen -->
     <div id="loading-screen" class="loading-screen">
@@ -66,9 +61,6 @@
                 <li><a href="#quest-details" class="nav-link">Detalles</a></li>
                 <li><a href="#rsvp" class="nav-link">Confirmar</a></li>
             </ul>
-            <button class="music-toggle playing" id="music-toggle" title="Pausar música Disney">
-                <i class="fas fa-pause"></i>
-            </button>
         </div>
     </nav>
 
@@ -902,9 +894,6 @@
                 <div class="footer-social">
                     <button class="social-btn" onclick="shareInvitation()">
                         <i class="fas fa-share-alt"></i>
-                    </button>
-                    <button class="social-btn" onclick="toggleMusic()">
-                        <i class="fas fa-music"></i>
                     </button>
                 </div>
             </div>

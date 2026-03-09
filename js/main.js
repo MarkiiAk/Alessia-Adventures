@@ -10,14 +10,6 @@ const CONFIG = {
     // Fecha del viaje
     tripDate: new Date('2026-08-31T07:25:00'),
     
-    // Configuración de YouTube Music
-    youtube: {
-        enabled: true,
-        volume: 30, // 0-100
-        videoId: 'b4qVpdEfNyk',
-        startTime: 1937
-    },
-    
     // Configuración de animaciones
     animations: {
         enabled: true,
@@ -163,7 +155,6 @@ class Navigation {
     constructor() {
         this.nav = Utils.$('#main-nav');
         this.links = Utils.$$('.nav-link');
-        this.musicToggle = Utils.$('#music-toggle');
         this.isScrolling = false;
         
         this.bindEvents();
@@ -184,13 +175,6 @@ class Navigation {
                 this.setActiveLink(link);
             });
         });
-        
-        // Music toggle
-        if (this.musicToggle) {
-            this.musicToggle.addEventListener('click', () => {
-                MusicManager.toggle();
-            });
-        }
     }
     
     handleScroll() {
@@ -359,194 +343,6 @@ class CountdownTimer {
         }
     }
 }
-
-// ===========================
-// GESTOR DE MÚSICA HTML5
-// ===========================
-class HTML5AudioManager {
-    constructor() {
-        this.audio = Utils.$('#disney-audio');
-        this.toggleButton = Utils.$('#music-toggle');
-        this.isPlaying = false;
-        this.isReady = false;
-        this.isEnabled = CONFIG.youtube.enabled; // Reutilizamos la config
-        this.hasUserInteracted = false;
-        
-        this.initPlayer();
-    }
-    
-    initPlayer() {
-        if (!this.audio) {
-            console.warn('Audio element no encontrado');
-            this.hide();
-            return;
-        }
-        
-        // Configurar volumen
-        this.audio.volume = (CONFIG.youtube.volume || 30) / 100;
-        
-        // Event listeners para el audio
-        this.audio.addEventListener('loadeddata', () => {
-            this.isReady = true;
-            this.updateButtonState();
-            console.log('🎵 Audio listo para reproducir');
-        });
-        
-        this.audio.addEventListener('play', () => {
-            this.isPlaying = true;
-            this.updateButtonState();
-        });
-        
-        this.audio.addEventListener('pause', () => {
-            this.isPlaying = false;
-            this.updateButtonState();
-        });
-        
-        this.audio.addEventListener('ended', () => {
-            // El audio está en loop, esto no debería pasar
-            this.isPlaying = false;
-            this.updateButtonState();
-        });
-        
-        this.audio.addEventListener('error', (e) => {
-            console.warn('Error al cargar audio:', e);
-            this.hide();
-        });
-        
-        // Detectar primera interacción del usuario
-        this.setupUserInteractionDetection();
-        
-        // Intentar autoplay después de un delay
-        setTimeout(() => {
-            this.tryAutoplay();
-        }, 1000);
-    }
-    
-    setupUserInteractionDetection() {
-        const events = ['click', 'touchstart', 'scroll', 'keydown'];
-        const handleUserInteraction = () => {
-            this.hasUserInteracted = true;
-            
-            // Intentar reproducir si no está ya reproduciéndose
-            if (this.isEnabled && !this.isPlaying) {
-                this.play();
-            }
-            
-            // Remover listeners ya que solo necesitamos la primera interacción
-            events.forEach(event => {
-                document.removeEventListener(event, handleUserInteraction);
-            });
-        };
-        
-        events.forEach(event => {
-            document.addEventListener(event, handleUserInteraction, { passive: true });
-        });
-    }
-    
-    async tryAutoplay() {
-        if (!this.isEnabled || !this.isReady) return;
-        
-        try {
-            await this.audio.play();
-            console.log('🎵 Autoplay exitoso');
-        } catch (error) {
-            console.log('🎵 Autoplay bloqueado, esperando interacción del usuario');
-            // El autoplay fue bloqueado, esperaremos la interacción del usuario
-        }
-    }
-    
-    toggle() {
-        if (!this.isReady || !this.audio) return;
-        
-        if (this.isPlaying) {
-            this.pause();
-        } else {
-            this.play();
-        }
-    }
-    
-    async play() {
-        if (!this.isReady || !this.isEnabled || !this.audio) return;
-        
-        try {
-            await this.audio.play();
-            console.log('🎵 Audio reproduciéndose');
-        } catch (error) {
-            console.warn('No se pudo reproducir el audio:', error);
-            // Si falla, mostrar mensaje al usuario
-            showNotification('Toca en cualquier lugar para activar la música Disney 🎵', 'info');
-        }
-    }
-    
-    pause() {
-        if (!this.audio) return;
-        
-        try {
-            this.audio.pause();
-            console.log('🎵 Audio pausado');
-        } catch (error) {
-            console.warn('No se pudo pausar el audio:', error);
-        }
-    }
-    
-    setVolume(volume) {
-        if (!this.audio) return;
-        
-        try {
-            this.audio.volume = Math.max(0, Math.min(1, volume / 100));
-            console.log(`🔊 Volumen ajustado a ${volume}%`);
-        } catch (error) {
-            console.warn('No se pudo ajustar el volumen:', error);
-        }
-    }
-    
-    updateButtonState() {
-        if (!this.toggleButton) return;
-        
-        if (this.isPlaying) {
-            Utils.addClass(this.toggleButton, 'playing');
-            this.toggleButton.innerHTML = '<i class="fas fa-pause"></i>';
-            this.toggleButton.title = 'Pausar música Disney';
-        } else {
-            Utils.removeClass(this.toggleButton, 'playing');
-            this.toggleButton.innerHTML = '<i class="fas fa-music"></i>';
-            this.toggleButton.title = 'Reproducir música Disney';
-        }
-        
-        // Mostrar el botón solo si el reproductor está listo
-        if (this.isReady && this.toggleButton.style.display === 'none') {
-            this.toggleButton.style.display = '';
-        }
-    }
-    
-    hide() {
-        if (this.toggleButton) {
-            this.toggleButton.style.display = 'none';
-        }
-    }
-    
-    // Métodos estáticos para compatibilidad con MusicManager
-    static toggle() {
-        if (window.musicManager) {
-            window.musicManager.toggle();
-        }
-    }
-    
-    static play() {
-        if (window.musicManager) {
-            window.musicManager.play();
-        }
-    }
-    
-    static pause() {
-        if (window.musicManager) {
-            window.musicManager.pause();
-        }
-    }
-}
-
-// Alias para mantener compatibilidad
-const MusicManager = HTML5AudioManager;
 
 // ===========================
 // EFECTOS DE PARTÍCULAS
@@ -1009,11 +805,6 @@ function showNotification(message, type = 'success') {
     }, 4000);
 }
 
-// Función para alternar música
-function toggleMusic() {
-    MusicManager.toggle();
-}
-
 // ===========================
 // APLICACIÓN PRINCIPAL
 // ===========================
@@ -1025,7 +816,6 @@ class App {
             // Inicializar componentes principales
             window.navigation = new Navigation();
             window.countdownTimer = new CountdownTimer();
-            window.musicManager = new MusicManager();
             window.particleSystem = new ParticleSystem();
             window.scrollAnimations = new ScrollAnimations();
             window.rsvpManager = new RSVPManager();
