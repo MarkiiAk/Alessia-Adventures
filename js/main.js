@@ -156,7 +156,9 @@ class Navigation {
         this.nav = Utils.$('#main-nav');
         this.links = Utils.$$('.nav-link');
         this.isScrolling = false;
+        this.mobileMenuOpen = false;
         
+        this.initMobileMenu();
         this.bindEvents();
     }
     
@@ -173,8 +175,96 @@ class Navigation {
                 const target = link.getAttribute('href');
                 this.scrollToSection(target);
                 this.setActiveLink(link);
+                this.closeMobileMenu(); // Cerrar menú móvil al navegar
             });
         });
+    }
+
+    initMobileMenu() {
+        // Crear botón de menú móvil si no existe
+        let toggleButton = Utils.$('.mobile-menu-toggle');
+        if (!toggleButton) {
+            toggleButton = document.createElement('button');
+            toggleButton.className = 'mobile-menu-toggle';
+            toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+            toggleButton.setAttribute('aria-label', 'Toggle Mobile Menu');
+            
+            // Insertar después del logo
+            const navLogo = Utils.$('.nav-logo');
+            if (navLogo && navLogo.parentNode) {
+                navLogo.parentNode.insertBefore(toggleButton, navLogo.nextSibling);
+            }
+        }
+
+        // Eventos del menú móvil
+        toggleButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.toggleMobileMenu();
+        });
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            const navMenu = Utils.$('.nav-menu');
+            const toggleBtn = Utils.$('.mobile-menu-toggle');
+            
+            if (this.mobileMenuOpen && 
+                navMenu && !navMenu.contains(e.target) && 
+                toggleBtn && !toggleBtn.contains(e.target)) {
+                this.closeMobileMenu();
+            }
+        });
+
+        // Cerrar menú con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.mobileMenuOpen) {
+                this.closeMobileMenu();
+            }
+        });
+
+        // Cerrar menú en resize a desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 767 && this.mobileMenuOpen) {
+                this.closeMobileMenu();
+            }
+        });
+    }
+
+    toggleMobileMenu() {
+        if (this.mobileMenuOpen) {
+            this.closeMobileMenu();
+        } else {
+            this.openMobileMenu();
+        }
+    }
+
+    openMobileMenu() {
+        const navMenu = Utils.$('.nav-menu');
+        const toggleButton = Utils.$('.mobile-menu-toggle');
+        
+        if (navMenu) navMenu.classList.add('active');
+        if (toggleButton) {
+            toggleButton.classList.add('active');
+            const icon = toggleButton.querySelector('i');
+            if (icon) icon.className = 'fas fa-times';
+        }
+        
+        this.mobileMenuOpen = true;
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeMobileMenu() {
+        const navMenu = Utils.$('.nav-menu');
+        const toggleButton = Utils.$('.mobile-menu-toggle');
+        
+        if (navMenu) navMenu.classList.remove('active');
+        if (toggleButton) {
+            toggleButton.classList.remove('active');
+            const icon = toggleButton.querySelector('i');
+            if (icon) icon.className = 'fas fa-bars';
+        }
+        
+        this.mobileMenuOpen = false;
+        document.body.style.overflow = '';
     }
     
     handleScroll() {
