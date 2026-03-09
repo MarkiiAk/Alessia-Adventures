@@ -32,17 +32,11 @@
     <meta property="og:type" content="website">
 </head>
 <body>
-    <!-- YouTube Background Music -->
-    <div id="youtube-player-container" style="position: fixed; top: -9999px; left: -9999px; z-index: -1;">
-        <iframe id="youtube-player" 
-                width="1" 
-                height="1" 
-                src="https://www.youtube.com/embed/b4qVpdEfNyk?enablejsapi=1&autoplay=0&loop=1&playlist=b4qVpdEfNyk&start=1937&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
-                frameborder="0" 
-                allow="autoplay; encrypted-media"
-                style="opacity: 0; pointer-events: none;">
-        </iframe>
-    </div>
+    <!-- Audio Player para música Disney -->
+    <audio id="disney-audio" loop preload="auto" style="display: none;">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+        <!-- Fallback: archivo de prueba, se puede cambiar por música Disney -->
+    </audio>
 
     <!-- Loading Screen -->
     <div id="loading-screen" class="loading-screen">

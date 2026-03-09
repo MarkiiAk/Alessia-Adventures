@@ -361,62 +361,102 @@ class CountdownTimer {
 }
 
 // ===========================
-// GESTOR DE MÚSICA YOUTUBE
+// GESTOR DE MÚSICA HTML5
 // ===========================
-class YouTubeMusicManager {
+class HTML5AudioManager {
     constructor() {
-        this.player = null;
+        this.audio = Utils.$('#disney-audio');
         this.toggleButton = Utils.$('#music-toggle');
-        this.iframe = Utils.$('#youtube-player');
-        this.isPlaying = true; // Iniciar como true para autoplay
+        this.isPlaying = false;
         this.isReady = false;
-        this.isEnabled = CONFIG.youtube.enabled;
+        this.isEnabled = CONFIG.youtube.enabled; // Reutilizamos la config
+        this.hasUserInteracted = false;
         
         this.initPlayer();
     }
     
     initPlayer() {
-        if (!this.iframe) {
-            console.warn('YouTube iframe no encontrado');
+        if (!this.audio) {
+            console.warn('Audio element no encontrado');
             this.hide();
             return;
         }
         
-        // Escuchar mensajes del iframe para controlar el reproductor
-        window.addEventListener('message', (event) => {
-            if (event.origin !== 'https://www.youtube.com') return;
-            
-            try {
-                const data = JSON.parse(event.data);
-                this.handleYouTubeMessage(data);
-            } catch (e) {
-                // Ignorar mensajes que no son JSON
-            }
-        });
+        // Configurar volumen
+        this.audio.volume = (CONFIG.youtube.volume || 30) / 100;
         
-        // Marcar como listo después de un breve retraso y iniciar autoplay
-        setTimeout(() => {
+        // Event listeners para el audio
+        this.audio.addEventListener('loadeddata', () => {
             this.isReady = true;
             this.updateButtonState();
-            // Iniciar reproducción automática
-            if (this.isEnabled) {
-                this.play();
-            }
-        }, 2000);
+            console.log('🎵 Audio listo para reproducir');
+        });
+        
+        this.audio.addEventListener('play', () => {
+            this.isPlaying = true;
+            this.updateButtonState();
+        });
+        
+        this.audio.addEventListener('pause', () => {
+            this.isPlaying = false;
+            this.updateButtonState();
+        });
+        
+        this.audio.addEventListener('ended', () => {
+            // El audio está en loop, esto no debería pasar
+            this.isPlaying = false;
+            this.updateButtonState();
+        });
+        
+        this.audio.addEventListener('error', (e) => {
+            console.warn('Error al cargar audio:', e);
+            this.hide();
+        });
+        
+        // Detectar primera interacción del usuario
+        this.setupUserInteractionDetection();
+        
+        // Intentar autoplay después de un delay
+        setTimeout(() => {
+            this.tryAutoplay();
+        }, 1000);
     }
     
-    handleYouTubeMessage(data) {
-        if (data.event === 'video-progress') {
-            // El video está reproduciéndose
-            if (!this.isPlaying) {
-                this.isPlaying = true;
-                this.updateButtonState();
+    setupUserInteractionDetection() {
+        const events = ['click', 'touchstart', 'scroll', 'keydown'];
+        const handleUserInteraction = () => {
+            this.hasUserInteracted = true;
+            
+            // Intentar reproducir si no está ya reproduciéndose
+            if (this.isEnabled && !this.isPlaying) {
+                this.play();
             }
+            
+            // Remover listeners ya que solo necesitamos la primera interacción
+            events.forEach(event => {
+                document.removeEventListener(event, handleUserInteraction);
+            });
+        };
+        
+        events.forEach(event => {
+            document.addEventListener(event, handleUserInteraction, { passive: true });
+        });
+    }
+    
+    async tryAutoplay() {
+        if (!this.isEnabled || !this.isReady) return;
+        
+        try {
+            await this.audio.play();
+            console.log('🎵 Autoplay exitoso');
+        } catch (error) {
+            console.log('🎵 Autoplay bloqueado, esperando interacción del usuario');
+            // El autoplay fue bloqueado, esperaremos la interacción del usuario
         }
     }
     
     toggle() {
-        if (!this.isReady || !this.iframe) return;
+        if (!this.isReady || !this.audio) return;
         
         if (this.isPlaying) {
             this.pause();
@@ -425,46 +465,36 @@ class YouTubeMusicManager {
         }
     }
     
-    play() {
-        if (!this.isReady || !this.isEnabled || !this.iframe) return;
+    async play() {
+        if (!this.isReady || !this.isEnabled || !this.audio) return;
         
         try {
-            // Enviar comando de reproducir al iframe
-            this.iframe.contentWindow.postMessage(
-                '{"event":"command","func":"playVideo","args":""}',
-                'https://www.youtube.com'
-            );
-            this.isPlaying = true;
-            this.updateButtonState();
+            await this.audio.play();
+            console.log('🎵 Audio reproduciéndose');
         } catch (error) {
-            console.warn('No se pudo reproducir la música de YouTube:', error);
+            console.warn('No se pudo reproducir el audio:', error);
+            // Si falla, mostrar mensaje al usuario
+            showNotification('Toca en cualquier lugar para activar la música Disney 🎵', 'info');
         }
     }
     
     pause() {
-        if (!this.iframe) return;
+        if (!this.audio) return;
         
         try {
-            // Enviar comando de pausar al iframe
-            this.iframe.contentWindow.postMessage(
-                '{"event":"command","func":"pauseVideo","args":""}',
-                'https://www.youtube.com'
-            );
-            this.isPlaying = false;
-            this.updateButtonState();
+            this.audio.pause();
+            console.log('🎵 Audio pausado');
         } catch (error) {
-            console.warn('No se pudo pausar la música de YouTube:', error);
+            console.warn('No se pudo pausar el audio:', error);
         }
     }
     
     setVolume(volume) {
-        if (!this.iframe) return;
+        if (!this.audio) return;
         
         try {
-            this.iframe.contentWindow.postMessage(
-                `{"event":"command","func":"setVolume","args":"${volume}"}`,
-                'https://www.youtube.com'
-            );
+            this.audio.volume = Math.max(0, Math.min(1, volume / 100));
+            console.log(`🔊 Volumen ajustado a ${volume}%`);
         } catch (error) {
             console.warn('No se pudo ajustar el volumen:', error);
         }
@@ -516,7 +546,7 @@ class YouTubeMusicManager {
 }
 
 // Alias para mantener compatibilidad
-const MusicManager = YouTubeMusicManager;
+const MusicManager = HTML5AudioManager;
 
 // ===========================
 // EFECTOS DE PARTÍCULAS
