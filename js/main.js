@@ -368,7 +368,7 @@ class YouTubeMusicManager {
         this.player = null;
         this.toggleButton = Utils.$('#music-toggle');
         this.iframe = Utils.$('#youtube-player');
-        this.isPlaying = false;
+        this.isPlaying = true; // Iniciar como true para autoplay
         this.isReady = false;
         this.isEnabled = CONFIG.youtube.enabled;
         
@@ -394,10 +394,14 @@ class YouTubeMusicManager {
             }
         });
         
-        // Marcar como listo después de un breve retraso
+        // Marcar como listo después de un breve retraso y iniciar autoplay
         setTimeout(() => {
             this.isReady = true;
             this.updateButtonState();
+            // Iniciar reproducción automática
+            if (this.isEnabled) {
+                this.play();
+            }
         }, 2000);
     }
     
