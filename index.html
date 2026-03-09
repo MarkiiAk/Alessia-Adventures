@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Cumpleaños #3 de Alessia | Aventura Disney ✨</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/main.css" as="style">
+    <link rel="preload" href="js/main.js" as="script">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏰</text></svg>">
+    
+    <!-- Meta tags -->
+    <meta name="description" content="¡Únete a la aventura Disney de Alessia! Cumpleaños #3 en Disneyland - 31 Agosto al 3 Septiembre">
+    <meta name="keywords" content="Alessia, cumpleaños, Disney, Disneyland, California, aventura">
+    <meta property="og:title" content="Cumpleaños #3 de Alessia - Aventura Disney">
+    <meta property="og:description" content="Una experiencia mágica en Disneyland para celebrar los 3 años de nuestra princesa">
+    <meta property="og:type" content="website">
+</head>
+<body>
+    <!-- YouTube Background Music -->
+    <div id="youtube-player-container" style="position: fixed; top: -9999px; left: -9999px; z-index: -1;">
+        <iframe id="youtube-player" 
+                width="1" 
+                height="1" 
+                src="https://www.youtube.com/embed/b4qVpdEfNyk?enablejsapi=1&autoplay=0&loop=1&playlist=b4qVpdEfNyk&start=1937&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
+                frameborder="0" 
+                allow="autoplay; encrypted-media"
+                style="opacity: 0; pointer-events: none;">
+        </iframe>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="castle-loader">
+                <i class="fas fa-chess-rook"></i>
+            </div>
+            <h2 class="loading-title">Preparando la magia...</h2>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-chess-rook"></i>
+                <span>Alessia's Adventure</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#hero" class="nav-link active">Inicio</a></li>
+                <li><a href="#adventure-team" class="nav-link">Aventureros</a></li>
+                <li><a href="#journey" class="nav-link">El Viaje</a></li>
+                <li><a href="#characters" class="nav-link">Personajes</a></li>
+                <li><a href="#quest-details" class="nav-link">Detalles</a></li>
+                <li><a href="#rsvp" class="nav-link">Confirmar</a></li>
+            </ul>
+            <button class="music-toggle" id="music-toggle">
+                <i class="fas fa-music"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-bg">
+            <div class="stars-layer"></div>
+            <div class="floating-elements">
+                <div class="float-element">✨</div>
+                <div class="float-element">🌟</div>
+                <div class="float-element">💫</div>
+                <div class="float-element">⭐</div>
+                <div class="float-element">🎭</div>
+                <div class="float-element">🎪</div>
+            </div>
+        </div>
+        
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="birthday-crown">
+                    <i class="fas fa-crown"></i>
+                </div>
+                
+                <div class="hero-badge">
+                    <span class="badge-text">Aventura Disney</span>
+                    <i class="fas fa-sparkles"></i>
+                </div>
+                
+                <h1 class="hero-title">
+                    <span class="title-line animate__animated animate__fadeInDown">¡Celebremos el</span>
+                    <span class="title-highlight animate__animated animate__fadeInUp animate__delay-1s">Cumpleaños #3</span>
+                    <span class="title-name animate__animated animate__zoomIn animate__delay-2s">de Alessia</span>
+                </h1>
+                
+                <div class="hero-subtitle animate__animated animate__fadeInUp animate__delay-3s">
+                    <p>Una aventura mágica en el reino de Disney</p>
+                    <p>donde los sueños se hacen realidad ✨</p>
+                </div>
+                
+                <div class="trip-dates animate__animated animate__fadeInUp animate__delay-4s">
+                    <div class="date-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>31 Agosto - 3 Septiembre</span>
+                    </div>
+                    <div class="date-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Disneyland, California</span>
+                    </div>
+                </div>
+                
+                <!-- Countdown Timer -->
+                <div id="countdown" class="countdown-container animate__animated animate__fadeInUp animate__delay-5s">
+                    <h3 class="countdown-title">La aventura comienza en:</h3>
+                    <div class="countdown-timer">
+                        <div class="time-unit">
+                            <span class="time-value" id="days">00</span>
+                            <span class="time-label">Días</span>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-unit">
+                            <span class="time-value" id="hours">00</span>
+                            <span class="time-label">Horas</span>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-unit">
+                            <span class="time-value" id="minutes">00</span>
+                            <span class="time-label">Min</span>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-unit">
+                            <span class="time-value" id="seconds">00</span>
+                            <span class="time-label">Seg</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-actions animate__animated animate__fadeInUp animate__delay-6s">
+                    <button class="cta-button primary" onclick="scrollToSection('adventure-team')">
+                        <span>Conoce a los Aventureros</span>
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                    <button class="cta-button secondary" onclick="scrollToSection('quest-details')">
+                        <span>Ver Detalles del Viaje</span>
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="birthday-girl-frame">
+                    <div class="frame-decoration">
+                        <div class="sparkle-ring"></div>
+                        <div class="magic-particles"></div>
+                    </div>
+                    <div class="birthday-photo">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-heart"></i>
+                            <p>Nuestra Princesa</p>
+                            <p>Alessia</p>
+                        </div>
+                    </div>
+                    <div class="age-badge">
+                        <span class="age-number">3</span>
+                        <span class="age-text">años</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span>Desliza para la aventura</span>
+        </div>
+    </section>
+
+    <!-- Adventure Team Section -->
+    <section id="adventure-team" class="adventure-team-section">
+        <div class="section-bg">
+            <div class="bg-pattern"></div>
+        </div>
+        
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-decoration">👑</span>
+                    Los Aventureros Disney
+                    <span class="title-decoration">👑</span>
+                </h2>
+                <p class="section-subtitle">8 valientes exploradores listos para la magia</p>
+            </div>
+            
+            <div class="adventurers-grid">
+                <!-- Birthday Girl -->
+                <div class="adventurer-card birthday-girl">
+                    <div class="card-glow"></div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-crown"></i>
+                        <div class="crown-sparkles">
+                            <span>✨</span>
+                            <span>⭐</span>
+                            <span>💫</span>
+                        </div>
+                    </div>
+                    <h3 class="adventurer-name">Alessia</h3>
+                    <p class="adventurer-role">👸 Princesa Cumpleañera</p>
+                    <div class="birthday-special">
+                        <span class="special-badge">¡3 años de magia!</span>
+                    </div>
+                </div>
+                
+                <!-- Confirmed Adventurers -->
+                <div class="adventurer-card confirmed">
+                    <div class="confirmed-seal">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Confirmado</span>
+                    </div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 class="adventurer-name">Marco</h3>
+                    <p class="adventurer-role">🛡️ Guardián de la Aventura</p>
+                </div>
+                
+                <div class="adventurer-card confirmed">
+                    <div class="confirmed-seal">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Confirmado</span>
+                    </div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="adventurer-name">Lilo</h3>
+                    <p class="adventurer-role">💖 Compañera Mágica</p>
+                </div>
+                
+                <!-- Pending Adventurers -->
+                <div class="adventurer-card pending">
+                    <div class="pending-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span>Esperando confirmación</span>
+                    </div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="adventurer-name">Cony</h3>
+                    <p class="adventurer-role">🌟 Exploradora</p>
+                </div>
+                
+                <div class="adventurer-card pending">
+                    <div class="pending-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span>Esperando confirmación</span>
+                    </div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="adventurer-name">Valeria</h3>
+                    <p class="adventurer-role">🎭 Aventurera</p>
+                </div>
+                
+                <div class="adventurer-card pending">
+                    <div class="pending-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span>Esperando confirmación</span>
+                    </div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="adventurer-name">Ramon</h3>
+                    <p class="adventurer-role">⚔️ Caballero</p>
+                </div>
+                
+                <div class="adventurer-card pending">
+                    <div class="pending-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span>Esperando confirmación</span>
+                    </div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="adventurer-name">Diego</h3>
+                    <p class="adventurer-role">🏃 Explorador</p>
+                </div>
+                
+                <div class="adventurer-card pending">
+                    <div class="pending-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span>Esperando confirmación</span>
+                    </div>
+                    <div class="adventurer-avatar">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3 class="adventurer-name">Dieguito</h3>
+                    <p class="adventurer-role">🎪 Pequeño Aventurero</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Section -->
+    <section id="journey" class="journey-section">
+        <div class="section-bg">
+            <div class="journey-pattern"></div>
+        </div>
+        
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-decoration">🗺️</span>
+                    La Gran Aventura
+                    <span class="title-decoration">🗺️</span>
+                </h2>
+                <p class="section-subtitle">4 días de pura magia Disney</p>
+            </div>
+            
+            <div class="journey-timeline">
+                <!-- Day 1 -->
+                <div class="timeline-day">
+                    <div class="day-marker">
+                        <div class="day-number">1</div>
+                        <div class="day-icon">
+                            <i class="fas fa-plane-departure"></i>
+                        </div>
+                    </div>
+                    <div class="day-content">
+                        <div class="day-header">
+                            <h3 class="day-title">Día 1 - ¡El Despegue!</h3>
+                            <p class="day-date">Lunes 31 de Agosto</p>
+                        </div>
+                        <div class="day-details">
+                            <div class="activity">
+                                <i class="fas fa-clock"></i>
+                                <span><strong>7:25 AM</strong> - Vuelo México ✈️ Tijuana</span>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-car"></i>
+                                <span><strong>Ford Transit</strong> - Recogida del auto rentado</span>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-hotel"></i>
+                                <span><strong>Check-in</strong> - Days Inn by Wyndham Anaheim</span>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-utensils"></i>
+                                <span><strong>Cena</strong> - Primer festín en California</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Day 2 -->
+                <div class="timeline-day featured">
+                    <div class="day-marker">
+                        <div class="day-number">2</div>
+                        <div class="day-icon">
+                            <i class="fas fa-chess-rook"></i>
+                        </div>
+                    </div>
+                    <div class="day-content">
+                        <div class="day-header">
+                            <h3 class="day-title">Día 2 - ¡Disneyland Park!</h3>
+                            <p class="day-date">Martes 1 de Septiembre</p>
+                        </div>
+                        <div class="park-highlight">
+                            <div class="park-badge">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span>$129 por persona</span>
+                            </div>
+                        </div>
+                        <div class="day-details">
+                            <div class="activity featured">
+                                <i class="fas fa-chess-rook"></i>
+                                <span><strong>Castillo de la Bella Durmiente</strong></span>
+                            </div>
+                            <div class="activity featured">
+                                <i class="fas fa-rocket"></i>
+                                <span><strong>Space Mountain</strong></span>
+                            </div>
+                            <div class="activity featured">
+                                <i class="fas fa-skull"></i>
+                                <span><strong>Haunted Mansion</strong></span>
+                            </div>
+                            <div class="activity featured">
+                                <i class="fas fa-ship"></i>
+                                <span><strong>Pirates of the Caribbean</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Day 3 -->
+                <div class="timeline-day featured">
+                    <div class="day-marker">
+                        <div class="day-number">3</div>
+                        <div class="day-icon">
+                            <i class="fas fa-ferris-wheel"></i>
+                        </div>
+                    </div>
+                    <div class="day-content">
+                        <div class="day-header">
+                            <h3 class="day-title">Día 3 - ¡California Adventure!</h3>
+                            <p class="day-date">Miércoles 2 de Septiembre</p>
+                        </div>
+                        <div class="park-highlight">
+                            <div class="park-badge">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span>$129 por persona</span>
+                            </div>
+                        </div>
+                        <div class="day-details">
+                            <div class="activity featured">
+                                <i class="fas fa-car-side"></i>
+                                <span><strong>Cars Land</strong></span>
+                            </div>
+                            <div class="activity featured">
+                                <i class="fas fa-spider"></i>
+                                <span><strong>Spider-Man Adventure</strong></span>
+                            </div>
+                            <div class="activity featured">
+                                <i class="fas fa-ferris-wheel"></i>
+                                <span><strong>Mickey's Fun Wheel</strong></span>
+                            </div>
+                            <div class="activity featured">
+                                <i class="fas fa-mountain"></i>
+                                <span><strong>Guardians of the Galaxy</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Day 4 -->
+                <div class="timeline-day">
+                    <div class="day-marker">
+                        <div class="day-number">4</div>
+                        <div class="day-icon">
+                            <i class="fas fa-plane-arrival"></i>
+                        </div>
+                    </div>
+                    <div class="day-content">
+                        <div class="day-header">
+                            <h3 class="day-title">Día 4 - ¡Regreso a Casa!</h3>
+                            <p class="day-date">Jueves 3 de Septiembre</p>
+                        </div>
+                        <div class="day-details">
+                            <div class="activity">
+                                <i class="fas fa-suitcase"></i>
+                                <span><strong>Check-out</strong> - Despedida del hotel</span>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-car"></i>
+                                <span><strong>Devolución</strong> - Ford Transit</span>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-clock"></i>
+                                <span><strong>5:57 PM</strong> - Vuelo Tijuana ✈️ México</span>
+                            </div>
+                            <div class="activity">
+                                <i class="fas fa-heart"></i>
+                                <span><strong>Recuerdos</strong> - ¡Para toda la vida!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Characters Section -->
+    <section id="characters" class="characters-section">
+        <div class="section-bg">
+            <div class="characters-pattern"></div>
+        </div>
+        
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-decoration">🌟</span>
+                    Personajes Favoritos de Alessia
+                    <span class="title-decoration">🌟</span>
+                </h2>
+                <p class="section-subtitle">Los amigos mágicos que encontraremos</p>
+            </div>
+            
+            <div class="characters-grid">
+                <div class="character-card featured stitch">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <i class="fas fa-alien"></i>
+                        <div class="character-sparkles">
+                            <span>💙</span>
+                            <span>✨</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Stitch</h3>
+                    <p class="character-description">El alienígena más tierno del universo</p>
+                    <div class="character-badge">Favorito #1</div>
+                </div>
+                
+                <div class="character-card featured grogu">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <i class="fas fa-baby"></i>
+                        <div class="character-sparkles">
+                            <span>💚</span>
+                            <span>🌟</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Grogu</h3>
+                    <p class="character-description">Baby Yoda y sus poderes Jedi</p>
+                    <div class="character-badge">Favorito #2</div>
+                </div>
+                
+                <div class="character-card featured r2d2">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <i class="fas fa-robot"></i>
+                        <div class="character-sparkles">
+                            <span>🔵</span>
+                            <span>⚡</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">R2-D2</h3>
+                    <p class="character-description">El droide más valiente de la galaxia</p>
+                    <div class="character-badge">Favorito #3</div>
+                </div>
+                
+                <div class="character-card featured bella">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <i class="fas fa-book"></i>
+                        <div class="character-sparkles">
+                            <span>💛</span>
+                            <span>📚</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Bella</h3>
+                    <p class="character-description">La princesa amante de los libros</p>
+                    <div class="character-badge">Favorito #4</div>
+                </div>
+                
+                <div class="character-card featured pocahontas">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <i class="fas fa-feather-alt"></i>
+                        <div class="character-sparkles">
+                            <span>💜</span>
+                            <span>🍃</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Pocahontas</h3>
+                    <p class="character-description">La valiente princesa de la naturaleza</p>
+                    <div class="character-badge">Favorito #5</div>
+                </div>
+                
+                <div class="character-card mickey">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <i class="fas fa-mouse"></i>
+                        <div class="character-sparkles">
+                            <span>🔴</span>
+                            <span>⚫</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Mickey & Minnie</h3>
+                    <p class="character-description">Los ratones más famosos del mundo</p>
+                    <div class="character-badge">Clásicos Disney</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quest Details Section -->
+    <section id="quest-details" class="quest-details-section">
+        <div class="section-bg">
+            <div class="details-pattern"></div>
+        </div>
+        
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-decoration">💰</span>
+                    Detalles de la Quest
+                    <span class="title-decoration">💰</span>
+                </h2>
+                <p class="section-subtitle">Todo lo que necesitas saber sobre nuestra aventura</p>
+            </div>
+            
+            <!-- Cost Breakdown -->
+            <div class="cost-breakdown">
+                <h3 class="breakdown-title">💎 Inversión en la Magia</h3>
+                
+                <div class="cost-items">
+                    <div class="cost-item">
+                        <div class="cost-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="cost-info">
+                            <h4>Vuelos + Hospedaje</h4>
+                            <p>Aeromexico | Days Inn Wyndham</p>
+                        </div>
+                        <div class="cost-amount">$45,568</div>
+                    </div>
+                    
+                    <div class="cost-item">
+                        <div class="cost-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="cost-info">
+                            <h4>Transporte</h4>
+                            <p>Ford Transit (4 días)</p>
+                        </div>
+                        <div class="cost-amount">$18,279</div>
+                    </div>
+                    
+                    <div class="cost-item">
+                        <div class="cost-icon">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <div class="cost-info">
+                            <h4>Entradas Disney</h4>
+                            <p>2 días en ambos parques</p>
+                        </div>
+                        <div class="cost-amount">$31,605</div>
+                    </div>
+                </div>
+                
+                <div class="total-cost">
+                    <div class="total-label">Inversión Total en Magia</div>
+                    <div class="total-amount">$95,452</div>
+                    <div class="total-note">
+                        <i class="fas fa-users"></i>
+                        <span>Para 8 aventureros valientes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Plan -->
+            <div class="payment-plan">
+                <h3 class="plan-title">💳 Plan de Pago Mágico</h3>
+                
+                <div class="plan-content">
+                    <div class="plan-visual">
+                        <div class="payment-circle">
+                            <div class="months-display">
+                                <span class="months-number">18</span>
+                                <span class="months-text">meses</span>
+                            </div>
+                            <div class="plan-badge">Sin Intereses</div>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-details">
+                        <div class="plan-item">
+                            <i class="fas fa-calculator"></i>
+                            <div class="plan-info">
+                                <h4>Pago Total MSI</h4>
+                                <p>18 meses sin intereses</p>
+                            </div>
+                            <div class="plan-amount">$2,531.56</div>
+                        </div>
+                        
+                        <div class="plan-item featured">
+                            <i class="fas fa-user"></i>
+                            <div class="plan-info">
+                                <h4>Pago por Persona</h4>
+                                <p>Mensual durante 18 meses</p>
+                            </div>
+                            <div class="plan-amount">$316.44</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="monthly-highlight">
+                    <div class="highlight-content">
+                        <h4>¡Solo $316 pesos mensuales por persona!</h4>
+                        <p>Menos de $11 pesos por día para vivir la magia Disney</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Travel Details -->
+            <div class="travel-details">
+                <h3 class="details-title">✈️ Detalles del Viaje</h3>
+                
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-plane-departure"></i>
+                        </div>
+                        <h4>Vuelo de Ida</h4>
+                        <div class="detail-info">
+                            <p><strong>Fecha:</strong> 31 de Agosto</p>
+                            <p><strong>Hora:</strong> 7:25 AM</p>
+                            <p><strong>Ruta:</strong> México → Tijuana</p>
+                            <p><strong>Aerolínea:</strong> Aeromexico</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        <h4>Hospedaje</h4>
+                        <div class="detail-info">
+                            <p><strong>Hotel:</strong> Days Inn by Wyndham</p>
+                            <p><strong>Ubicación:</strong> Anaheim Near the Park</p>
+                            <p><strong>Noches:</strong> 3 noches</p>
+                            <p><strong>Comodidades:</strong> Desayuno incluido</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h4>Transporte</h4>
+                        <div class="detail-info">
+                            <p><strong>Vehículo:</strong> Ford Transit</p>
+                            <p><strong>Capacidad:</strong> 8 pasajeros</p>
+                            <p><strong>Duración:</strong> 4 días</p>
+                            <p><strong>Incluye:</strong> Seguro completo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-plane-arrival"></i>
+                        </div>
+                        <h4>Vuelo de Regreso</h4>
+                        <div class="detail-info">
+                            <p><strong>Fecha:</strong> 3 de Septiembre</p>
+                            <p><strong>Hora:</strong> 5:57 PM</p>
+                            <p><strong>Ruta:</strong> Tijuana → México</p>
+                            <p><strong>Aerolínea:</strong> Aeromexico</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="rsvp-section">
+        <div class="section-bg">
+            <div class="rsvp-pattern"></div>
+        </div>
+        
+        <div class="container">
+            <div class="rsvp-content">
+                <div class="rsvp-header">
+                    <div class="rsvp-crown">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h2 class="rsvp-title">
+                        ¿Te Unes a la Aventura?
+                    </h2>
+                    <p class="rsvp-subtitle">Alessia te invita a vivir la magia Disney</p>
+                </div>
+                
+                <div class="rsvp-card">
+                    <div class="invitation-scroll">
+                        <div class="scroll-decoration top"></div>
+                        
+                        <div class="invitation-content">
+                            <div class="royal-seal">
+                                <i class="fas fa-chess-rook"></i>
+                            </div>
+                            
+                            <h3 class="invitation-title">Invitación Real</h3>
+                            
+                            <div class="invitation-text">
+                                <p>Por la presente, <strong>Su Alteza Real Alessia</strong> 
+                                te convoca a unirte a la más grandiosa aventura Disney.</p>
+                                
+                                <p class="highlight-text">¡Celebremos juntos sus 3 años de vida!</p>
+                                
+                                <p>En los mágicos reinos de <strong>Disneyland</strong> y 
+                                <strong>California Adventure</strong>, donde los sueños 
+                                se hacen realidad y la diversión nunca termina.</p>
+                            </div>
+                            
+                            <div class="invitation-details">
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="detail-text">
+                                        <strong>Fechas:</strong>
+                                        31 Agosto - 3 Septiembre 2026
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="detail-text">
+                                        <strong>Destino:</strong>
+                                        Disneyland Resort, California
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="detail-text">
+                                        <strong>Aventureros:</strong>
+                                        8 valientes exploradores
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <div class="detail-text">
+                                        <strong>Inversión:</strong>
+                                        $316 pesos mensuales x 18 meses
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="dress-code">
+                                <h4>👗 Código de Vestimenta</h4>
+                                <p>Comodidad máxima para caminar y diversión.
+                                ¡Opcional: Orejas de Mickey, tiaras de princesa, 
+                                o tu disfraz Disney favorito!</p>
+                            </div>
+                            
+                            <div class="rsvp-actions">
+                                <p class="rsvp-text">
+                                    <strong>¡La aventura te espera!</strong><br>
+                                    Confirma tu asistencia antes del <strong>15 de agosto</strong>
+                                </p>
+                                
+                                <button class="rsvp-button confirm" onclick="confirmRSVP()">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>¡Sí, me uno a la aventura!</span>
+                                </button>
+                                
+                                <p class="whatsapp-note">
+                                    <i class="fas fa-whatsapp"></i>
+                                    Te llevará a WhatsApp para confirmar
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="scroll-decoration bottom"></div>
+                    </div>
+                </div>
+                
+                <div class="final-message">
+                    <div class="message-content">
+                        <h3 class="final-title">
+                            <span class="crown-decoration">👑</span>
+                            "Los sueños se hacen realidad"
+                            <span class="crown-decoration">👑</span>
+                        </h3>
+                        <p class="final-quote">
+                            En Disney, cada momento es mágico, cada sonrisa es especial,
+                            y cada aventura es inolvidable. ¡Ayúdanos a hacer de los 3 años
+                            de Alessia una celebración épica!
+                        </p>
+                        <div class="signature">
+                            <p><strong>Con amor mágico,</strong></p>
+                            <p class="signature-name">La Familia de Alessia ✨</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reproductor YouTube Visible para Testing -->
+    <section style="padding: 2rem; background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); text-align: center;">
+        <div class="container">
+            <h3 style="color: var(--disney-golden-yellow); font-family: var(--font-display); margin-bottom: 1rem; font-size: 1.5rem;">
+                🎵 Música de la Fiesta de Alessia 🎵
+            </h3>
+            <p style="color: white; margin-bottom: 1.5rem; opacity: 0.9;">
+                ¡Escucha la banda sonora mágica de nuestra aventura Disney!
+            </p>
+            <div style="max-width: 560px; margin: 0 auto; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3);">
+                <iframe width="560" height="315" 
+                        src="https://www.youtube.com/embed/b4qVpdEfNyk?si=gN-lGSIP7jVIVvPd&amp;start=1937" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin" 
+                        allowfullscreen
+                        style="width: 100%; height: 315px;">
+                </iframe>
+            </div>
+            <p style="color: white; margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+                <i class="fas fa-play"></i> Presiona play para comenzar la magia musical
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-chess-rook"></i>
+                    <span>Cumpleaños #3 de Alessia</span>
+                </div>
+                <div class="footer-info">
+                    <p>Una aventura Disney unforgettable</p>
+                    <p>31 Agosto - 3 Septiembre 2026</p>
+                </div>
+                <div class="footer-social">
+                    <button class="social-btn" onclick="shareInvitation()">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    <button class="social-btn" onclick="toggleMusic()">
+                        <i class="fas fa-music"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 - Hecho con 💖 para la Princesa Alessia</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
