@@ -1459,6 +1459,115 @@
     border-left: 3px solid var(--disney-golden-yellow);
 }
 
+/* REDISEÑO COMPLETO PARA ESCRITORIO */
+@media (min-width: 768px) {
+    /* Layout horizontal para invitation-details */
+    .invitation-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .detail-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: start;
+        gap: 0.8rem;
+        padding: 0.8rem 1rem;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        border-left: 3px solid var(--disney-golden-yellow);
+    }
+    
+    .detail-icon {
+        width: 35px;
+        height: 35px;
+        background: var(--gradient-castle);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    
+    .detail-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.95);
+        margin: 0;
+        align-self: center;
+    }
+    
+    .detail-text strong {
+        color: var(--disney-golden-yellow);
+        font-weight: 600;
+        display: block;
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+    
+    /* Dress code en grid horizontal */
+    .dress-code {
+        grid-column: 1 / -1;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 1.2rem 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    .dress-code h4 {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        color: var(--disney-princess-pink);
+        margin-bottom: 0.8rem;
+    }
+    
+    .dress-code p {
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.5;
+        font-size: 0.95rem;
+    }
+    
+    /* Compactar el contenido general */
+    .invitation-scroll {
+        padding: 2.5rem 2rem;
+    }
+    
+    .invitation-title {
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .invitation-text {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+    
+    .highlight-text {
+        font-size: 1.25rem;
+        margin: 1.2rem 0;
+    }
+    
+    .rsvp-text {
+        margin-bottom: 1.5rem;
+        font-size: 1.05rem;
+        line-height: 1.5;
+    }
+    
+    /* Mejorar el botón RSVP */
+    .rsvp-button {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+    }
+}
+
 .detail-icon {
     width: 40px;
     height: 40px;
