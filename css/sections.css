@@ -518,8 +518,23 @@
     transition: all var(--animation-normal);
 }
 
+.character-image .character-avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    transition: all var(--animation-normal);
+}
+
 .character-card:hover .character-image i {
     transform: scale(1.2) rotate(10deg);
+}
+
+.character-card:hover .character-image .character-avatar {
+    transform: scale(1.2) rotate(10deg);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 .character-sparkles {
