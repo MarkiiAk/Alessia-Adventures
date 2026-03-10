@@ -30,7 +30,7 @@
     font-size: 4rem;
     color: var(--disney-golden-yellow);
     margin-bottom: 2rem;
-    animation: castleSpin 3s linear infinite;
+    animation: loadingPulse 2s ease-in-out infinite;
     display: flex;
     align-items: center;
     justify-content: center;
