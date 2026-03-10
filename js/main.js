@@ -94,9 +94,9 @@ class LoadingScreen {
         this.progress = Utils.$('.loading-progress');
         this.loadingSteps = [
             { text: 'Preparando el castillo...', duration: 800 },
-            { text: 'Invocando la magia Disney...', duration: 600 },
-            { text: 'Reuniendo a los personajes...', duration: 700 },
-            { text: '¡Listo para la aventura!', duration: 500 }
+            { text: 'Invocando la magia Disney...', duration: 800 },
+            { text: 'Reuniendo a los personajes...', duration: 800 },
+            { text: '¡Listo para la aventura!', duration: 800 }
         ];
         this.currentStep = 0;
     }

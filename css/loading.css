@@ -31,6 +31,16 @@
     color: var(--disney-golden-yellow);
     margin-bottom: 2rem;
     animation: castleSpin 3s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.castle-svg {
+    color: var(--disney-golden-yellow);
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
 }
 
 .loading-title {
