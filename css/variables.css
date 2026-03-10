@@ -1,4 +1,23 @@
 /* ===========================
+   FUENTES DISNEY
+   =========================== */
+@font-face {
+    font-family: 'Disney Regular';
+    src: url('../fonts/NewWaltDisneyFontRegular-BPen.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Disney UI';
+    src: url('../fonts/NewWaltDisneyUi-8YdA.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ===========================
    VARIABLES CSS PREMIUM
    =========================== */
 :root {
@@ -35,6 +54,8 @@
     /* Tipografía Premium */
     --font-display: 'Fredoka', cursive;
     --font-body: 'Poppins', sans-serif;
+    --font-disney-regular: 'Disney Regular', 'Fredoka', cursive;
+    --font-disney-ui: 'Disney UI', 'Poppins', sans-serif;
     
     /* Espaciado */
     --section-padding: 120px 0;
