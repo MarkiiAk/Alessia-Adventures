@@ -16,11 +16,6 @@ const CONFIG = {
         duration: 800
     },
     
-    // WhatsApp RSVP
-    whatsapp: {
-        number: '+5215555555555', // Reemplazar con número real
-        message: '¡Hola! Me encantaría unirme a la aventura Disney de Alessia 🏰✨ Quiero confirmar mi asistencia al cumpleaños #3.'
-    }
 };
 
 // ===========================
@@ -624,44 +619,6 @@ class ScrollAnimations {
     }
 }
 
-// ===========================
-// RSVP FUNCTIONALITY
-// ===========================
-class RSVPManager {
-    constructor() {
-        this.confirmButton = Utils.$('.rsvp-button.confirm');
-        this.bindEvents();
-    }
-    
-    bindEvents() {
-        if (this.confirmButton) {
-            this.confirmButton.addEventListener('click', () => {
-                this.handleRSVP();
-            });
-        }
-    }
-    
-    handleRSVP() {
-        // Crear mensaje personalizado
-        const message = CONFIG.whatsapp.message;
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${CONFIG.whatsapp.number}?text=${encodedMessage}`;
-        
-        // Efecto visual antes de redirigir
-        Utils.addClass(this.confirmButton, 'sending');
-        this.confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Conectando...</span>';
-        
-        setTimeout(() => {
-            window.open(whatsappUrl, '_blank');
-            this.resetButton();
-        }, 1500);
-    }
-    
-    resetButton() {
-        Utils.removeClass(this.confirmButton, 'sending');
-        this.confirmButton.innerHTML = '<i class="fas fa-check-circle"></i><span>¡Sí, me uno a la aventura!</span>';
-    }
-}
 
 // ===========================
 // EFECTOS INTERACTIVOS
@@ -820,11 +777,10 @@ function scrollToSection(sectionId) {
     }
 }
 
-// Función para confirmar RSVP
+// Función para confirmar RSVP (reemplazada por React)
 function confirmRSVP() {
-    if (window.rsvpManager) {
-        window.rsvpManager.handleRSVP();
-    }
+    // Esta función ya no hace nada, React maneja el botón RSVP
+    console.log('RSVP button handled by React component');
 }
 
 // Función para compartir invitación
@@ -909,7 +865,6 @@ class App {
             window.countdownTimer = new CountdownTimer();
             window.particleSystem = new ParticleSystem();
             window.scrollAnimations = new ScrollAnimations();
-            window.rsvpManager = new RSVPManager();
             window.interactiveEffects = new InteractiveEffects();
             window.rsvpState = new RSVPState();
             
