@@ -34,6 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .castle-svg {
@@ -41,6 +42,178 @@
     width: 80px;
     height: 80px;
     filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+    z-index: 2;
+}
+
+/* ===========================
+   EFECTOS DE FUEGOS ARTIFICIALES
+   =========================== */
+.fireworks-zone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Explosión principal de fuegos artificiales */
+.firework-explosion {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+}
+
+/* Partícula individual de fuego artificial */
+.firework-spark {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #fbbf24;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+}
+
+/* Chispas que explotan hacia afuera */
+.firework-spark:nth-child(1) {
+    top: 50%;
+    left: 50%;
+    animation: explode-up 2.5s ease-out infinite;
+    animation-delay: 0s;
+}
+
+.firework-spark:nth-child(2) {
+    top: 50%;
+    left: 50%;
+    animation: explode-up-right 2.5s ease-out infinite;
+    animation-delay: 0.2s;
+}
+
+.firework-spark:nth-child(3) {
+    top: 50%;
+    left: 50%;
+    animation: explode-right 2.5s ease-out infinite;
+    animation-delay: 0.4s;
+}
+
+.firework-spark:nth-child(4) {
+    top: 50%;
+    left: 50%;
+    animation: explode-down-right 2.5s ease-out infinite;
+    animation-delay: 0.6s;
+}
+
+.firework-spark:nth-child(5) {
+    top: 50%;
+    left: 50%;
+    animation: explode-down 2.5s ease-out infinite;
+    animation-delay: 0.8s;
+}
+
+.firework-spark:nth-child(6) {
+    top: 50%;
+    left: 50%;
+    animation: explode-down-left 2.5s ease-out infinite;
+    animation-delay: 1.0s;
+}
+
+.firework-spark:nth-child(7) {
+    top: 50%;
+    left: 50%;
+    animation: explode-left 2.5s ease-out infinite;
+    animation-delay: 1.2s;
+}
+
+.firework-spark:nth-child(8) {
+    top: 50%;
+    left: 50%;
+    animation: explode-up-left 2.5s ease-out infinite;
+    animation-delay: 1.4s;
+}
+
+/* Segunda capa de fuegos artificiales más grandes */
+.firework-burst {
+    position: absolute;
+    top: 30%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+}
+
+.firework-burst .firework-spark {
+    background: #ec4899;
+    box-shadow: 0 0 8px #ec4899, 0 0 16px #be185d;
+}
+
+.firework-burst:nth-child(1) { animation-delay: 1.5s; }
+.firework-burst:nth-child(2) { top: 70%; left: 40%; animation-delay: 3s; }
+
+/* Tercera capa con colores diferentes */
+.firework-multi {
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+
+.firework-multi .firework-spark:nth-child(odd) {
+    background: #3b82f6;
+    box-shadow: 0 0 8px #3b82f6, 0 0 16px #1d4ed8;
+}
+
+.firework-multi .firework-spark:nth-child(even) {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981, 0 0 16px #047857;
+}
+
+/* Estrellas que caen después de la explosión */
+.falling-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.falling-star {
+    position: absolute;
+    font-size: 16px;
+    opacity: 0;
+    animation: starFall 3s ease-in-out infinite;
+}
+
+.falling-star:nth-child(1) {
+    top: 20%;
+    left: 25%;
+    animation-delay: 2s;
+}
+
+.falling-star:nth-child(2) {
+    top: 30%;
+    left: 70%;
+    animation-delay: 2.5s;
+}
+
+.falling-star:nth-child(3) {
+    top: 15%;
+    left: 50%;
+    animation-delay: 3s;
+}
+
+.falling-star:nth-child(4) {
+    top: 25%;
+    left: 80%;
+    animation-delay: 3.5s;
+}
+
+.falling-star:nth-child(5) {
+    top: 35%;
+    left: 20%;
+    animation-delay: 4s;
 }
 
 .loading-title {
@@ -89,4 +262,241 @@
 @keyframes loaderFadeOut {
     0% { opacity: 1; transform: scale(1); }
     100% { opacity: 0; transform: scale(0.95); visibility: hidden; }
+}
+
+/* Animaciones para efectos mágicos */
+@keyframes orbitFloat {
+    0% { transform: translateX(-50%) rotate(0deg) translateX(60px) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+
+@keyframes particleSparkle {
+    0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.6; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+}
+
+@keyframes fireworkExplode {
+    0% { 
+        opacity: 0; 
+        transform: translateY(0) scale(0.5); 
+    }
+    10% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+    50% { 
+        opacity: 1; 
+        transform: translateY(-40px) scale(1.2); 
+    }
+    100% { 
+        opacity: 0; 
+        transform: translateY(-80px) scale(0.3); 
+    }
+}
+
+@keyframes sparkleRandom {
+    0%, 90% { 
+        opacity: 0; 
+        transform: translateY(0) scale(0.5) rotate(0deg); 
+    }
+    10% { 
+        opacity: 1; 
+        transform: translateY(-10px) scale(1) rotate(180deg); 
+    }
+    80% { 
+        opacity: 0.8; 
+        transform: translateY(-5px) scale(0.8) rotate(360deg); 
+    }
+}
+
+/* ===========================
+   ANIMACIONES DE FUEGOS ARTIFICIALES
+   =========================== */
+
+/* Explosiones en todas las direcciones */
+@keyframes explode-up {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateY(0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateY(-60px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translateY(-120px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+@keyframes explode-up-right {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(42px, -42px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translate(85px, -85px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+@keyframes explode-right {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateX(0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateX(60px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translateX(120px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+@keyframes explode-down-right {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(42px, 42px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translate(85px, 85px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+@keyframes explode-down {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateY(0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateY(60px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translateY(120px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+@keyframes explode-down-left {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(-42px, 42px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translate(-85px, 85px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+@keyframes explode-left {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateX(0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translateX(-60px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translateX(-120px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+@keyframes explode-up-left {
+    0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+        box-shadow: 0 0 8px #fbbf24, 0 0 16px #f59e0b;
+    }
+    50% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) translate(-42px, -42px) scale(1.5);
+        box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) translate(-85px, -85px) scale(0.2);
+        box-shadow: none;
+    }
+}
+
+/* Animación de estrellas que caen */
+@keyframes starFall {
+    0% { 
+        opacity: 1; 
+        transform: translateY(-20px) scale(1) rotate(0deg);
+        filter: brightness(1.5) drop-shadow(0 0 8px #fbbf24);
+    }
+    50% { 
+        opacity: 0.8; 
+        transform: translateY(20px) scale(0.8) rotate(180deg);
+        filter: brightness(1.2) drop-shadow(0 0 6px #f59e0b);
+    }
+    100% { 
+        opacity: 0; 
+        transform: translateY(60px) scale(0.3) rotate(360deg);
+        filter: brightness(0.8) drop-shadow(0 0 2px #f59e0b);
+    }
+}
+
+/* Efecto de destello inicial */
+@keyframes fireworkFlash {
+    0% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0);
+        box-shadow: 0 0 0px #fff;
+    }
+    10% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(2);
+        box-shadow: 0 0 30px #fff, 0 0 60px #fbbf24;
+    }
+    20% { 
+        opacity: 0.8; 
+        transform: translate(-50%, -50%) scale(1.5);
+        box-shadow: 0 0 20px #fff, 0 0 40px #fbbf24;
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0.5);
+        box-shadow: none;
+    }
 }
