@@ -72,6 +72,17 @@
     .music-toggle {
         margin-top: 15px;
         align-self: center;
+        min-height: 48px; /* Touch target optimization */
+        min-width: 48px;
+        padding: 12px;
+        border-radius: 25px;
+        transition: all var(--animation-normal);
+    }
+
+    .music-toggle:hover,
+    .music-toggle:active {
+        transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.1);
     }
 
     /* Mobile Hero Section */
@@ -198,16 +209,32 @@
     /* Mobile Hero Actions */
     .hero-actions {
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.5rem;
         align-items: stretch;
     }
 
     .cta-button {
         width: 100%;
         max-width: 100%;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
+        padding: 1.2rem 2rem;
+        font-size: 1.2rem;
         justify-content: center;
+        min-height: 56px; /* Minimum touch target size */
+        border-radius: 30px;
+        font-weight: 700;
+        box-shadow: var(--shadow-strong);
+        transition: all var(--animation-normal);
+    }
+
+    .cta-button:hover,
+    .cta-button:active {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-glow);
+    }
+
+    .cta-button:active {
+        transform: translateY(0);
+        transition-duration: 0.1s;
     }
 
     /* Mobile Section Headers */
@@ -342,82 +369,358 @@
         font-size: 0.95rem;
     }
 
-    /* Mobile Quest Details */
+    /* Mobile Quest Details - OPTIMIZADO */
     .cost-breakdown,
     .payment-plan,
     .travel-details {
-        margin: 0 10px 3rem;
-        padding: 2rem 1.5rem;
+        margin: 0 15px 3rem;
+        padding: 2.5rem 2rem;
     }
 
     .breakdown-title,
     .plan-title,
     .details-title {
-        font-size: 1.8rem;
-        margin-bottom: 2rem;
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+        line-height: 1.2;
+    }
+
+    /* Mobile Cost Breakdown - MEJORADO */
+    .cost-items {
+        gap: 2rem;
     }
 
     .cost-item {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-        padding: 1.2rem;
+        flex-direction: row;
+        gap: 1.5rem;
+        text-align: left;
+        padding: 1.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        border-left: 4px solid var(--disney-golden-yellow);
     }
 
     .cost-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.3rem;
-        margin: 0 auto;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .cost-info {
+        flex: 1;
+    }
+
+    .cost-info h4 {
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.2;
+    }
+
+    .cost-info p {
+        font-size: 1rem;
+        line-height: 1.4;
     }
 
     .cost-amount {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--disney-golden-yellow);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
     .total-cost {
-        padding: 1.5rem;
+        padding: 2.5rem 2rem;
+        margin-top: 2rem;
+        background: var(--gradient-royal);
+        border-radius: 25px;
+        box-shadow: var(--shadow-glow);
+    }
+
+    .total-label {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
     }
 
     .total-amount {
-        font-size: 2.5rem;
+        font-size: 3.5rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 1.5rem;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
     }
 
+    .total-note {
+        font-size: 1.1rem;
+        gap: 0.8rem;
+    }
+
+    /* Mobile Payment Plan - COMPLETAMENTE REDISEÑADO */
     .plan-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 2.5rem;
         text-align: center;
     }
 
     .payment-circle {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 2rem;
+        box-shadow: var(--shadow-strong);
     }
 
     .months-number {
-        font-size: 2.5rem;
+        font-size: 3rem;
+        line-height: 1;
+    }
+
+    .months-text {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .plan-badge {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+        bottom: -20px;
+    }
+
+    .plan-details {
+        gap: 2rem;
     }
 
     .plan-item {
-        flex-direction: column;
+        flex-direction: row;
+        text-align: left;
+        gap: 1.5rem;
+        padding: 2rem 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        border: 2px solid transparent;
+        transition: all var(--animation-normal);
+    }
+
+    .plan-item.featured {
+        background: rgba(251, 191, 36, 0.15);
+        border-color: var(--disney-golden-yellow);
+        box-shadow: var(--shadow-medium);
+    }
+
+    .plan-item i {
+        font-size: 1.8rem;
+        color: var(--disney-golden-yellow);
+        width: 40px;
         text-align: center;
-        gap: 1rem;
-        padding: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .plan-info h4 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+
+    .plan-info p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.4;
     }
 
     .plan-amount {
-        font-size: 1.3rem;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--disney-golden-yellow);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Mobile Payment Sections - NUEVO */
+    .msi-plan-section,
+    .direct-payment-section {
+        margin: 0 15px 3rem;
+        padding: 2.5rem 2rem;
+        border-radius: 25px;
+    }
+
+    .plan-section-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .plan-section-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .direct-payment-items {
+        gap: 2rem;
+    }
+
+    .payment-item {
+        flex-direction: row;
+        gap: 1.5rem;
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+    }
+
+    .payment-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        flex-shrink: 0;
+    }
+
+    .payment-icon i {
+        font-size: 2rem;
+    }
+
+    .payment-info h5 {
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.2;
+    }
+
+    .payment-info p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .payment-calculation {
+        align-items: flex-end;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    .payment-calculation .total-amount {
+        font-size: 1.8rem;
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+    }
+
+    .per-person {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .payment-total {
+        padding: 2.5rem 2rem;
+        margin-top: 2.5rem;
+        border-radius: 25px;
+        background: rgba(251, 191, 36, 0.15);
+        border: 2px solid var(--disney-golden-yellow);
+        box-shadow: var(--shadow-medium);
+    }
+
+    .total-label {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+    .total-amount-direct {
+        font-size: 3.2rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 1.5rem;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+    }
+
+    .payment-note {
+        font-size: 1.1rem;
+        gap: 0.8rem;
+        font-weight: 600;
+    }
+
+    /* Mobile Final Cost Summary - NUEVO */
+    .final-cost-summary {
+        margin: 0 15px 3rem;
+        padding: 2.5rem 2rem;
+        border-radius: 25px;
+        border: 3px solid var(--disney-golden-yellow);
+    }
+
+    .summary-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        line-height: 1.2;
+    }
+
+    .summary-breakdown {
+        padding: 2rem 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 20px;
+    }
+
+    .summary-item {
+        padding: 1rem 0;
+        font-size: 1.1rem;
+    }
+
+    .summary-label {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .summary-amount {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    .summary-total .summary-amount.final {
+        font-size: 2.5rem;
+        font-weight: 900;
+        line-height: 1.1;
+    }
+
+    .summary-highlight {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+        border: 2px solid #ec4899;
+    }
+
+    .summary-highlight .highlight-content h4 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+
+    .summary-highlight .highlight-content p {
+        font-size: 1.1rem;
+        line-height: 1.5;
     }
 
     .details-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 2rem;
     }
 
     .detail-card {
-        padding: 1.5rem;
-        margin: 0 5px;
+        padding: 2rem 1.5rem;
+        margin: 0 10px;
+        border-radius: 25px;
+    }
+
+    .detail-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-card h4 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .detail-info p {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.5;
+        padding-left: 1rem;
+        border-left: 3px solid rgba(255, 255, 255, 0.3);
     }
 
     /* Mobile RSVP */
@@ -578,17 +881,203 @@
         margin: 0 5px;
     }
 
+    /* MOBILE ULTRA SMALL - Payment Sections */
     .cost-breakdown,
     .payment-plan,
     .travel-details,
-    .rsvp-content {
+    .msi-plan-section,
+    .direct-payment-section,
+    .final-cost-summary {
         margin: 0 5px 2.5rem;
+        padding: 2rem 1.5rem;
     }
 
     .breakdown-title,
     .plan-title,
-    .details-title {
+    .details-title,
+    .plan-section-title,
+    .summary-title {
         font-size: 1.6rem;
+        margin-bottom: 2rem;
+        line-height: 1.1;
+    }
+
+    .cost-item {
+        padding: 1.5rem 1rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .cost-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+        margin: 0 auto;
+    }
+
+    .cost-info h4 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .cost-info p {
+        font-size: 0.9rem;
+    }
+
+    .cost-amount {
+        font-size: 1.6rem;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    .total-cost {
+        padding: 2rem 1.5rem;
+    }
+
+    .total-amount {
+        font-size: 3rem;
+        line-height: 0.9;
+    }
+
+    .payment-circle {
+        width: 120px;
+        height: 120px;
+    }
+
+    .months-number {
+        font-size: 2.5rem;
+    }
+
+    .plan-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .plan-item i {
+        font-size: 1.5rem;
+        margin: 0 auto;
+    }
+
+    .plan-info h4 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .plan-info p {
+        font-size: 0.9rem;
+    }
+
+    .plan-amount {
+        font-size: 1.6rem;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    .payment-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.2rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .payment-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+    }
+
+    .payment-icon i {
+        font-size: 1.8rem;
+    }
+
+    .payment-info h5 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .payment-info p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .payment-calculation {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .payment-calculation .total-amount {
+        font-size: 1.6rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .per-person {
+        font-size: 0.9rem;
+    }
+
+    .payment-total {
+        padding: 2rem 1.5rem;
+    }
+
+    .total-amount-direct {
+        font-size: 2.8rem;
+        line-height: 0.9;
+    }
+
+    .summary-breakdown {
+        padding: 1.5rem 1rem;
+    }
+
+    .summary-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+        padding: 0.8rem 0;
+    }
+
+    .summary-label {
+        font-size: 1rem;
+        order: 1;
+    }
+
+    .summary-amount {
+        font-size: 1.4rem;
+        font-weight: 900;
+        order: 2;
+        color: var(--disney-golden-yellow);
+    }
+
+    .summary-total {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem 0;
+    }
+
+    .summary-total .summary-amount.final {
+        font-size: 2.2rem;
+        order: 2;
+    }
+
+    .summary-highlight {
+        padding: 1.5rem 1rem;
+    }
+
+    .summary-highlight .highlight-content h4 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .summary-highlight .highlight-content p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .rsvp-content {
+        margin: 0 5px 2.5rem;
     }
 
     .rsvp-title {
@@ -600,6 +1089,71 @@
     }
 
     .invitation-scroll {
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* Ultra Small Mobile (320px - 360px) */
+@media (max-width: 360px) {
+    .cost-breakdown,
+    .payment-plan,
+    .msi-plan-section,
+    .direct-payment-section,
+    .final-cost-summary {
+        margin: 0 2px 2rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .breakdown-title,
+    .plan-section-title,
+    .summary-title {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+        line-height: 1;
+    }
+
+    .cost-item,
+    .plan-item,
+    .payment-item {
+        padding: 1.2rem 0.8rem;
+    }
+
+    .cost-amount,
+    .plan-amount {
+        font-size: 1.4rem;
+    }
+
+    .total-amount {
+        font-size: 2.5rem;
+    }
+
+    .total-amount-direct {
+        font-size: 2.4rem;
+    }
+
+    .payment-circle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .months-number {
+        font-size: 2rem;
+    }
+
+    .months-text {
+        font-size: 0.8rem;
+    }
+
+    .summary-amount {
+        font-size: 1.2rem;
+    }
+
+    .summary-total .summary-amount.final {
+        font-size: 2rem;
+    }
+
+    .payment-total,
+    .total-cost {
         padding: 1.5rem 1rem;
     }
 }
