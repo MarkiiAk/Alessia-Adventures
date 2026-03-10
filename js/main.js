@@ -746,7 +746,7 @@ class InteractiveEffects {
         
         // Elementos con parallax
         Utils.$$('.stars-layer').forEach(layer => {
-            const speed = 0.5;
+            const speed = 0.3;
             layer.style.transform = `translateY(${scrollY * speed}px)`;
         });
         

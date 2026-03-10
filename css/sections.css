@@ -768,18 +768,284 @@
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     border-radius: 25px;
-    padding: 3rem 2rem;
-    margin-bottom: 4rem;
+    padding: 3rem;
+    margin: 3rem 0;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-plan::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💳</text></svg>') no-repeat;
+    background-size: 100px 100px;
+    background-position: top right;
+    opacity: 0.1;
+    pointer-events: none;
 }
 
 .plan-title {
     font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--disney-emerald-green);
+    font-size: 2.5rem;
+    color: white;
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
+    text-shadow: var(--text-shadow);
+}
+
+/* MSI Plan Section */
+.msi-plan-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.plan-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.plan-section-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--disney-golden-yellow);
+    margin-bottom: 0.5rem;
+    text-shadow: var(--text-shadow);
+}
+
+.plan-section-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Direct Payment Section */
+.direct-payment-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.direct-payment-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.payment-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all var(--animation-normal);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.payment-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.payment-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    background: var(--gradient-princess);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-soft);
+}
+
+.payment-icon i {
+    font-size: 1.8rem;
+    color: var(--disney-royal-blue);
+}
+
+.payment-info {
+    flex: 1;
+}
+
+.payment-info h5 {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.payment-info p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+.payment-calculation {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.total-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--disney-golden-yellow);
+    text-shadow: var(--text-shadow);
+}
+
+.per-person {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 0.3rem;
+}
+
+.payment-total {
+    background: rgba(251, 191, 36, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    margin-top: 1rem;
+}
+
+.total-label {
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.total-amount-direct {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--disney-golden-yellow);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+}
+
+.payment-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.payment-note i {
+    color: var(--disney-golden-yellow);
+}
+
+/* Final Cost Summary */
+.final-cost-summary {
+    background: var(--gradient-princess);
+    border-radius: 20px;
+    padding: 2.5rem;
+    border: 3px solid var(--disney-golden-yellow);
+    box-shadow: var(--shadow-glow);
+}
+
+.summary-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.summary-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--disney-royal-blue);
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.summary-breakdown {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    color: var(--disney-royal-blue);
+}
+
+.summary-label {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.summary-amount {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.summary-divider {
+    height: 2px;
+    background: var(--disney-golden-yellow);
+    margin: 1rem 0;
+    border-radius: 2px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 2px solid var(--disney-golden-yellow);
+    margin-top: 1rem;
+}
+
+.summary-total .summary-amount.final {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #ec4899;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.summary-highlight {
+    background: rgba(236, 72, 153, 0.1);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 2px solid #ec4899;
+}
+
+.summary-highlight .highlight-content h4 {
+    color: var(--disney-royal-blue);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.summary-highlight .highlight-content p {
+    color: var(--disney-royal-blue);
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.summary-highlight strong {
+    color: #ec4899;
+    font-weight: 800;
 }
 
 .plan-content {
@@ -871,13 +1137,13 @@
 }
 
 .plan-item.featured {
-    background: rgba(52, 211, 153, 0.2);
-    border: 2px solid var(--disney-emerald-green);
+    background: rgba(251, 191, 36, 0.15);
+    border: 2px solid var(--disney-golden-yellow);
 }
 
 .plan-item i {
     font-size: 1.5rem;
-    color: var(--disney-emerald-green);
+    color: var(--disney-golden-yellow);
     width: 30px;
     text-align: center;
 }
@@ -902,7 +1168,7 @@
     font-family: var(--font-display);
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--disney-emerald-green);
+    color: var(--disney-golden-yellow);
 }
 
 .monthly-highlight {
