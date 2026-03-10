@@ -1,0 +1,52 @@
+/* ===========================
+   VARIABLES CSS PREMIUM
+   =========================== */
+:root {
+    /* Colores Disney Premium */
+    --disney-royal-blue: #1e3a8a;
+    --disney-magic-purple: #7c3aed;
+    --disney-golden-yellow: #fbbf24;
+    --disney-princess-pink: #ec4899;
+    --disney-emerald-green: #10b981;
+    --disney-coral-orange: #f97316;
+    --disney-sky-blue: #0ea5e9;
+    --disney-rose-gold: #f472b6;
+    --disney-mint-green: #34d399;
+    --disney-lavender: #a78bfa;
+    
+    /* Gradientes Mágicos */
+    --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-hero: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #ec4899 100%);
+    --gradient-princess: linear-gradient(135deg, #fbbf24 0%, #f472b6 50%, #a78bfa 100%);
+    --gradient-royal: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    --gradient-fairy: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    --gradient-castle: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    --gradient-sunset: linear-gradient(135deg, #f97316 0%, #ec4899 100%);
+    --gradient-ocean: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+    
+    /* Sombras Premium */
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --shadow-strong: 0 12px 40px rgba(0, 0, 0, 0.2);
+    --shadow-magic: 0 20px 60px rgba(102, 126, 234, 0.3);
+    --shadow-glow: 0 0 30px rgba(251, 191, 36, 0.4);
+    --shadow-princess: 0 15px 50px rgba(236, 72, 153, 0.25);
+    
+    /* Tipografía Premium */
+    --font-display: 'Fredoka', cursive;
+    --font-body: 'Poppins', sans-serif;
+    
+    /* Espaciado */
+    --section-padding: 120px 0;
+    --container-padding: 0 20px;
+    
+    /* Z-Index Layers */
+    --z-navigation: 1000;
+    --z-modal: 2000;
+    --z-loading: 3000;
+    
+    /* Animaciones */
+    --animation-fast: 0.3s ease;
+    --animation-normal: 0.5s ease;
+    --animation-slow: 1s ease;
+}

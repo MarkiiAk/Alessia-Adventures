@@ -1,0 +1,530 @@
+/* ===========================
+   HERO SECTION
+   =========================== */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 100px 20px 50px;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    background-image: url('../src/castlehero.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+}
+
+.hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 58, 138, 0.2);
+    z-index: 1;
+}
+
+.stars-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: 
+        radial-gradient(2px 2px at 20px 30px, rgb(255, 255, 255), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgb(255, 255, 255), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgb(255, 255, 255), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgb(255, 255, 255), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgb(255, 255, 255), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: starsFloat 8s linear infinite;
+}
+
+@keyframes starsFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
+}
+
+.floating-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.float-element {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: floatMagic 6s ease-in-out infinite;
+    opacity: 0.15;
+}
+
+.float-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+.float-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+.float-element:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; }
+.float-element:nth-child(4) { bottom: 30%; right: 10%; animation-delay: 3s; }
+.float-element:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
+.float-element:nth-child(6) { top: 60%; right: 5%; animation-delay: 5s; }
+
+@keyframes floatMagic {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+    50% { transform: translateY(-30px) rotate(180deg); opacity: 0.3; }
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    width: 100%;
+}
+
+.hero-content {
+    animation: heroSlideIn 1s ease-out;
+}
+
+@keyframes heroSlideIn {
+    0% { opacity: 0; transform: translateX(-50px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+.birthday-crown {
+    text-align: center;
+    font-size: 4rem;
+    color: var(--disney-golden-yellow);
+    margin-bottom: 2rem;
+    animation: crownFloat 3s ease-in-out infinite;
+}
+
+@keyframes crownFloat {
+    0%, 100% { transform: translateY(0px) rotate(-5deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--gradient-royal);
+    color: var(--disney-royal-blue);
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-soft);
+    animation: badgeGlow 2s ease-in-out infinite;
+}
+
+@keyframes badgeGlow {
+    0%, 100% { box-shadow: var(--shadow-soft); }
+    50% { box-shadow: var(--shadow-glow); }
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    text-align: center;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+}
+
+.title-line {
+    display: block;
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.title-highlight {
+    display: block;
+    font-size: 3.5rem;
+    background: var(--gradient-princess);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.5)); }
+    50% { filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.8)); }
+}
+
+.title-name {
+    display: block;
+    font-size: 4rem;
+    color: var(--disney-golden-yellow);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.trip-dates {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.date-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.date-item i {
+    font-size: 1.3rem;
+    color: var(--disney-golden-yellow);
+}
+
+/* Countdown Timer */
+.countdown-container {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.countdown-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--disney-golden-yellow);
+    font-weight: 600;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+}
+
+.time-unit {
+    background: var(--gradient-castle);
+    padding: 1.5rem 1rem;
+    border-radius: 15px;
+    min-width: 80px;
+    text-align: center;
+    box-shadow: var(--shadow-medium);
+    animation: countdownPulse 2s ease-in-out infinite;
+}
+
+@keyframes countdownPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.time-value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+}
+
+.time-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.time-separator {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--disney-golden-yellow);
+    animation: separatorBlink 1s ease-in-out infinite;
+}
+
+@keyframes separatorBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--animation-normal);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+.cta-button.primary {
+    background: var(--gradient-princess);
+    color: var(--disney-royal-blue);
+}
+
+.cta-button.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Hero Visual */
+.hero-visual {
+    display: flex;
+    justify-content: center;
+    animation: heroVisualSlide 1s ease-out 0.5s both;
+}
+
+@keyframes heroVisualSlide {
+    0% { opacity: 0; transform: translateX(50px) scale(0.9); }
+    100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.birthday-girl-frame {
+    position: relative;
+    text-align: center;
+}
+
+.frame-decoration {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    pointer-events: none;
+}
+
+.sparkle-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 3px solid var(--disney-golden-yellow);
+    border-radius: 50%;
+    animation: sparkleRotate 10s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes sparkleRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.magic-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.magic-particles::before,
+.magic-particles::after {
+    content: '✨';
+    position: absolute;
+    font-size: 1.5rem;
+    animation: particleFloat 3s ease-in-out infinite;
+}
+
+.magic-particles::before {
+    top: 10%;
+    right: 10%;
+    animation-delay: 0s;
+}
+
+.magic-particles::after {
+    bottom: 10%;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+@keyframes particleFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+    50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+}
+
+.birthday-photo {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--gradient-princess);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-princess);
+    margin-bottom: 2rem;
+}
+
+.birthday-photo::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(transparent, rgba(255,255,255,0.3), transparent 30%);
+    animation: photoGlow 4s linear infinite;
+}
+
+@keyframes photoGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.photo-placeholder {
+    text-align: center;
+    z-index: 2;
+    color: var(--disney-royal-blue);
+}
+
+.photo-placeholder i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: heartBeat 2s ease-in-out infinite;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    75% { transform: scale(1.05); }
+}
+
+.photo-placeholder p {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+.age-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--gradient-royal);
+    color: var(--disney-royal-blue);
+    padding: 1rem;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    box-shadow: var(--shadow-medium);
+    animation: badgeBounce 2s ease-in-out infinite;
+}
+
+@keyframes badgeBounce {
+    0%, 100% { transform: scale(1) rotate(-5deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+}
+
+.age-number {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.age-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    animation: scrollBounce 2s ease-in-out infinite;
+}
+
+@keyframes scrollBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(10px); }
+}
+
+.scroll-mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    position: relative;
+    margin: 0 auto 10px;
+}
+
+.scroll-wheel {
+    width: 4px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 2px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: wheelMove 2s ease-in-out infinite;
+}
+
+@keyframes wheelMove {
+    0%, 100% { top: 8px; opacity: 1; }
+    50% { top: 20px; opacity: 0.3; }
+}

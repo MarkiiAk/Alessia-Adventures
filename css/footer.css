@@ -1,0 +1,77 @@
+/* ===========================
+   FOOTER
+   =========================== */
+.main-footer {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.95), rgba(30, 58, 138, 1));
+    border-top: 2px solid var(--disney-golden-yellow);
+    padding: 3rem 0 1rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--disney-golden-yellow);
+    font-weight: 600;
+}
+
+.footer-logo i {
+    font-size: 1.8rem;
+    animation: logoGlow 3s ease-in-out infinite;
+}
+
+.footer-info {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-info p {
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-btn {
+    width: 45px;
+    height: 45px;
+    background: var(--gradient-princess);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all var(--animation-normal);
+    box-shadow: var(--shadow-soft);
+}
+
+.social-btn:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: var(--shadow-medium);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
