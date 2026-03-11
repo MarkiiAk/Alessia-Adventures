@@ -9,5 +9,6 @@
       "source": "/",
       "destination": "/invites/turns3/turns3.html"
     }
-  ]
+  ],
+  "outputDirectory": "."
 }
