@@ -1,9 +1,15 @@
 {
-  "dependencies": {
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1"
+  "name": "alessia-adventures",
+  "version": "1.0.0",
+  "description": "Alessia's Birthday Adventure",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Build completed'"
   },
-  "devDependencies": {
-    "webpack-cli": "^6.0.1"
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
