@@ -1,9 +1,4 @@
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
   // Configurar CORS
@@ -20,8 +15,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const client = await pool.connect();
-  
   try {
     const { guestName, email, phone, status = 1 } = req.body;
 
@@ -31,66 +24,56 @@ export default async function handler(req, res) {
 
     console.log('🎯 RSVP attempt:', { guestName, email, phone, status });
 
-    // Comenzar transacción
-    await client.query('BEGIN');
+    // Conectar usando Neon serverless driver
+    const sql = neon(process.env.DATABASE_URL);
 
     // Buscar o crear evento de Alessia
-    let eventResult = await client.query(
-      `SELECT id, name FROM events WHERE LOWER(name) LIKE LOWER($1) LIMIT 1`,
-      ['%alessia%']
-    );
+    let eventResult = await sql`
+      SELECT id, name FROM events WHERE LOWER(name) LIKE LOWER(${'%alessia%'}) LIMIT 1
+    `;
 
     let eventId;
-    if (eventResult.rows.length === 0) {
+    if (eventResult.length === 0) {
       // Crear evento si no existe
-      const newEventResult = await client.query(
-        `INSERT INTO events (name, description, event_date, created_at) 
-         VALUES ($1, $2, $3, NOW()) RETURNING id, name`,
-        [
-          'Cumpleaños #3 de Alessia - Aventura Disney',
-          'Celebración del tercer cumpleaños de Alessia en Disneyland',
-          '2026-08-31T07:25:00'
-        ]
-      );
-      eventId = newEventResult.rows[0].id;
+      const newEventResult = await sql`
+        INSERT INTO events (name, description, event_date, created_at) 
+        VALUES (${`Cumpleaños #3 de Alessia - Aventura Disney`}, ${`Celebración del tercer cumpleaños de Alessia en Disneyland`}, ${'2026-08-31T07:25:00'}, NOW()) 
+        RETURNING id, name
+      `;
+      eventId = newEventResult[0].id;
       console.log('✅ Event created:', eventId);
     } else {
-      eventId = eventResult.rows[0].id;
+      eventId = eventResult[0].id;
     }
 
     // Buscar o crear invitado
-    let guestResult = await client.query(
-      `SELECT id, name FROM guests WHERE LOWER(name) = LOWER($1) LIMIT 1`,
-      [guestName]
-    );
+    let guestResult = await sql`
+      SELECT id, name FROM guests WHERE LOWER(name) = LOWER(${guestName}) LIMIT 1
+    `;
 
     let guestId;
-    if (guestResult.rows.length === 0) {
-      const newGuestResult = await client.query(
-        `INSERT INTO guests (name, email, phone, created_at) 
-         VALUES ($1, $2, $3, NOW()) RETURNING id, name`,
-        [guestName, email || null, phone || null]
-      );
-      guestId = newGuestResult.rows[0].id;
+    if (guestResult.length === 0) {
+      const newGuestResult = await sql`
+        INSERT INTO guests (name, email, phone, created_at) 
+        VALUES (${guestName}, ${email || null}, ${phone || null}, NOW()) 
+        RETURNING id, name
+      `;
+      guestId = newGuestResult[0].id;
       console.log('✅ Guest created:', guestId);
     } else {
-      guestId = guestResult.rows[0].id;
+      guestId = guestResult[0].id;
     }
 
     // Crear o actualizar invitación
-    const invitationResult = await client.query(
-      `INSERT INTO invitations (guest_id, event_id, status, responded_at, created_at)
-       VALUES ($1, $2, $3, NOW(), NOW())
-       ON CONFLICT (guest_id, event_id) 
-       DO UPDATE SET status = EXCLUDED.status, responded_at = NOW()
-       RETURNING id, status, responded_at`,
-      [guestId, eventId, status]
-    );
+    const invitationResult = await sql`
+      INSERT INTO invitations (guest_id, event_id, status, responded_at, created_at)
+      VALUES (${guestId}, ${eventId}, ${status}, NOW(), NOW())
+      ON CONFLICT (guest_id, event_id) 
+      DO UPDATE SET status = EXCLUDED.status, responded_at = NOW()
+      RETURNING id, status, responded_at
+    `;
 
-    // Confirmar transacción
-    await client.query('COMMIT');
-
-    const invitation = invitationResult.rows[0];
+    const invitation = invitationResult[0];
     console.log('✅ RSVP successful:', invitation.id);
 
     const statusText = status === 1 ? 'confirmado' : status === 2 ? 'declinado' : 'pendiente';
@@ -108,7 +91,6 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    await client.query('ROLLBACK');
     console.error('❌ Database error:', error);
     
     res.status(500).json({
@@ -117,7 +99,5 @@ export default async function handler(req, res) {
       details: error.message,
       timestamp: new Date().toISOString()
     });
-  } finally {
-    client.release();
   }
 }
