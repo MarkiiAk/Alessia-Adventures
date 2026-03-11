@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && prisma generate",
     "build:dev": "webpack --mode development",
     "start": "node server.js",
     "dev": "npm run build:dev && npm start",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
+    "vercel-build": "webpack && prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

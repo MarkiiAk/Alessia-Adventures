@@ -27,22 +27,31 @@ Una invitación digital interactiva para el cumpleaños #3 de Alessia con funcio
 - package-lock.json (se regenera automáticamente)
 ```
 
-### 2. Setup en Producción (Vercel/Netlify):
+### 2. Setup en Vercel (más fácil):
 
 ```bash
-# 1. Instalar dependencias
-npm install
+# Vercel hace automáticamente:
+✅ npm install (detecta package.json)
+✅ npm run build (si existe script)
+✅ Deploy del servidor
 
-# 2. Configurar variables de entorno
-# Crear .env.local con:
-DATABASE_URL="postgresql://username:password@ep-xxx.neon.tech/neondb"
+# SOLO necesitas hacer manualmente:
+🔧 Configurar variables de entorno en Vercel Dashboard:
+   Settings > Environment Variables > Add estas variables:
 
-# 3. Generar bundle React
-npm run build:dev
-
-# 4. Iniciar servidor
-npm start
+   DATABASE_URL=postgresql://neondb_owner:npg_NjAkKl2Dy3gc@ep-frosty-credit-ahm8kov6-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+   
+   POSTGRES_URL=postgresql://neondb_owner:npg_NjAkKl2Dy3gc@ep-frosty-credit-ahm8kov6-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+   
+   POSTGRES_PRISMA_URL=postgresql://neondb_owner:npg_NjAkKl2Dy3gc@ep-frosty-credit-ahm8kov6-pooler.c-3.us-east-1.aws.neon.tech/neondb?connect_timeout=15&sslmode=require
 ```
+
+### 3. Deploy Process en Vercel:
+1. **Git push** → Vercel detecta cambios
+2. **Auto-install** → `npm install` (automático)
+3. **Auto-build** → Ejecuta build scripts (automático)  
+4. **Variables** → Solo configurar DATABASE_URL en dashboard (manual)
+5. **Deploy** → ¡Listo! (automático)
 
 ### 3. Variables de entorno requeridas:
 - `DATABASE_URL`: Connection string de Neon PostgreSQL
