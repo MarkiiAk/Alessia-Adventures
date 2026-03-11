@@ -3,15 +3,73 @@ import { createRoot } from 'react-dom/client';
 
 // Componente React para el botón RSVP
 function RSVPButtonReact() {
-  const handleClick = (e) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [hasResponded, setHasResponded] = React.useState(false);
+
+  const handleClick = async (e) => {
     e.preventDefault();
     
-    // Crear un mensaje más bonito usando el sistema de notificaciones existente
+    if (isLoading || hasResponded) return;
+    
+    setIsLoading(true);
+    
+    // Mostrar estado de carga
     if (typeof showNotification === 'function') {
-      showNotification('¡Funcionó con React! 🚀✨', 'success');
-    } else {
-      // Fallback si no existe la función
-      alert('¡Funcionó con React! 🚀');
+      showNotification('🔄 Conectando con base de datos...', 'info');
+    }
+    
+    try {
+      // Datos para enviar a la API
+      const rsvpData = {
+        guestName: 'Test User', // Por ahora un usuario de prueba
+        email: 'test@adventures.com',
+        phone: null,
+        status: 1 // 1 = confirmado
+      };
+
+      console.log('🎯 Enviando RSVP a la BD:', rsvpData);
+      
+      // Llamada a la API
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(rsvpData)
+      });
+      
+      const result = await response.json();
+      console.log('📊 Respuesta de la BD:', result);
+      
+      if (response.ok && result.success) {
+        // Éxito - RSVP guardado en BD
+        setHasResponded(true);
+        if (typeof showNotification === 'function') {
+          showNotification(
+            `✅ ${result.message}`, 
+            'success'
+          );
+        } else {
+          alert(`✅ ${result.message}`);
+        }
+      } else {
+        // Error del servidor
+        throw new Error(result.error || 'Error desconocido');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error conectando a BD:', error);
+      
+      if (typeof showNotification === 'function') {
+        showNotification(
+          `❌ Error de conexión: ${error.message}`, 
+          'error'
+        );
+      } else {
+        alert(`❌ Error de conexión: ${error.message}`);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 

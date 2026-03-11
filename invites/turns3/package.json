@@ -6,12 +6,21 @@
   "scripts": {
     "build": "webpack",
     "build:dev": "webpack --mode development",
+    "start": "node server.js",
+    "dev": "npm run build:dev && npm start",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^7.4.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pg": "^8.20.0",
+    "prisma": "^7.4.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
