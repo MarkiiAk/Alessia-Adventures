@@ -1,0 +1,18 @@
+{
+  "functions": {
+    "api/rsvp.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/invites/turns3/turns3.html"
+    },
+    {
+      "source": "/invites/turns3/(.*)",
+      "destination": "/invites/turns3/$1"
+    }
+  ],
+  "outputDirectory": "invites/turns3"
+}
