@@ -33,6 +33,7 @@
 | `name` | VARCHAR(255) | NOT NULL | Nombre del evento |
 | `description` | TEXT | NULLABLE | Descripción detallada |
 | `event_date` | TIMESTAMP(6) | NULLABLE | Fecha y hora del evento |
+| `invitation_route` | VARCHAR(255) | NULLABLE | Ruta a la invitación HTML |
 | `created_at` | TIMESTAMP(6) | DEFAULT now() | Fecha de creación |
 
 **Relaciones:**

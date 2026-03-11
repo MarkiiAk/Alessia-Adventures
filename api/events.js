@@ -21,9 +21,9 @@ export default async function handler(req, res) {
     // Conectar usando Neon serverless driver
     const sql = neon(process.env.DATABASE_URL);
 
-    // Obtener todos los eventos - solo el nombre
+    // Obtener todos los eventos - nombre y ruta de invitación
     const events = await sql`
-      SELECT name FROM events ORDER BY created_at DESC
+      SELECT name, invitation_route FROM events ORDER BY created_at DESC
     `;
 
     console.log('✅ Events retrieved:', events.length);

@@ -4,52 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventos Disponibles - Alessia Adventures</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        .loading {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-        }
-        .error {
-            color: red;
-            text-align: center;
-            padding: 20px;
-            background-color: #ffe6e6;
-            border: 1px solid #ff9999;
-            border-radius: 4px;
-        }
-        .no-events {
-            text-align: center;
-            color: #666;
-            padding: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="src/styles/main.css">
 </head>
 <body>
     <h1>🎉 Eventos Disponibles</h1>
@@ -62,62 +17,13 @@
         <thead>
             <tr>
                 <th>Nombre del Evento</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody id="events-tbody">
         </tbody>
     </table>
 
-    <script>
-        async function loadEvents() {
-            try {
-                console.log('🎯 Fetching events...');
-                
-                const response = await fetch('/api/events');
-                const data = await response.json();
-                
-                console.log('✅ API response:', data);
-                
-                // Ocultar loading
-                document.getElementById('loading').style.display = 'none';
-                
-                if (!data.success) {
-                    throw new Error(data.error || 'Error desconocido');
-                }
-                
-                if (data.events.length === 0) {
-                    document.getElementById('no-events').style.display = 'block';
-                    return;
-                }
-                
-                // Mostrar tabla y llenar con datos
-                const table = document.getElementById('events-table');
-                const tbody = document.getElementById('events-tbody');
-                
-                tbody.innerHTML = '';
-                
-                data.events.forEach(event => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td>${event.name}</td>`;
-                    tbody.appendChild(row);
-                });
-                
-                table.style.display = 'table';
-                
-                console.log('✅ Events displayed:', data.events.length);
-                
-            } catch (error) {
-                console.error('❌ Error loading events:', error);
-                
-                document.getElementById('loading').style.display = 'none';
-                const errorDiv = document.getElementById('error');
-                errorDiv.textContent = `Error: ${error.message}`;
-                errorDiv.style.display = 'block';
-            }
-        }
-        
-        // Cargar eventos cuando la página esté lista
-        document.addEventListener('DOMContentLoaded', loadEvents);
-    </script>
+    <script src="src/scripts/events.js"></script>
 </body>
 </html>
