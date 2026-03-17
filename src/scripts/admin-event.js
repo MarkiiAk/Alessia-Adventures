@@ -131,12 +131,12 @@ function fillGuestsTable(guests) {
         }
         
         // Crear celda de avatar
-        const avatarSrc = guest.avatar ? `/uploads/${guest.avatar}` : '/src/default-avatar.png';
+        const avatarSrc = guest.avatar ? `/uploads/${guest.avatar}` : '/src/default-avatar.svg';
         const displayName = guest.nickname ? `${guest.name} (${guest.nickname})` : guest.name;
         
         row.innerHTML = `
             <td class="avatar-cell">
-                <img src="${avatarSrc}" alt="Avatar de ${guest.name}" class="guest-avatar" onerror="this.src='/src/default-avatar.png'">
+                <img src="${avatarSrc}" alt="Avatar de ${guest.name}" class="guest-avatar" onerror="this.src='/src/default-avatar.svg'">
             </td>
             <td>${displayName}</td>
             <td>${guest.email || '-'}</td>
