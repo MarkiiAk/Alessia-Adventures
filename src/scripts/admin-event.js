@@ -137,10 +137,10 @@ function fillGuestsTable(guests) {
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>
                             <button class="generate-invitation-btn" onclick="generateInvitation('${guest.name}', '${guest.email}')" title="Generar invitación personalizada">
-                                <i class="fas fa-link"></i>
+                                <i class="fas fa-link">Generar Invitacion</i>
                             </button>
-                            <button class="delete-btn" onclick="deleteGuest(${guest.id})" title="Eliminar invitado">
-                                <i class="fas fa-trash"></i>
+                            <button class="delete-btn" onclick="deleteGuest(${guest.guest_id})" title="Eliminar invitado">
+                                <i class="fas fa-trash">Eliminar</i>
                             </button>
                         </td>
         `;
@@ -302,7 +302,7 @@ async function generateInvitation(guestName, guestEmail) {
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         button.disabled = true;
         
-        const response = await fetch('/api/admin-events', {
+        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
