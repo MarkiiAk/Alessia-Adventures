@@ -46,6 +46,13 @@ class GuestsManager {
             if (data.success && data.data && data.data.guests) {
                 this.guests = data.data.guests;
                 
+                console.log('📋 Invitados con prioridad:', this.guests.map(g => ({
+                    name: g.name, 
+                    priority: g.priority,
+                    status: g.status,
+                    avatar: g.avatar
+                })));
+                
                 // Identificar al invitado actual si hay invitación
                 if (this.currentInvitationId) {
                     this.currentGuest = this.guests.find(guest => guest.id === this.currentInvitationId);
@@ -125,9 +132,9 @@ class GuestsManager {
         card.style.transform = 'translateY(30px)';
         card.style.transition = `all 800ms ease ${(index + 1) * 100}ms`;
         
-        // Avatar: usar foto si existe, o icono por defecto
+        // Avatar: usar foto real de Dropbox si existe, con fallback
         const avatarContent = guest.avatar && guest.avatar !== '/src/default-avatar.png' 
-            ? `<img src="${guest.avatar}" alt="${guest.name}" class="avatar-image">`
+            ? `<img src="${guest.avatar}" alt="${guest.name}" class="avatar-image" onerror="this.src='/src/default-avatar.png'">`
             : `<i class="fas fa-user"></i>`;
         
         card.innerHTML = `
