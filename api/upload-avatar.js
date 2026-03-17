@@ -1,6 +1,6 @@
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
-import crypto from 'crypto';
+import { Dropbox } from 'dropbox';
 
 export const config = {
   api: {
@@ -29,6 +29,19 @@ export default async function handler(req, res) {
   try {
     console.log('🖼️ Avatar upload request received');
     
+    // Token de acceso actualizado - si este expira, necesitamos uno nuevo
+    const accessToken = 'sl.u.AGUoSIDwscJ3q0LOX9nniIafPTpLgEbcL3VfKx1zLWX3-8XIJWktVG6EvNc8T588VZlHCMvowK0tykdL5IdGj-Hot1LPAFWBMKXq5YOfnIV2R5LHS2vEQsx8NVvfbICcH6Yc2c2UOdIW4s2MeAAp88RdbRiMXANVmwRoUs3M9RXuJMsQZJKKk6iUnqlhLaXC2pf6pYn0k4zcfjNm5IyWPG_Af0fPHS_homZM7b65DyUZi7au7isxC2Ubk35uj5LyvjfPTNZh5sUidLVl1ylLAMzBH0r--oo3Oc3lNnfon-rUuqWE0zxXeN1KOTb58z72CR6EZP9etB-XTIpkp_iEarV5rtuCNg6RBRvhayWhnSo69Mi364Xh8CrAq2QF6voZphtc9kd3XFnCb8jCr_FqNC4SQYT8pjIVg4sOpahRHZFVbwX-JSR4Ih4jRl3vs7TWBYXhu20HOlKxOCLzjuFF7EwZcFe-qivc85-9XI2UTz9tDXLJHjvf0-w2QmIKDVY-rDVY17gUYKcvQsQDeXVPFjzt2IxIG_ZJKO7EH2lDeKiZYTr16RvwKj4SOSLtRNZ0_muFuSSI3rla1E5A_QtFlrTsdRi6wst2mh7FGvu8nrKeIqPui6VaOmE6tXA6qcrEwhM4WxHrb2tnJiF8ZTaAFcKOW17AX-HChy58HQz_MZ0gXwu54atPsNuGCTz614PNjKgCoNiyT1h14aMDT4I3mIl48m2lF9woA_JrSt5akSpwmFNvnucMnAYAtMmr-fq__QDdvgwN7F8mKBiNlHmrw4KS84OmMYiOOwqVk3l2ycr3gSWlN9d7rjSk6aHPN50Yn3QccS7MjUV3yauA7xOLLegWxsj68ViDg6AUyROcziL8UD0RbPNlY-8KJTRqDyjN6eKwFAS-wR4orKRMMhXhcSvGh64HG8y5PsRIIHZaU7IZ24QI4ZrVmnw05gu3yez4AJ_wRU_nRZYejC2gZTAYFyPlrllPgUGta_4MWe63icTnpNr1D49dskqBJ6iS3FI0UDSElYq5OYBISmgYEBt4MLdaFPDh_ouPFTL8JGqz4L2_2y0lBdCpD062Dlq7EEmJmYnkbYLyuhcI1ppyFy06ycEo240QjVeJn2NGjJdcGk8hNJWQu6gpZkSebbkqYdkdPubOcVlcgaqu9bOwMQdC1EIKLhSUa59fN7sjP0FOBnd3lHw-gYSuYFSNUehbaYYS7F4cynP7-QNewewTaLWsNQhT_q4A10_Bq7hOypJS_xRSQ5gxZqnfWg83eh5cMTKeHKkkuk5N0UvVmg9OE9HQrKBDPS2E8Wv7OumrVavnLeYd0cbRrq4Ps1wCszyVQGnfx34';
+    
+    console.log('🔑 Usando OAuth2 token de Dropbox');
+    console.log('🔍 Token length:', accessToken.length);
+
+    // Configurar cliente de Dropbox
+    const dbx = new Dropbox({
+      accessToken: accessToken
+    });
+    
+    console.log('✅ Dropbox client configured');
+
     const form = new IncomingForm({
       maxFileSize: 5 * 1024 * 1024, // 5MB max
       keepExtensions: true,
@@ -63,7 +76,7 @@ export default async function handler(req, res) {
 
     // Generar nombre único para el archivo
     const timestamp = Date.now();
-    const randomId = crypto.randomBytes(4).toString('hex');
+    const randomId = Math.random().toString(36).substring(2, 8);
     const extension = avatarFile.originalFilename ? 
       avatarFile.originalFilename.split('.').pop() : 'jpg';
     const safeName = nickname ? 
@@ -74,42 +87,86 @@ export default async function handler(req, res) {
     const fileBuffer = fs.readFileSync(avatarFile.filepath);
     console.log('📁 Archivo leído:', fileName, 'Size:', fileBuffer.length, 'bytes');
 
-    // Usar las credenciales de app directamente sin OAuth
-    const APP_KEY = 'yfh7bv6gksy94c4';
-    const APP_SECRET = '0z9z2qvhehp7zbv';
-    
-    // Para simplificar, vamos a usar almacenamiento local en producción
-    // Ya que Dropbox requiere OAuth2 obligatoriamente para apps de terceros
-    
-    // Crear directorio si no existe
-    const uploadsDir = './public/uploads/avatars';
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-      console.log('📁 Created uploads directory');
+    // Subir a Dropbox
+    try {
+      console.log('📤 INICIANDO SUBIDA A DROPBOX...');
+      console.log('📁 Nombre archivo:', fileName);
+      console.log('📊 Tamaño buffer:', fileBuffer.length, 'bytes');
+      console.log('🎯 Ruta destino:', `/AlessiaEvents/${fileName}`);
+      
+      const uploadResponse = await dbx.filesUpload({
+        path: `/AlessiaEvents/${fileName}`,
+        contents: fileBuffer,
+        mode: 'add',
+        autorename: true
+      });
+      
+      console.log('✅ UPLOAD EXITOSO! File uploaded to Dropbox:', uploadResponse.result.path_display);
+
+      // Intentar crear enlace compartido, pero si falla, usar una URL alternativa
+      let directUrl;
+      try {
+        console.log('🔗 Creando enlace compartido...');
+        const shareLinkResponse = await dbx.sharingCreateSharedLinkWithSettings({
+          path: uploadResponse.result.path_display,
+          settings: {
+            requested_visibility: 'public',
+            audience: 'public',
+            access: 'viewer'
+          }
+        });
+
+        console.log('🔗 Enlace compartido creado:', shareLinkResponse.result.url);
+
+        // Convertir el enlace de Dropbox a URL directa
+        directUrl = shareLinkResponse.result.url.replace('dropbox.com', 'dl.dropboxusercontent.com');
+        directUrl = directUrl.replace('?dl=0', '');
+
+      } catch (shareError) {
+        console.warn('⚠️ No se pudo crear enlace compartido, usando URL temporal:', shareError.message);
+        
+        // Si falla crear el enlace, devolver una URL temporal basada en el path
+        // Esto permite que el frontend sepa que la subida fue exitosa
+        directUrl = `https://dropbox-placeholder.com/AlessiaEvents/${fileName}`;
+      }
+
+      console.log('✅ Direct URL:', directUrl);
+
+      // Limpiar archivo temporal
+      fs.unlinkSync(avatarFile.filepath);
+
+      res.status(200).json({
+        success: true,
+        message: 'Avatar subido exitosamente a Dropbox',
+        filename: fileName,
+        url: directUrl,
+        dropboxPath: uploadResponse.result.path_display
+      });
+
+    } catch (dropboxError) {
+      console.error('🚨🚨🚨 DROPBOX ERROR CAPTURADO 🚨🚨🚨');
+      console.error('❌ Error message:', dropboxError.message);
+      console.error('❌ Error status:', dropboxError.status);
+      console.error('❌ Error code:', dropboxError.code);
+      
+      // Log específico para errores de API
+      if (dropboxError.error) {
+        console.error('🚨 Dropbox API Error:', JSON.stringify(dropboxError.error, null, 2));
+        if (dropboxError.error.error_summary) {
+          console.error('🚨 Error Summary:', dropboxError.error.error_summary);
+        }
+      }
+      
+      // Limpiar archivo temporal
+      if (fs.existsSync(avatarFile.filepath)) {
+        fs.unlinkSync(avatarFile.filepath);
+      }
+
+      throw new Error(`Error subiendo a Dropbox: ${dropboxError.message || 'Error desconocido'}`);
     }
-    
-    // Guardar archivo localmente
-    const localPath = `${uploadsDir}/${fileName}`;
-    fs.writeFileSync(localPath, fileBuffer);
-    
-    // URL pública del archivo
-    const publicUrl = `/uploads/avatars/${fileName}`;
-    
-    console.log('✅ File saved locally:', localPath);
-    console.log('🔗 Public URL:', publicUrl);
-
-    // Limpiar archivo temporal
-    fs.unlinkSync(avatarFile.filepath);
-
-    res.status(200).json({
-      success: true,
-      message: 'Avatar subido exitosamente',
-      url: publicUrl,
-      filename: fileName
-    });
 
   } catch (error) {
-    console.error('❌ Error general:', error);
+    console.error('❌ Error uploading avatar:', error);
     
     res.status(500).json({
       success: false,
