@@ -92,7 +92,7 @@ function updateStats(stats) {
     document.getElementById('pending-guests').textContent = stats.pending;
 }
 
-// Llenar tabla de invitados
+// Llenar tabla de invitados con funcionalidad de ordenamiento
 function fillGuestsTable(guests) {
     const tbody = document.getElementById('guests-tbody');
     const noGuests = document.getElementById('no-guests');
@@ -109,8 +109,11 @@ function fillGuestsTable(guests) {
     
     tbody.innerHTML = '';
     
-    guests.forEach(guest => {
+    guests.forEach((guest, index) => {
         const row = document.createElement('tr');
+        row.draggable = true;
+        row.dataset.guestId = guest.guest_id;
+        row.dataset.currentIndex = index;
         
         // Determinar clase de estado
         let statusText, statusClass;
@@ -132,11 +135,27 @@ function fillGuestsTable(guests) {
         
         // Crear celda de avatar
         const avatarSrc = guest.avatar && guest.avatar.startsWith('http') ? 
-            guest.avatar : // URL completa de Dropbox/externa
-            (guest.avatar ? guest.avatar : '/src/default-avatar.svg'); // URL local relativa o fallback
+            guest.avatar : 
+            (guest.avatar ? guest.avatar : '/src/default-avatar.svg');
         const displayName = guest.nickname ? `${guest.name} (${guest.nickname})` : guest.name;
         
+        // Botones de control de prioridad
+        const priorityControls = `
+            <div class="priority-controls">
+                <button class="priority-btn move-top" onclick="moveTo(${index}, 'top')" title="Mover al inicio" ${index === 0 ? 'disabled' : ''}>⬆⬆</button>
+                <button class="priority-btn move-up" onclick="moveTo(${index}, 'up')" title="Subir" ${index === 0 ? 'disabled' : ''}>⬆</button>
+                <button class="priority-btn move-down" onclick="moveTo(${index}, 'down')" title="Bajar" ${index === guests.length - 1 ? 'disabled' : ''}>⬇</button>
+                <button class="priority-btn move-bottom" onclick="moveTo(${index}, 'bottom')" title="Mover al final" ${index === guests.length - 1 ? 'disabled' : ''}>⬇⬇</button>
+            </div>
+        `;
+        
         row.innerHTML = `
+            <td class="priority-col">
+                <span class="priority-number">${guest.priority_order || (index + 1)}</span>
+            </td>
+            <td class="drag-col">
+                <span class="drag-handle">≡≡</span>
+            </td>
             <td class="avatar-cell">
                 <img src="${avatarSrc}" alt="Avatar de ${guest.name}" class="guest-avatar" onerror="this.src='/src/default-avatar.png'">
             </td>
@@ -144,18 +163,22 @@ function fillGuestsTable(guests) {
             <td>${guest.email || '-'}</td>
             <td>${guest.phone || '-'}</td>
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+            <td>${priorityControls}</td>
             <td>
                 <button class="generate-invitation-btn" onclick="generateInvitation('${guest.name}', '${guest.email}')" title="Generar invitación personalizada">
-                    <i class="fas fa-link">Generar Invitacion</i>
+                    Generar Invitación
                 </button>
                 <button class="delete-btn" onclick="deleteGuest(${guest.guest_id})" title="Eliminar invitado">
-                    <i class="fas fa-trash">Eliminar</i>
+                    Eliminar
                 </button>
             </td>
         `;
         
         tbody.appendChild(row);
     });
+    
+    // Configurar drag and drop después de llenar la tabla
+    setupDragAndDrop();
 }
 
 // Configurar event listeners
@@ -443,6 +466,175 @@ function showSuccessMessage(message) {
             document.body.removeChild(messageDiv);
         }, 300);
     }, 3000);
+}
+
+// Mover invitado manualmente (botones de control)
+async function moveTo(fromIndex, direction) {
+    try {
+        if (!eventData || !eventData.guests) return;
+        
+        const guests = [...eventData.guests];
+        const guest = guests[fromIndex];
+        
+        let newIndex;
+        
+        switch (direction) {
+            case 'top':
+                newIndex = 0;
+                break;
+            case 'up':
+                newIndex = Math.max(0, fromIndex - 1);
+                break;
+            case 'down':
+                newIndex = Math.min(guests.length - 1, fromIndex + 1);
+                break;
+            case 'bottom':
+                newIndex = guests.length - 1;
+                break;
+            default:
+                return;
+        }
+        
+        // Si no hay cambio, no hacer nada
+        if (newIndex === fromIndex) return;
+        
+        // Reordenar array localmente
+        guests.splice(fromIndex, 1);
+        guests.splice(newIndex, 0, guest);
+        
+        // Enviar nuevo orden al servidor
+        await saveNewOrder(guests);
+        
+    } catch (error) {
+        console.error('❌ Error moving guest:', error);
+        alert(`Error moviendo invitado: ${error.message}`);
+    }
+}
+
+// Configurar drag and drop
+function setupDragAndDrop() {
+    const tbody = document.getElementById('guests-tbody');
+    if (!tbody) return;
+    
+    let draggedElement = null;
+    let draggedIndex = null;
+    
+    // Event listeners para cada fila
+    const rows = tbody.querySelectorAll('tr');
+    
+    rows.forEach((row, index) => {
+        // Drag start
+        row.addEventListener('dragstart', (e) => {
+            draggedElement = row;
+            draggedIndex = index;
+            row.classList.add('dragging');
+            
+            // Configurar dataTransfer
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', row.outerHTML);
+        });
+        
+        // Drag end
+        row.addEventListener('dragend', (e) => {
+            row.classList.remove('dragging');
+            
+            // Remover todas las clases de drag-over
+            rows.forEach(r => r.classList.remove('drag-over'));
+        });
+        
+        // Drag over
+        row.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (draggedElement !== row) {
+                // Remover drag-over de otros elementos
+                rows.forEach(r => r.classList.remove('drag-over'));
+                row.classList.add('drag-over');
+            }
+        });
+        
+        // Drag enter
+        row.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+        });
+        
+        // Drag leave
+        row.addEventListener('dragleave', (e) => {
+            // Solo remover si realmente salimos del elemento
+            if (!row.contains(e.relatedTarget)) {
+                row.classList.remove('drag-over');
+            }
+        });
+        
+        // Drop
+        row.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            
+            if (draggedElement !== row) {
+                const currentIndex = draggedIndex;
+                const targetIndex = Array.from(tbody.children).indexOf(row);
+                
+                console.log('🎯 Dropping guest from', currentIndex, 'to', targetIndex);
+                
+                // Reordenar array
+                const guests = [...eventData.guests];
+                const movedGuest = guests.splice(currentIndex, 1)[0];
+                guests.splice(targetIndex, 0, movedGuest);
+                
+                // Enviar nuevo orden al servidor
+                await saveNewOrder(guests);
+            }
+            
+            // Limpiar clases
+            rows.forEach(r => r.classList.remove('drag-over'));
+        });
+    });
+}
+
+// Enviar nuevo orden al servidor
+async function saveNewOrder(reorderedGuests) {
+    try {
+        console.log('💾 Saving new guest order...');
+        
+        // Preparar datos para el API
+        const guestsData = reorderedGuests.map((guest, index) => ({
+            guest_id: guest.guest_id,
+            new_priority: index + 1
+        }));
+        
+        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'reorder_guests',
+                guests: guestsData
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Error reordenando invitados');
+        }
+        
+        console.log('✅ New order saved successfully');
+        
+        // Recargar datos para actualizar la vista
+        await loadEventData();
+        
+        // Mostrar mensaje de éxito temporal
+        showSuccessMessage('Orden de invitados actualizado exitosamente');
+        
+    } catch (error) {
+        console.error('❌ Error saving new order:', error);
+        alert(`Error guardando nuevo orden: ${error.message}`);
+        
+        // Recargar datos para restaurar el estado original
+        await loadEventData();
+    }
 }
 
 // Agregar estilos de animación

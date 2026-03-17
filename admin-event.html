@@ -104,20 +104,25 @@
                     <div id="no-guests" class="no-data" style="display: none;">
                         No hay invitados registrados para este evento.
                     </div>
-                    <table id="guests-table" style="display: none;">
-                        <thead>
-                            <tr>
-                                <th>Avatar</th>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Teléfono</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="guests-tbody">
-                        </tbody>
-                    </table>
+                    <div class="guests-table-container">
+                        <table id="guests-table" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th class="priority-col">#</th>
+                                    <th class="drag-col">≡≡</th>
+                                    <th>Avatar</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Estado</th>
+                                    <th>Controles</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="guests-tbody" class="sortable-list">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
         </div>

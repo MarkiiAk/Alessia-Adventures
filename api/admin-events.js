@@ -36,6 +36,10 @@ export default async function handler(req, res) {
         return await getEventData(sql, res, eventId);
       
       case 'PUT':
+        // Manejar reordenamiento de invitados
+        if (req.body.action === 'reorder_guests') {
+          return await reorderGuests(sql, res, eventId, req.body);
+        }
         return await updateEvent(sql, res, eventId, req.body);
       
       case 'POST':
@@ -90,7 +94,7 @@ async function getEventData(sql, res, eventId) {
       });
     }
 
-    // Obtener invitados del evento con información completa
+    // Obtener invitados del evento con información completa ordenados por prioridad
     const guests = await sql`
       SELECT 
         g.id as guest_id,
@@ -99,6 +103,7 @@ async function getEventData(sql, res, eventId) {
         g.avatar,
         g.email,
         g.phone,
+        g.priority_order,
         i.status,
         i.responded_at,
         i.created_at as invited_at
@@ -106,7 +111,7 @@ async function getEventData(sql, res, eventId) {
       INNER JOIN invitations i ON g.id = i.guest_id
       INNER JOIN events e ON i.event_id = e.id
       WHERE e.name = ${eventId}
-      ORDER BY g.name ASC
+      ORDER BY g.priority_order ASC, g.name ASC
     `;
 
     // Calcular estadísticas
@@ -247,10 +252,21 @@ async function addGuest(sql, res, eventId, data) {
       
       guestId = existingGuest.id;
     } else {
-      // Crear nuevo invitado
+      // Obtener el siguiente número de prioridad disponible para este evento
+      const maxPriority = await sql`
+        SELECT COALESCE(MAX(g.priority_order), 0) as max_priority
+        FROM guests g
+        INNER JOIN invitations i ON g.id = i.guest_id
+        INNER JOIN events e ON i.event_id = e.id
+        WHERE e.name = ${eventId}
+      `;
+      
+      const nextPriority = maxPriority[0].max_priority + 1;
+
+      // Crear nuevo invitado con prioridad al final
       const newGuest = await sql`
-        INSERT INTO guests (name, nickname, avatar, email, phone)
-        VALUES (${name.trim()}, ${nickname || null}, ${avatar || null}, ${email || null}, ${phone || null})
+        INSERT INTO guests (name, nickname, avatar, email, phone, priority_order)
+        VALUES (${name.trim()}, ${nickname || null}, ${avatar || null}, ${email || null}, ${phone || null}, ${nextPriority})
         RETURNING id
       `;
       guestId = newGuest[0].id;
@@ -532,6 +548,59 @@ async function confirmRSVPFromInvitation(sql, res, data, eventId) {
 
   } catch (error) {
     console.error('❌ Error confirming RSVP:', error);
+    throw error;
+  }
+}
+
+// PUT: Reordenar invitados del evento
+async function reorderGuests(sql, res, eventId, data) {
+  try {
+    console.log('🔄 Reordering guests for event:', eventId, data);
+    
+    const { guests } = data;
+    
+    if (!guests || !Array.isArray(guests)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Se requiere un array de invitados con nuevo orden'
+      });
+    }
+
+    // Obtener el ID del evento
+    const event = await sql`
+      SELECT id FROM events WHERE name = ${eventId}
+    `;
+    
+    if (event.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evento no encontrado'
+      });
+    }
+
+    // Actualizar priority_order para cada invitado
+    const updatePromises = guests.map((guest, index) => {
+      const newPriority = index + 1; // priority_order starts from 1
+      return sql`
+        UPDATE guests 
+        SET priority_order = ${newPriority}
+        WHERE id = ${guest.guest_id}
+      `;
+    });
+
+    // Ejecutar todas las actualizaciones
+    await Promise.all(updatePromises);
+
+    console.log('✅ Guests reordered successfully');
+
+    res.status(200).json({
+      success: true,
+      message: 'Orden de invitados actualizado exitosamente',
+      updated_guests: guests.length
+    });
+
+  } catch (error) {
+    console.error('❌ Error reordering guests:', error);
     throw error;
   }
 }
