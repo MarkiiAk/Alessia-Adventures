@@ -200,11 +200,26 @@ class GuestsManager {
 
 // Inicializar automáticamente cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎯 DOM LOADED - Inicializando GuestsManager...');
     // Esperar un poco para que otros scripts se inicialicen
     setTimeout(() => {
+        console.log('🚀 CREANDO GUESTS MANAGER...');
         window.guestsManager = new GuestsManager();
     }, 500);
 });
+
+// También intentar inicializar si window ya está cargado
+if (document.readyState === 'loading') {
+    console.log('📄 Document still loading...');
+} else {
+    console.log('📄 Document already loaded, initializing immediately...');
+    setTimeout(() => {
+        console.log('🚀 BACKUP INIT - CREANDO GUESTS MANAGER...');
+        if (!window.guestsManager) {
+            window.guestsManager = new GuestsManager();
+        }
+    }, 100);
+}
 
 // Exportar para debugging
 if (typeof module !== 'undefined' && module.exports) {

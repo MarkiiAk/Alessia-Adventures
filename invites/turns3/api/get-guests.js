@@ -35,55 +35,59 @@ module.exports = async (req, res) => {
 
         console.log('Obteniendo invitados para evento:', eventId);
 
-        // Obtener invitados ordenados: confirmados primero, luego pendientes, después declinados
-        const guests = await prisma.invitation.findMany({
+        // Obtener invitados con datos completos de Guest e Invitation
+        const invitations = await prisma.invitation.findMany({
             where: {
                 eventId: eventId
             },
-            select: {
-                id: true,
-                guestName: true,
-                email: true,
-                phone: true,
-                rsvpStatus: true,
-                avatarUrl: true,
-                role: true,
-                createdAt: true
+            include: {
+                guest: true
             },
             orderBy: [
-                // Primero por estado: CONFIRMED, PENDING, DECLINED
+                // Primero por estado: 1=CONFIRMED, 2=PENDING, 3=DECLINED
                 {
-                    rsvpStatus: 'asc'
+                    status: 'asc'
                 },
                 // Luego por nombre alfabético
                 {
-                    guestName: 'asc'
+                    guest: {
+                        name: 'asc'
+                    }
                 }
             ]
         });
 
-        // Contar estados
+        // Contar estados (1=CONFIRMED, 2=PENDING, 3=DECLINED)
         const statusCounts = {
-            confirmed: guests.filter(g => g.rsvpStatus === 'CONFIRMED').length,
-            pending: guests.filter(g => g.rsvpStatus === 'PENDING').length,
-            declined: guests.filter(g => g.rsvpStatus === 'DECLINED').length,
-            total: guests.length
+            confirmed: invitations.filter(i => i.status === 1).length,
+            pending: invitations.filter(i => i.status === 2).length,
+            declined: invitations.filter(i => i.status === 3).length,
+            total: invitations.length
         };
 
-        console.log('Invitados encontrados:', guests.length);
+        console.log('Invitaciones encontradas:', invitations.length);
         console.log('Estados:', statusCounts);
 
         // Formatear respuesta con datos completos
-        const formattedGuests = guests.map(guest => ({
-            id: guest.id,
-            name: guest.guestName,
-            email: guest.email,
-            phone: guest.phone || '',
-            status: guest.rsvpStatus,
-            avatar: guest.avatarUrl || '/src/default-avatar.png',
-            role: guest.role || 'Aventurero Mágico',
-            createdAt: guest.createdAt.toISOString()
-        }));
+        const formattedGuests = invitations.map(invitation => {
+            // Mapear status numérico a texto
+            let status = 'PENDING';
+            if (invitation.status === 1) status = 'CONFIRMED';
+            else if (invitation.status === 3) status = 'DECLINED';
+            
+            return {
+                id: invitation.id,
+                name: invitation.guest.name,
+                email: invitation.guest.email,
+                phone: invitation.guest.phone || '',
+                status: status,
+                avatar: '/src/default-avatar.png', // Por ahora usar default
+                role: 'Aventurero Mágico', // Role por defecto
+                createdAt: invitation.createdAt.toISOString()
+            };
+        });
+
+        console.log('Invitados formateados:', formattedGuests);
 
         return res.status(200).json({
             success: true,
