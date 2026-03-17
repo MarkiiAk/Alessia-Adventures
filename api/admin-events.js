@@ -35,6 +35,10 @@ export default async function handler(req, res) {
         return await updateEvent(sql, res, eventId, req.body);
       
       case 'POST':
+        // Manejar generación de invitaciones
+        if (req.body.action === 'generate_invitation') {
+          return await generateInvitation(sql, res, req.body);
+        }
         return await addGuest(sql, res, eventId, req.body);
       
       case 'DELETE':
@@ -312,5 +316,79 @@ async function deleteGuest(sql, res, data) {
   } catch (error) {
     console.error('❌ Error deleting guest:', error);
     throw error;
+  }
+}
+
+// Generar invitación personalizada
+async function generateInvitation(sql, res, data) {
+  try {
+    const { eventName, guestName, guestEmail } = data;
+    
+    console.log('🔗 Generating invitation for guest:', guestName, 'in event:', eventName);
+    
+    // Buscar el evento
+    const event = await sql`
+      SELECT id FROM events WHERE name = ${eventName}
+    `;
+    
+    if (event.length === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Evento no encontrado' 
+      });
+    }
+    
+    const eventId = event[0].id;
+    
+    // Buscar el invitado
+    const guest = await sql`
+      SELECT id FROM guests WHERE name = ${guestName}
+    `;
+    
+    if (guest.length === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Invitado no encontrado' 
+      });
+    }
+    
+    const guestId = guest[0].id;
+    
+    // Verificar si ya existe una invitación para este invitado en este evento
+    const existingInvitations = await sql`
+      SELECT id FROM invitations 
+      WHERE guest_id = ${guestId} AND event_id = ${eventId}
+    `;
+    
+    let invitationId;
+    
+    if (existingInvitations.length > 0) {
+      // Ya existe una invitación, usar la existente
+      invitationId = existingInvitations[0].id;
+      console.log('✅ Using existing invitation:', invitationId);
+    } else {
+      // Esto no debería ocurrir si el invitado está en la lista, pero por seguridad
+      const newInvitation = await sql`
+        INSERT INTO invitations (guest_id, event_id, status, sent_at)
+        VALUES (${guestId}, ${eventId}, 3, NOW())
+        RETURNING id
+      `;
+      
+      invitationId = newInvitation[0].id;
+      console.log('✅ Created new invitation:', invitationId);
+    }
+    
+    return res.json({ 
+      success: true, 
+      invitationId: invitationId,
+      message: 'Invitación generada exitosamente' 
+    });
+    
+  } catch (error) {
+    console.error('❌ Error generating invitation:', error);
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Error interno del servidor generando invitación' 
+    });
   }
 }

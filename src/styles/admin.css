@@ -240,21 +240,44 @@ table tr:hover {
     color: white;
 }
 
+.generate-invitation-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.generate-invitation-btn:hover {
+    background-color: #218838;
+}
+
+.generate-invitation-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
 .delete-btn {
     background-color: #dc3545;
     color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
 }
 
-.action-btn:hover {
-    opacity: 0.8;
+.delete-btn:hover {
+    background-color: #c82333;
 }
 
-/* Responsive */
+/* Media queries para dispositivos móviles */
 @media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
     header {
         flex-direction: column;
         text-align: center;

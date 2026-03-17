@@ -135,11 +135,14 @@ function fillGuestsTable(guests) {
             <td>${guest.email || '-'}</td>
             <td>${guest.phone || '-'}</td>
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-            <td>
-                <button class="action-btn delete-btn" onclick="deleteGuest('${guest.guest_id}')">
-                    🗑️ Eliminar
-                </button>
-            </td>
+                        <td>
+                            <button class="generate-invitation-btn" onclick="generateInvitation('${guest.name}', '${guest.email}')" title="Generar invitación personalizada">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button class="delete-btn" onclick="deleteGuest(${guest.id})" title="Eliminar invitado">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
         `;
         
         tbody.appendChild(row);
@@ -285,6 +288,64 @@ async function deleteGuest(guestId) {
     } catch (error) {
         console.error('❌ Error deleting guest:', error);
         alert(`Error: ${error.message}`);
+    }
+}
+
+// Generar invitación personalizada
+async function generateInvitation(guestName, guestEmail) {
+    try {
+        console.log('🔗 Generating invitation for:', guestName);
+        
+        // Mostrar indicador de carga en el botón
+        const button = event.target.closest('button');
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        button.disabled = true;
+        
+        const response = await fetch('/api/admin-events', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'generate_invitation',
+                eventName: currentEventName,
+                guestName: guestName,
+                guestEmail: guestEmail
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Error generando invitación');
+        }
+        
+        // Crear URL personalizada
+        const baseUrl = window.location.origin;
+        const invitationUrl = `${baseUrl}/invites/turns3/turns3.html?invitation=${result.invitationId}`;
+        
+        // Copiar al portapapeles
+        await navigator.clipboard.writeText(invitationUrl);
+        
+        // Restaurar botón
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+        
+        showSuccessMessage(`✅ Invitación generada y copiada al portapapeles!\n${invitationUrl}`);
+        
+        console.log('✅ Invitation generated successfully:', invitationUrl);
+        
+    } catch (error) {
+        console.error('❌ Error generating invitation:', error);
+        
+        // Restaurar botón en caso de error
+        if (button) {
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        }
+        
+        alert(`Error generando invitación: ${error.message}`);
     }
 }
 

@@ -16,7 +16,190 @@ const CONFIG = {
         duration: 800
     },
     
+    // Variables para invitaciones personalizadas
+    invitationId: null,
+    guestData: null
 };
+
+// ===========================
+// GESTIÓN DE INVITACIONES PERSONALIZADAS
+// ===========================
+class InvitationManager {
+    constructor() {
+        this.invitationId = null;
+        this.guestData = null;
+        this.init();
+    }
+    
+    init() {
+        // Obtener parámetros de URL
+        const urlParams = new URLSearchParams(window.location.search);
+        this.invitationId = urlParams.get('invitation');
+        
+        if (this.invitationId) {
+            this.loadGuestData();
+        }
+    }
+    
+    async loadGuestData() {
+        try {
+            console.log('🎯 Loading personalized invitation:', this.invitationId);
+            
+            const response = await fetch(`/api/rsvp-direct?invitation=${this.invitationId}`);
+            const data = await response.json();
+            
+            if (data.success && data.guest) {
+                this.guestData = data.guest;
+                this.personalizeInvitation();
+                console.log('✅ Personalized invitation loaded for:', data.guest.name);
+            } else {
+                console.warn('⚠️ Could not load guest data for invitation:', this.invitationId);
+            }
+            
+        } catch (error) {
+            console.error('❌ Error loading guest data:', error);
+        }
+    }
+    
+    personalizeInvitation() {
+        if (!this.guestData) return;
+        
+        // Personalizar elementos de la invitación
+        this.updateTitle();
+        this.updateRSVPSection();
+        this.highlightGuestCard();
+    }
+    
+    updateTitle() {
+        // Personalizar títulos con el nombre del invitado
+        const heroTitle = Utils.$('.hero-title .title-line');
+        if (heroTitle && this.guestData.name) {
+            heroTitle.innerHTML = `¡Hola ${this.guestData.name}! Celebremos el`;
+        }
+        
+        // Actualizar meta tags para compartir
+        const titleMeta = Utils.$('meta[property="og:title"]');
+        if (titleMeta && this.guestData.name) {
+            titleMeta.content = `🏰¡${this.guestData.name}, únete a la aventura de Alessia! 🎂 Cumpleaños #3 en Disneyland ✨`;
+        }
+    }
+    
+    updateRSVPSection() {
+        // Personalizar texto del RSVP
+        const rsvpText = Utils.$('.rsvp-text');
+        if (rsvpText && this.guestData.name) {
+            rsvpText.innerHTML = `
+                <strong>¡Hola ${this.guestData.name}!</strong><br>
+                Alessia te invita especialmente a su aventura Disney.<br>
+                Confirma tu asistencia antes del <strong>15 de agosto</strong>
+            `;
+        }
+        
+        // Actualizar botón RSVP para manejar respuesta directa
+        const rsvpButton = Utils.$('.rsvp-button.confirm');
+        if (rsvpButton) {
+            rsvpButton.setAttribute('data-invitation-id', this.invitationId);
+            rsvpButton.onclick = () => this.handleRSVP();
+        }
+    }
+    
+    highlightGuestCard() {
+        // Destacar la tarjeta del invitado en la sección de aventureros
+        const guestCards = Utils.$$('.adventurer-card');
+        guestCards.forEach(card => {
+            const nameElement = card.querySelector('.adventurer-name');
+            if (nameElement && nameElement.textContent.trim() === this.guestData.name) {
+                Utils.addClass(card, 'highlighted-guest');
+                
+                // Agregar un indicador especial
+                const indicator = document.createElement('div');
+                indicator.className = 'invitation-indicator';
+                indicator.innerHTML = '👑 ¡Eres tú!';
+                card.appendChild(indicator);
+            }
+        });
+    }
+    
+    async handleRSVP() {
+        if (!this.invitationId) {
+            showNotification('❌ Error: No se pudo procesar la respuesta', 'error');
+            return;
+        }
+        
+        try {
+            const button = Utils.$('.rsvp-button.confirm');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirmando...';
+                button.disabled = true;
+                Utils.addClass(button, 'sending');
+            }
+            
+            const response = await fetch('/api/rsvp-direct', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    invitationId: this.invitationId,
+                    response: 'confirmed'
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                if (button) {
+                    button.innerHTML = '<i class="fas fa-check-circle"></i> ¡Confirmado!';
+                    Utils.removeClass(button, 'sending');
+                    Utils.addClass(button, 'confirmed');
+                }
+                
+                showNotification(`🎉 ¡Perfecto ${this.guestData.name}! Tu asistencia ha sido confirmada ✨`, 'success');
+                
+                // Actualizar estado visual
+                this.updateGuestCardStatus('confirmed');
+                
+            } else {
+                throw new Error(result.error || 'Error desconocido');
+            }
+            
+        } catch (error) {
+            console.error('❌ Error confirming RSVP:', error);
+            
+            const button = Utils.$('.rsvp-button.confirm');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-check-circle"></i> ¡Sí, me uno a la aventura!';
+                button.disabled = false;
+                Utils.removeClass(button, 'sending');
+            }
+            
+            showNotification(`❌ Error al confirmar: ${error.message}`, 'error');
+        }
+    }
+    
+    updateGuestCardStatus(status) {
+        const guestCards = Utils.$$('.adventurer-card');
+        guestCards.forEach(card => {
+            const nameElement = card.querySelector('.adventurer-name');
+            if (nameElement && nameElement.textContent.trim() === this.guestData.name) {
+                // Remover estados anteriores
+                Utils.removeClass(card, 'pending');
+                Utils.removeClass(card, 'declined');
+                
+                // Agregar nuevo estado
+                Utils.addClass(card, status);
+                
+                // Actualizar indicador
+                const indicator = card.querySelector('.pending-indicator, .confirmed-seal, .declined-seal');
+                if (indicator) {
+                    indicator.innerHTML = status === 'confirmed' ? 
+                        '<i class="fas fa-check-circle"></i><span>Confirmado</span>' :
+                        '<i class="fas fa-clock"></i><span>Pendiente</span>';
+                }
+            }
+        });
+    }
+}
 
 // ===========================
 // UTILIDADES
@@ -867,6 +1050,7 @@ class App {
             window.scrollAnimations = new ScrollAnimations();
             window.interactiveEffects = new InteractiveEffects();
             window.rsvpState = new RSVPState();
+            window.invitationManager = new InvitationManager();
             
             // Inicializar timers y animaciones
             window.countdownTimer.init();
