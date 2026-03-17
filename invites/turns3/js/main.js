@@ -46,7 +46,8 @@ class InvitationManager {
             console.log('🎯 Loading personalized invitation:', this.invitationId);
             
             // Usar el nuevo endpoint de admin-events para obtener datos del invitado
-            const response = await fetch(`/api/admin-events?action=get_invitation&invitationId=${this.invitationId}`);
+            const eventId = encodeURIComponent("Cumpleaños #3 de Alessia - Aventura Disney");
+            const response = await fetch(`/api/admin-events?action=get_invitation&invitationId=${this.invitationId}&eventId=${eventId}`);
             const data = await response.json();
             
             if (data.success && data.guest) {

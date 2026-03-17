@@ -29,6 +29,10 @@ export default async function handler(req, res) {
 
     switch (req.method) {
       case 'GET':
+        // Manejar acciones especiales para invitaciones
+        if (req.query.action === 'get_invitation') {
+          return await getInvitationData(sql, res, req.query);
+        }
         return await getEventData(sql, res, eventId);
       
       case 'PUT':
@@ -38,6 +42,10 @@ export default async function handler(req, res) {
         // Manejar generación de invitaciones
         if (req.body.action === 'generate_invitation') {
           return await generateInvitation(sql, res, req.body);
+        }
+        // Manejar confirmación de RSVP
+        if (req.body.action === 'confirm_rsvp') {
+          return await confirmRSVPFromInvitation(sql, res, req.body, eventId);
         }
         return await addGuest(sql, res, eventId, req.body);
       
@@ -390,5 +398,138 @@ async function generateInvitation(sql, res, data) {
       success: false, 
       error: 'Error interno del servidor generando invitación' 
     });
+  }
+}
+
+// Obtener datos de invitación personalizada
+async function getInvitationData(sql, res, query) {
+  try {
+    const { invitationId, eventId } = query;
+    
+    console.log('🎯 Getting invitation data for ID:', invitationId, 'in event:', eventId);
+    
+    if (!invitationId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Se requiere invitationId'
+      });
+    }
+
+    // Obtener datos del invitado y la invitación
+    const invitation = await sql`
+      SELECT 
+        i.id as invitation_id,
+        i.status,
+        i.responded_at,
+        g.id as guest_id,
+        g.name,
+        g.email,
+        g.phone,
+        e.name as event_name,
+        e.description as event_description,
+        e.event_date
+      FROM invitations i
+      INNER JOIN guests g ON i.guest_id = g.id
+      INNER JOIN events e ON i.event_id = e.id
+      WHERE i.id = ${invitationId} AND e.name = ${eventId}
+    `;
+
+    if (invitation.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Invitación no encontrada'
+      });
+    }
+
+    const invitationData = invitation[0];
+
+    console.log('✅ Invitation data retrieved for:', invitationData.name);
+
+    res.status(200).json({
+      success: true,
+      guest: {
+        id: invitationData.guest_id,
+        name: invitationData.name,
+        email: invitationData.email,
+        phone: invitationData.phone,
+        status: invitationData.status,
+        responded_at: invitationData.responded_at
+      },
+      event: {
+        name: invitationData.event_name,
+        description: invitationData.event_description,
+        event_date: invitationData.event_date
+      },
+      invitation_id: invitationData.invitation_id
+    });
+
+  } catch (error) {
+    console.error('❌ Error getting invitation data:', error);
+    throw error;
+  }
+}
+
+// Confirmar RSVP desde invitación personalizada
+async function confirmRSVPFromInvitation(sql, res, data, eventId) {
+  try {
+    const { invitationId } = data;
+    
+    console.log('✅ Confirming RSVP for invitation ID:', invitationId);
+    
+    if (!invitationId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Se requiere invitationId'
+      });
+    }
+
+    // Verificar que la invitación existe y pertenece al evento
+    const invitation = await sql`
+      SELECT i.id, i.guest_id, g.name as guest_name, e.name as event_name
+      FROM invitations i
+      INNER JOIN guests g ON i.guest_id = g.id
+      INNER JOIN events e ON i.event_id = e.id
+      WHERE i.id = ${invitationId} AND e.name = ${eventId}
+    `;
+
+    if (invitation.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Invitación no encontrada'
+      });
+    }
+
+    // Actualizar el estado a confirmado (1) y registrar fecha de respuesta
+    const result = await sql`
+      UPDATE invitations 
+      SET status = 1, responded_at = NOW()
+      WHERE id = ${invitationId}
+      RETURNING id, status, responded_at
+    `;
+
+    if (result.length === 0) {
+      return res.status(500).json({
+        success: false,
+        error: 'Error actualizando estado de invitación'
+      });
+    }
+
+    const guestName = invitation[0].guest_name;
+    
+    console.log('✅ RSVP confirmed successfully for:', guestName);
+
+    res.status(200).json({
+      success: true,
+      message: `RSVP confirmado exitosamente para ${guestName}`,
+      invitation: {
+        id: result[0].id,
+        status: result[0].status,
+        responded_at: result[0].responded_at
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error confirming RSVP:', error);
+    throw error;
   }
 }
