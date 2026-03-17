@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
   // Configurar CORS
@@ -16,6 +14,9 @@ export default async function handler(req, res) {
   try {
     console.log(`🎯 Admin API - ${req.method} request:`, req.url);
     
+    // Conectar usando Neon serverless driver
+    const sql = neon(process.env.DATABASE_URL);
+    
     // Extraer eventId de la query string
     const { eventId } = req.query;
     
@@ -28,20 +29,20 @@ export default async function handler(req, res) {
 
     switch (req.method) {
       case 'GET':
-        return await getEventData(res, eventId);
+        return await getEventData(sql, res, eventId);
       
       case 'PUT':
-        return await updateEvent(res, eventId, req.body);
+        return await updateEvent(sql, res, eventId, req.body);
       
       case 'POST':
         // Manejar generación de invitaciones
         if (req.body.action === 'generate_invitation') {
-          return await generateInvitation(res, req.body);
+          return await generateInvitation(sql, res, req.body);
         }
-        return await addGuest(res, eventId, req.body);
+        return await addGuest(sql, res, eventId, req.body);
       
       case 'DELETE':
-        return await deleteGuest(res, req.body);
+        return await deleteGuest(sql, res, req.body);
         
       default:
         return res.status(405).json({ 
@@ -59,22 +60,22 @@ export default async function handler(req, res) {
       details: error.message,
       timestamp: new Date().toISOString()
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
 // GET: Obtener datos completos del evento
-async function getEventData(res, eventId) {
+async function getEventData(sql, res, eventId) {
   try {
     console.log('📋 Getting event data for:', eventId);
     
     // Obtener información del evento
-    const event = await prisma.events.findFirst({
-      where: { name: eventId }
-    });
+    const event = await sql`
+      SELECT id, name, description, event_date, invitation_route, created_at 
+      FROM events 
+      WHERE name = ${eventId}
+    `;
     
-    if (!event) {
+    if (event.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'Evento no encontrado'
@@ -82,28 +83,21 @@ async function getEventData(res, eventId) {
     }
 
     // Obtener invitados del evento con información completa
-    const invitations = await prisma.invitations.findMany({
-      where: { event_id: event.id },
-      include: {
-        guests: true
-      },
-      orderBy: {
-        guests: {
-          name: 'asc'
-        }
-      }
-    });
-
-    // Formatear datos para la respuesta
-    const guests = invitations.map(inv => ({
-      guest_id: inv.guests.id,
-      name: inv.guests.name,
-      email: inv.guests.email,
-      phone: inv.guests.phone,
-      status: inv.status,
-      responded_at: inv.responded_at,
-      invited_at: inv.created_at
-    }));
+    const guests = await sql`
+      SELECT 
+        g.id as guest_id,
+        g.name,
+        g.email,
+        g.phone,
+        i.status,
+        i.responded_at,
+        i.created_at as invited_at
+      FROM guests g
+      INNER JOIN invitations i ON g.id = i.guest_id
+      INNER JOIN events e ON i.event_id = e.id
+      WHERE e.name = ${eventId}
+      ORDER BY g.name ASC
+    `;
 
     // Calcular estadísticas
     const totalGuests = guests.length;
@@ -115,7 +109,7 @@ async function getEventData(res, eventId) {
 
     res.status(200).json({
       success: true,
-      event: event,
+      event: event[0],
       guests: guests,
       stats: {
         total: totalGuests,
@@ -132,7 +126,7 @@ async function getEventData(res, eventId) {
 }
 
 // PUT: Actualizar información general del evento
-async function updateEvent(res, eventId, data) {
+async function updateEvent(sql, res, eventId, data) {
   try {
     console.log('💾 Updating event:', eventId, data);
     
@@ -157,21 +151,29 @@ async function updateEvent(res, eventId, data) {
       }
     }
 
-    const result = await prisma.events.update({
-      where: { name: eventId },
-      data: {
-        name: name,
-        description: description || null,
-        event_date: eventDate
-      }
-    });
+    const result = await sql`
+      UPDATE events 
+      SET 
+        name = ${name},
+        description = ${description || null},
+        event_date = ${eventDate}
+      WHERE name = ${eventId}
+      RETURNING id, name, description, event_date
+    `;
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evento no encontrado'
+      });
+    }
 
     console.log('✅ Event updated successfully');
 
     res.status(200).json({
       success: true,
       message: 'Evento actualizado exitosamente',
-      event: result
+      event: result[0]
     });
 
   } catch (error) {
@@ -181,7 +183,7 @@ async function updateEvent(res, eventId, data) {
 }
 
 // POST: Agregar nuevo invitado al evento
-async function addGuest(res, eventId, data) {
+async function addGuest(sql, res, eventId, data) {
   try {
     console.log('👤 Adding guest to event:', eventId, data);
     
@@ -195,37 +197,38 @@ async function addGuest(res, eventId, data) {
     }
 
     // Obtener el ID del evento
-    const event = await prisma.events.findFirst({
-      where: { name: eventId }
-    });
+    const event = await sql`
+      SELECT id FROM events WHERE name = ${eventId}
+    `;
     
-    if (!event) {
+    if (event.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'Evento no encontrado'
       });
     }
 
-    // Verificar si el invitado ya existe con este email
+    const eventDbId = event[0].id;
+
+    // Verificar si el invitado ya existe con este email o teléfono
     let existingGuest = null;
     if (email) {
-      existingGuest = await prisma.guests.findFirst({
-        where: { email: email }
-      });
+      const guestByEmail = await sql`
+        SELECT id FROM guests WHERE email = ${email}
+      `;
+      existingGuest = guestByEmail[0];
     }
 
     let guestId;
     
     if (existingGuest) {
       // Verificar si ya está invitado a este evento
-      const existingInvitation = await prisma.invitations.findFirst({
-        where: { 
-          guest_id: existingGuest.id,
-          event_id: event.id
-        }
-      });
+      const existingInvitation = await sql`
+        SELECT id FROM invitations 
+        WHERE guest_id = ${existingGuest.id} AND event_id = ${eventDbId}
+      `;
       
-      if (existingInvitation) {
+      if (existingInvitation.length > 0) {
         return res.status(400).json({
           success: false,
           error: 'Este invitado ya está registrado para el evento'
@@ -235,24 +238,19 @@ async function addGuest(res, eventId, data) {
       guestId = existingGuest.id;
     } else {
       // Crear nuevo invitado
-      const newGuest = await prisma.guests.create({
-        data: {
-          name: name.trim(),
-          email: email || null,
-          phone: phone || null
-        }
-      });
-      guestId = newGuest.id;
+      const newGuest = await sql`
+        INSERT INTO guests (name, email, phone)
+        VALUES (${name.trim()}, ${email || null}, ${phone || null})
+        RETURNING id
+      `;
+      guestId = newGuest[0].id;
     }
 
     // Crear la invitación
-    await prisma.invitations.create({
-      data: {
-        guest_id: guestId,
-        event_id: event.id,
-        status: 3
-      }
-    });
+    await sql`
+      INSERT INTO invitations (guest_id, event_id, status)
+      VALUES (${guestId}, ${eventDbId}, 3)
+    `;
 
     console.log('✅ Guest added successfully');
 
@@ -269,7 +267,7 @@ async function addGuest(res, eventId, data) {
 }
 
 // DELETE: Eliminar invitado del evento
-async function deleteGuest(res, data) {
+async function deleteGuest(sql, res, data) {
   try {
     console.log('🗑️ Deleting guest:', data);
     
@@ -283,11 +281,11 @@ async function deleteGuest(res, data) {
     }
 
     // Obtener el ID del evento
-    const event = await prisma.events.findFirst({
-      where: { name: eventName }
-    });
+    const event = await sql`
+      SELECT id FROM events WHERE name = ${eventName}
+    `;
     
-    if (!event) {
+    if (event.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'Evento no encontrado'
@@ -295,14 +293,13 @@ async function deleteGuest(res, data) {
     }
 
     // Eliminar la invitación
-    const result = await prisma.invitations.deleteMany({
-      where: { 
-        guest_id: parseInt(guestId),
-        event_id: event.id
-      }
-    });
+    const result = await sql`
+      DELETE FROM invitations 
+      WHERE guest_id = ${guestId} AND event_id = ${event[0].id}
+      RETURNING id
+    `;
 
-    if (result.count === 0) {
+    if (result.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'Invitación no encontrada'
@@ -323,61 +320,61 @@ async function deleteGuest(res, data) {
 }
 
 // Generar invitación personalizada
-async function generateInvitation(res, data) {
+async function generateInvitation(sql, res, data) {
   try {
     const { eventName, guestName, guestEmail } = data;
     
     console.log('🔗 Generating invitation for guest:', guestName, 'in event:', eventName);
     
     // Buscar el evento
-    const event = await prisma.events.findFirst({
-      where: { name: eventName }
-    });
+    const event = await sql`
+      SELECT id FROM events WHERE name = ${eventName}
+    `;
     
-    if (!event) {
+    if (event.length === 0) {
       return res.status(404).json({ 
         success: false, 
         error: 'Evento no encontrado' 
       });
     }
     
-    // Buscar el invitado
-    const guest = await prisma.guests.findFirst({
-      where: { name: guestName }
-    });
+    const eventId = event[0].id;
     
-    if (!guest) {
+    // Buscar el invitado
+    const guest = await sql`
+      SELECT id FROM guests WHERE name = ${guestName}
+    `;
+    
+    if (guest.length === 0) {
       return res.status(404).json({ 
         success: false, 
         error: 'Invitado no encontrado' 
       });
     }
     
+    const guestId = guest[0].id;
+    
     // Verificar si ya existe una invitación para este invitado en este evento
-    const existingInvitation = await prisma.invitations.findFirst({
-      where: { 
-        guest_id: guest.id,
-        event_id: event.id
-      }
-    });
+    const existingInvitations = await sql`
+      SELECT id FROM invitations 
+      WHERE guest_id = ${guestId} AND event_id = ${eventId}
+    `;
     
     let invitationId;
     
-    if (existingInvitation) {
-      invitationId = existingInvitation.id;
+    if (existingInvitations.length > 0) {
+      // Ya existe una invitación, usar la existente
+      invitationId = existingInvitations[0].id;
       console.log('✅ Using existing invitation:', invitationId);
     } else {
-      // Crear nueva invitación
-      const newInvitation = await prisma.invitations.create({
-        data: {
-          guest_id: guest.id,
-          event_id: event.id,
-          status: 3,
-          sent_at: new Date()
-        }
-      });
+      // Esto no debería ocurrir si el invitado está en la lista, pero por seguridad
+      const newInvitation = await sql`
+        INSERT INTO invitations (guest_id, event_id, status, sent_at)
+        VALUES (${guestId}, ${eventId}, 3, NOW())
+        RETURNING id
+      `;
       
-      invitationId = newInvitation.id;
+      invitationId = newInvitation[0].id;
       console.log('✅ Created new invitation:', invitationId);
     }
     
