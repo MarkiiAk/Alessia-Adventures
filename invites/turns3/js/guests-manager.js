@@ -17,22 +17,31 @@ class GuestsManager {
         const urlParams = new URLSearchParams(window.location.search);
         this.currentInvitationId = urlParams.get('invitation');
         
-        // Cargar invitados dinámicamente
-        this.loadGuests();
-        
-        console.log('🎯 Guests Manager inicializado');
+        console.log('🎯 GUESTS MANAGER INICIALIZADO!!!');
+        console.log('🔗 URL actual:', window.location.href);
         if (this.currentInvitationId) {
             console.log('🎫 Invitación personal detectada:', this.currentInvitationId);
         }
+        
+        // Cargar invitados dinámicamente
+        this.loadGuests();
     }
     
     async loadGuests() {
         try {
-            console.log('🔄 Cargando invitados desde API...');
-            const response = await fetch(`api/get-guests?eventId=${this.eventId}`);
-            const data = await response.json();
+            console.log('🔄 CARGANDO INVITADOS DESDE API...');
+            console.log('🌐 URL de API:', `/api/get-guests?eventId=${this.eventId}`);
             
-            console.log('📡 Respuesta de API:', data);
+            const response = await fetch(`/api/get-guests?eventId=${this.eventId}`);
+            console.log('📡 Response status:', response.status);
+            console.log('📡 Response ok:', response.ok);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('📡 RESPUESTA DE API:', data);
             
             if (data.success && data.data && data.data.guests) {
                 this.guests = data.data.guests;
