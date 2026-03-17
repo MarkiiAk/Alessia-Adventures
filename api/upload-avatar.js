@@ -119,15 +119,30 @@ export default async function handler(req, res) {
         console.log('🔗 Enlace compartido creado:', shareLinkResponse.result.url);
 
         // Convertir el enlace de Dropbox a URL directa
-        directUrl = shareLinkResponse.result.url.replace('dropbox.com', 'dl.dropboxusercontent.com');
-        directUrl = directUrl.replace('?dl=0', '');
+        // Los nuevos enlaces tienen formato: https://www.dropbox.com/scl/fi/...?rlkey=...&st=...&dl=0
+        directUrl = shareLinkResponse.result.url;
+        
+        // Si es el nuevo formato con /scl/fi/, convertir correctamente
+        if (directUrl.includes('/scl/fi/')) {
+          // Cambiar dropbox.com por dl.dropboxusercontent.com y mantener parámetros
+          directUrl = directUrl.replace('www.dropbox.com/scl/fi/', 'dl.dropboxusercontent.com/scl/fi/');
+          // Cambiar dl=0 por dl=1 para descarga directa
+          directUrl = directUrl.replace('&dl=0', '&dl=1');
+          if (directUrl.includes('?dl=0')) {
+            directUrl = directUrl.replace('?dl=0', '?dl=1');
+          }
+        } else {
+          // Formato antiguo
+          directUrl = directUrl.replace('dropbox.com', 'dl.dropboxusercontent.com');
+          directUrl = directUrl.replace('?dl=0', '');
+        }
 
       } catch (shareError) {
-        console.warn('⚠️ No se pudo crear enlace compartido, usando URL temporal:', shareError.message);
+        console.warn('⚠️ No se pudo crear enlace compartido:', shareError.message);
         
-        // Si falla crear el enlace, devolver una URL temporal basada en el path
-        // Esto permite que el frontend sepa que la subida fue exitosa
-        directUrl = `https://dropbox-placeholder.com/AlessiaEvents/${fileName}`;
+        // Si falla crear el enlace, intentar usar un enlace temporal basado en el path
+        directUrl = `https://api.dropbox.com/2/sharing/create_shared_link_with_settings`;
+        console.error('🚨 Share link failed, will need manual intervention');
       }
 
       console.log('✅ Direct URL:', directUrl);
