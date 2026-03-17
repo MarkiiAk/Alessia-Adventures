@@ -103,20 +103,38 @@ export default async function handler(req, res) {
       
       console.log('✅ UPLOAD EXITOSO! File uploaded to Dropbox:', uploadResponse.result.path_display);
 
-      // Intentar crear enlace compartido, pero si falla, usar una URL alternativa
+      // Intentar obtener o crear enlace compartido
       let directUrl;
       try {
-        console.log('🔗 Creando enlace compartido...');
-        const shareLinkResponse = await dbx.sharingCreateSharedLinkWithSettings({
-          path: uploadResponse.result.path_display,
-          settings: {
-            requested_visibility: 'public',
-            audience: 'public',
-            access: 'viewer'
+        console.log('🔗 Intentando obtener enlace compartido existente...');
+        
+        // Primero intentar listar enlaces existentes
+        let shareLinkResponse;
+        try {
+          const existingLinks = await dbx.sharingListSharedLinks({
+            path: uploadResponse.result.path_display
+          });
+          
+          if (existingLinks.result.links && existingLinks.result.links.length > 0) {
+            console.log('✅ Encontrado enlace existente:', existingLinks.result.links[0].url);
+            shareLinkResponse = { result: { url: existingLinks.result.links[0].url } };
+          } else {
+            throw new Error('No hay enlaces existentes');
           }
-        });
-
-        console.log('🔗 Enlace compartido creado:', shareLinkResponse.result.url);
+        } catch (listError) {
+          console.log('🔗 No hay enlaces existentes, creando uno nuevo...');
+          
+          // Si no hay enlaces existentes, crear uno nuevo
+          shareLinkResponse = await dbx.sharingCreateSharedLinkWithSettings({
+            path: uploadResponse.result.path_display,
+            settings: {
+              requested_visibility: 'public',
+              audience: 'public', 
+              access: 'viewer'
+            }
+          });
+          console.log('✅ Enlace compartido creado:', shareLinkResponse.result.url);
+        }
 
         // Convertir el enlace de Dropbox a URL directa
         // Los nuevos enlaces tienen formato: https://www.dropbox.com/scl/fi/...?rlkey=...&st=...&dl=0
@@ -138,11 +156,11 @@ export default async function handler(req, res) {
         }
 
       } catch (shareError) {
-        console.warn('⚠️ No se pudo crear enlace compartido:', shareError.message);
+        console.error('🚨 FALLÓ OBTENER/CREAR ENLACE COMPARTIDO:', shareError.message);
+        console.error('🚨 Share error details:', JSON.stringify(shareError, null, 2));
         
-        // Si falla crear el enlace, intentar usar un enlace temporal basado en el path
-        directUrl = `https://api.dropbox.com/2/sharing/create_shared_link_with_settings`;
-        console.error('🚨 Share link failed, will need manual intervention');
+        // Si falla crear el enlace, devolver error porque no tenemos URL válida
+        throw new Error(`No se pudo crear enlace compartido de Dropbox: ${shareError.message}`);
       }
 
       console.log('✅ Direct URL:', directUrl);
