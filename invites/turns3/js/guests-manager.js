@@ -28,8 +28,11 @@ class GuestsManager {
     
     async loadGuests() {
         try {
+            console.log('🔄 Cargando invitados desde API...');
             const response = await fetch(`/api/get-guests?eventId=${this.eventId}`);
             const data = await response.json();
+            
+            console.log('📡 Respuesta de API:', data);
             
             if (data.success && data.data && data.data.guests) {
                 this.guests = data.data.guests;
@@ -37,6 +40,8 @@ class GuestsManager {
                 // Identificar al invitado actual si hay invitación
                 if (this.currentInvitationId) {
                     this.currentGuest = this.guests.find(guest => guest.id === this.currentInvitationId);
+                    console.log('🎯 Buscando invitación:', this.currentInvitationId);
+                    console.log('🎭 Invitado encontrado:', this.currentGuest);
                 }
                 
                 // Renderizar invitados dinámicos
@@ -57,7 +62,7 @@ class GuestsManager {
                     console.log('🎭 Invitado actual identificado:', this.currentGuest.name);
                 }
             } else {
-                console.warn('⚠️ No se pudieron cargar los invitados:', data.error);
+                console.warn('⚠️ No se pudieron cargar los invitados:', data);
                 this.fallbackToStaticGuests();
             }
         } catch (error) {
