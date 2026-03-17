@@ -1,0 +1,347 @@
+/* ===========================
+   ESTILOS DINÁMICOS PARA INVITADOS - DISNEY THEME
+   =========================== */
+
+/* ===========================
+   ESTILOS PARA INVITADO ACTUAL ("TÚ")
+   =========================== */
+
+/* Tarjeta del invitado actual */
+.adventurer-card.current-guest {
+    position: relative;
+    border: 3px solid var(--disney-golden-yellow) !important;
+    background: rgba(251, 191, 36, 0.15) !important;
+    box-shadow: 
+        0 0 25px rgba(251, 191, 36, 0.4),
+        0 10px 30px rgba(0, 0, 0, 0.2) !important;
+    animation: currentGuestGlow 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+/* Animación de brillo para invitado actual */
+@keyframes currentGuestGlow {
+    0%, 100% { 
+        box-shadow: 
+            0 0 25px rgba(251, 191, 36, 0.4),
+            0 10px 30px rgba(0, 0, 0, 0.2);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 
+            0 0 40px rgba(251, 191, 36, 0.7),
+            0 15px 35px rgba(0, 0, 0, 0.3);
+        transform: scale(1.02);
+    }
+}
+
+/* Badge especial "¡Eres Tú!" */
+.current-guest-badge {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 
+        0 4px 15px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    z-index: 15;
+    animation: currentGuestBadgeBounce 2s ease-in-out infinite;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Animación del badge */
+@keyframes currentGuestBadgeBounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+    40% {
+        transform: translateY(-8px) rotate(2deg);
+    }
+    60% {
+        transform: translateY(-4px) rotate(-1deg);
+    }
+}
+
+/* Efecto de partículas alrededor del invitado actual */
+.adventurer-card.current-guest::before {
+    content: '✨';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    animation: currentGuestSparkle 2s ease-in-out infinite;
+    z-index: 12;
+}
+
+.adventurer-card.current-guest::after {
+    content: '⭐';
+    position: absolute;
+    bottom: -10px;
+    right: 20px;
+    font-size: 1.2rem;
+    animation: currentGuestSparkle 2s ease-in-out infinite 1s;
+    z-index: 12;
+}
+
+@keyframes currentGuestSparkle {
+    0%, 100% {
+        opacity: 0.6;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.3);
+    }
+}
+
+/* Efecto especial en hover para invitado actual */
+.adventurer-card.current-guest:hover {
+    transform: translateY(-15px) scale(1.05) !important;
+    box-shadow: 
+        0 0 50px rgba(251, 191, 36, 0.8),
+        0 20px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Avatar del invitado actual con efecto especial */
+.adventurer-card.current-guest .adventurer-avatar {
+    border: 3px solid var(--disney-golden-yellow) !important;
+    box-shadow: 
+        0 0 20px rgba(251, 191, 36, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    animation: currentGuestAvatarPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes currentGuestAvatarPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Nombre del invitado actual con efecto dorado */
+.adventurer-card.current-guest .adventurer-name {
+    color: var(--disney-golden-yellow) !important;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(251, 191, 36, 0.5);
+    font-weight: 700;
+}
+
+/* Rol del invitado actual */
+.adventurer-card.current-guest .adventurer-role {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600;
+}
+
+/* ===========================
+   ESTADOS DE CONFIRMACIÓN MEJORADOS
+   =========================== */
+
+/* Estilo para invitados declinados */
+.adventurer-card.declined {
+    opacity: 0.7;
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.declined-seal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Mejorar el sello de confirmado */
+.confirmed-seal {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    animation: confirmedSealPulse 3s ease-in-out infinite;
+}
+
+@keyframes confirmedSealPulse {
+    0%, 100% { 
+        transform: scale(1) rotate(-2deg);
+        box-shadow: var(--shadow-soft);
+    }
+    50% { 
+        transform: scale(1.05) rotate(2deg);
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+}
+
+/* Mejorar indicador pendiente */
+.pending-indicator {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: rgba(245, 158, 11, 0.9) !important;
+    border: 1px solid rgba(245, 158, 11, 0.4) !important;
+}
+
+.pending-indicator i {
+    color: #f59e0b;
+    animation: pendingClockTick 2s ease-in-out infinite;
+}
+
+@keyframes pendingClockTick {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-10deg); }
+}
+
+/* ===========================
+   ANIMACIONES DE ENTRADA MEJORADAS
+   =========================== */
+
+/* Entrada escalonada para tarjetas dinámicas */
+.adventurer-card[style*="translateY(0)"] {
+    animation: dynamicCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes dynamicCardEntry {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Efecto de shimmer en carga */
+.adventurer-card.loading {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.1) 25%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.1) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ===========================
+   EFECTOS ESPECIALES ADICIONALES
+   =========================== */
+
+/* Partículas flotantes para invitado actual */
+.adventurer-card.current-guest .floating-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.adventurer-card.current-guest .floating-particles::before,
+.adventurer-card.current-guest .floating-particles::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--disney-golden-yellow);
+    border-radius: 50%;
+    animation: floatingParticle 4s ease-in-out infinite;
+}
+
+.adventurer-card.current-guest .floating-particles::before {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.adventurer-card.current-guest .floating-particles::after {
+    top: 70%;
+    right: 20%;
+    animation-delay: 2s;
+}
+
+@keyframes floatingParticle {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-20px);
+    }
+}
+
+/* ===========================
+   RESPONSIVE PARA INVITADO ACTUAL
+   =========================== */
+
+@media (max-width: 767px) {
+    .current-guest-badge {
+        top: -12px;
+        right: -12px;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .adventurer-card.current-guest {
+        margin: 1rem 0;
+    }
+    
+    .adventurer-card.current-guest:hover {
+        transform: translateY(-10px) scale(1.03) !important;
+    }
+}
+
+/* ===========================
+   ESTADOS DE ERROR Y CARGA
+   =========================== */
+
+.guests-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+}
+
+.guests-loading i {
+    margin-right: 1rem;
+    font-size: 1.5rem;
+    color: var(--disney-golden-yellow);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.guests-error {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(239, 68, 68, 0.8);
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 15px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.guests-error i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+}
