@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "dropbox": "^10.34.0",
     "formidable": "^3.5.4"
   },
   "engines": {

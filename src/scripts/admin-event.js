@@ -131,7 +131,9 @@ function fillGuestsTable(guests) {
         }
         
         // Crear celda de avatar
-        const avatarSrc = guest.avatar ? `/uploads/${guest.avatar}` : '/src/default-avatar.png';
+        const avatarSrc = guest.avatar && guest.avatar.startsWith('http') ? 
+            guest.avatar : // URL completa de Dropbox
+            (guest.avatar ? `/uploads/${guest.avatar}` : '/src/default-avatar.svg'); // Fallback local
         const displayName = guest.nickname ? `${guest.name} (${guest.nickname})` : guest.name;
         
         row.innerHTML = `
@@ -255,7 +257,7 @@ async function handleGuestFormSubmit(e) {
                 const uploadResult = await uploadResponse.json();
                 
                 if (uploadResult.success) {
-                    avatarUrl = uploadResult.filename;
+                    avatarUrl = uploadResult.url; // Usar la URL directa de Dropbox
                 } else {
                     throw new Error(uploadResult.error);
                 }
