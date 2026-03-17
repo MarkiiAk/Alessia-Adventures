@@ -29,7 +29,7 @@ class GuestsManager {
     async loadGuests() {
         try {
             console.log('🔄 Cargando invitados desde API...');
-            const response = await fetch(`/api/get-guests?eventId=${this.eventId}`);
+            const response = await fetch(`api/get-guests?eventId=${this.eventId}`);
             const data = await response.json();
             
             console.log('📡 Respuesta de API:', data);
