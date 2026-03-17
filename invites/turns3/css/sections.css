@@ -1418,6 +1418,15 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+.invitation-title .guest-name {
+    display: block;
+    font-size: 1.8rem;
+    color: var(--disney-princess-pink);
+    font-style: italic;
+    margin-top: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .invitation-text {
     font-size: 1.1rem;
     line-height: 1.8;

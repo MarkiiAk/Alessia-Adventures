@@ -45,7 +45,8 @@ class InvitationManager {
         try {
             console.log('🎯 Loading personalized invitation:', this.invitationId);
             
-            const response = await fetch(`/api/rsvp-direct?invitation=${this.invitationId}`);
+            // Usar el nuevo endpoint de admin-events para obtener datos del invitado
+            const response = await fetch(`/api/admin-events?action=get_invitation&invitationId=${this.invitationId}`);
             const data = await response.json();
             
             if (data.success && data.guest) {
@@ -85,6 +86,12 @@ class InvitationManager {
     }
     
     updateRSVPSection() {
+        // Personalizar sección de invitación con nombre del invitado
+        const invitationTitle = Utils.$('.invitation-title');
+        if (invitationTitle && this.guestData.name) {
+            invitationTitle.innerHTML = `Invitación Real<br><span class="guest-name">${this.guestData.name}</span>`;
+        }
+        
         // Personalizar texto del RSVP
         const rsvpText = Utils.$('.rsvp-text');
         if (rsvpText && this.guestData.name) {
@@ -134,14 +141,15 @@ class InvitationManager {
                 Utils.addClass(button, 'sending');
             }
             
-            const response = await fetch('/api/rsvp-direct', {
+            // Usar el endpoint admin-events para confirmar asistencia
+            const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent("Cumpleaños #3 de Alessia - Aventura Disney")}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    invitationId: this.invitationId,
-                    response: 'confirmed'
+                    action: 'confirm_rsvp',
+                    invitationId: this.invitationId
                 })
             });
             
