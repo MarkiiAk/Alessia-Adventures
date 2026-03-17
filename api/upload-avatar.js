@@ -28,11 +28,19 @@ export default async function handler(req, res) {
 
   try {
     console.log('🖼️ Avatar upload request received');
+    
+    // Obtener token de Dropbox
+    const accessToken = process.env.DROPBOX_ACCESS_TOKEN || 'sl.u.AGWZ1dTZ7QXDmK7bxtTMUficXdniAitUph5jHY61OkeUrONgFbBFR5RaU4UjDhStvo0Lz2m_8ffFhEAxxne6b_gBW2Ob5NyWQRDiHKXqZIgAZ1L_ZXdzMg-kLuoHP3mpgT6cdwblYtr0u8P7KYMbgWUgd0-Kol8ZLUcE5x3J_F6p6pZh1u37A0Ff62QiS0uxlhxoLdu98abcryWP9cgZLpIUoPmjdinjDf692C1zfZeiZrkpgDWXqJwr6eehYLVNLRkWyd3-wHOkxseEwkNT6omjOMgPKydo1P0sI9dKrfrpsRLlKE7onUfiuuyHfmo3KPFZlidn6OR1cti8u80-Je0GJJHUsuNmPN4b0vrYlDiBXrncgsSSeCS_xO_jRujqZ6rPze37PJ8SZXvk9utYlWevB8M6VJ5ELeSoa_8O5gDjh5AId7f-jpXXgOR8afWN0jJL4NnC3SyEGPyag4JA3TLOOiH1ndS6fCk52vt1TgEJ4Z-oqjkwidhOcs9fEt6n7I7o_JcNtV5TZIpduTbCTxZ3YGhJqwvlpUtaRjAlxwzOgVScjPf9bi-H3k5ACQSnb9Fmkfw97nvlH-WFRzkmrXgofaoxvIVQG34lLJHZrUuKjwqKNhKtjpiI9x-BMzqfZjcPE15USweUp2KkiPpWWPhyWh48zZdWk43DQeH-p9-9cOo18d0o1bUYxQjX9oAPkB29imEW1HlqvUUrGCsJQ7Q9cEAbZBEwJoGd5UdfFezYDk4VyWdRhJzESJVpYUT1Y13wt5Ea7UXObaCwSRHrzh3WwUzX4IaLx5mjjYqynRvlzpHd0SNARkq8uzYWX0Se-P5NrFmvCQKPa8EdtTUmGMpmLtW3DWqmWLfVB6qQNtdDdj0nbRne-2BUEd6miwz0Qlm6BK8F76Tv7SLjKaPu0avTDTZTCOtbgKZsDAYC5Zt6KmkgU8m5fj5L755rXTvOzew0iDKJUq1UJH6NbtA3UILa41HFCaAF3NqVtwVmT941NSKS0htFgv52-0OWVpt9h880PuyZLKnhx0KGo-gxKLt1G70qqAWsCPw8lTDP4nWrENM5HXxwb4Tyse1IfEnpcp4S4Bs0Tn066JTYiF2uXMPIkN6mQV2LYU-CdevndvRH2snRh1WP1QWFJ6Z6k9kNPpUFfjGVERp2dA3dUtLZQvcJwasOHiZDdm96mBFLy7DoZPBRn6HphhehM0ij6f3W30L7vrfzqnmGfr00124G-zuA0g9eZqoyxABzDEhsDUFmkSO3fRDeetfaYJlm5zc-KqfldDlc2sUY4nfs9B2nEy9UVsc6HVmjjykTWniJ1Hkp4g';
+    
+    console.log('🔑 Using access token:', accessToken ? `${accessToken.substring(0, 10)}...` : 'NO TOKEN');
+    console.log('🔑 Token length:', accessToken?.length || 0);
 
     // Configurar cliente de Dropbox
     const dbx = new Dropbox({
-      accessToken: 'sl.u.AGUMcVpt_tUOz1RBD8CiWRDZWKHM7ZCRobFML3U6kK7318b-OPWpjxu7_2d0Tyoxjl7pEVblnIuwopwyEyeDyWwOeBwbrjG-WISp8YR-iTAP39U4QWPHuV44jZ8CEtqeMBi42R7y1PHwGtNiJZFyH4jerNafI_PnlU4oFo7jP2spT4HWhmVRHsEShbm9-W5TaKiaC2M1kDQ-uht0Tt9q_wAUhpRt5jzAfsg6J_yl1ZZpmQv00p1WjZSdeZpIlY8coIbJHhDPi9_brL5T6l2AedCaE-vqCD1DrtSHy0Kw8JmiaJDdw6SNCxDqUgGrgw9xt2dLkarWQxZVkV30PjdQjF7Cjm0WrWYICNATsZK4Ox1FnH0CKDZFoVN6FQAiQVPHgAcyWwNG7slBlreV-8e_417iQKhYPc54oauwR7PzIP10APxJ_T6yySpt1T40I31laDNzLy6Jk5bZs9wVeNa-6IqKqYMlt7s1tgLGOrolECj_yIiL5KUbqkT8aoZht2GKbrV7ELfzEpSbC-wSw7i-G1bdqxZ3lJgnvlil_9LT0S-psKUPUTyJF-WWy5KLb0jrqR2RRgDt9s7ddy_iatzV3XwKkxe3Ya3A1JFWpgXlxBznN3Cmyu-9lAdetf55_-ShjnMuS9lpHzi1p_8EGKF4I_DJtY1aSucEerx9KouVZvOGSap5w63Gi2_pWHhINoytgj5xSra13FNAmzawkDnfU5ZZujQbetPwLNsrwIyDZbmOyYj0fyr7o9cFQKLPI4b6mgfb6Sl8-BEHpLm_XByla_WxLdOEKeLI35MxcbAWqOsjiFU9ja0d6gThKl4tN_MhzeUgoyKWmU0zil87XqEk3b74OBDa-aZ0tqpvIzeCanu9CHEF7AQcoUKRCQuzRmgT_lxlS3dGZOtTAl-Hez15PV1Nf0QHEXiApGCNot997W8CKs97ydRdVrxJs-38oYinCWQNRIgrPz_00P2o4YK7d9NNRg6mwiVjst1BhhGuxVaLKFPWUO_MDk915B6L1J4Bl5-JohPupaQ2ebCAQByN-joqxcA2hBwTZL_jGrZc5e_sqXP3lwsqfCrqhNwQ6JSNUONUNammULFeHcvYrLJ8XmchmQ6aupIocaiippiMz9043Pzz6swDy3FUbTl3UkKadWuAOMna3ZUwYkqTIbiiuXQQUPLYVYoPx8CVexQVerSkwl9MPPnv7KdKqTLAAXA7KR_MhKRGTSznUVQmb46u2ZWl6wy8YOPkeXGNH3DlsgQUFRki-e4TlFrQnY0Rzg8MCpWhUSFwsnLnFeO9UW3_oiicdaNAyQgdBuyAkEyCTnRs1Q'
+      accessToken: accessToken
     });
+    
+    console.log('✅ Dropbox client configured');
 
     const form = new IncomingForm({
       maxFileSize: 5 * 1024 * 1024, // 5MB max
@@ -79,6 +87,11 @@ export default async function handler(req, res) {
 
     // Subir a Dropbox
     try {
+      console.log('📤 Subiendo archivo a Dropbox...');
+      console.log('📁 Nombre archivo:', fileName);
+      console.log('📊 Tamaño buffer:', fileBuffer.length, 'bytes');
+      console.log('🎯 Ruta destino:', `/${fileName}`);
+      
       const uploadResponse = await dbx.filesUpload({
         path: `/${fileName}`,
         contents: fileBuffer,
@@ -87,8 +100,10 @@ export default async function handler(req, res) {
       });
 
       console.log('✅ File uploaded to Dropbox:', uploadResponse.result.path_display);
+      console.log('📋 Upload response:', JSON.stringify(uploadResponse.result, null, 2));
 
       // Crear enlace compartido público
+      console.log('🔗 Creando enlace compartido...');
       const shareLinkResponse = await dbx.sharingCreateSharedLinkWithSettings({
         path: uploadResponse.result.path_display,
         settings: {
@@ -97,6 +112,8 @@ export default async function handler(req, res) {
           access: 'viewer'
         }
       });
+
+      console.log('🔗 Enlace compartido creado:', shareLinkResponse.result.url);
 
       // Convertir el enlace de Dropbox a URL directa
       let directUrl = shareLinkResponse.result.url.replace('dropbox.com', 'dl.dropboxusercontent.com');
@@ -116,14 +133,30 @@ export default async function handler(req, res) {
       });
 
     } catch (dropboxError) {
-      console.error('❌ Dropbox error:', dropboxError);
+      console.error('❌ Dropbox error details:', {
+        message: dropboxError.message,
+        status: dropboxError.status,
+        error: dropboxError.error,
+        response: dropboxError.response?.data || dropboxError.response
+      });
+      
+      // Log específico para errores de API
+      if (dropboxError.error) {
+        console.error('🚨 Dropbox API Error:', JSON.stringify(dropboxError.error, null, 2));
+        if (dropboxError.error.error_summary) {
+          console.error('🚨 Error Summary:', dropboxError.error.error_summary);
+        }
+        if (dropboxError.error['.tag']) {
+          console.error('🚨 Error Tag:', dropboxError.error['.tag']);
+        }
+      }
       
       // Limpiar archivo temporal
       if (fs.existsSync(avatarFile.filepath)) {
         fs.unlinkSync(avatarFile.filepath);
       }
 
-      throw new Error(`Error subiendo a Dropbox: ${dropboxError.message}`);
+      throw new Error(`Error subiendo a Dropbox: ${dropboxError.message || 'Unknown error'}`);
     }
 
   } catch (error) {

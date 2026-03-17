@@ -132,8 +132,8 @@ function fillGuestsTable(guests) {
         
         // Crear celda de avatar
         const avatarSrc = guest.avatar && guest.avatar.startsWith('http') ? 
-            guest.avatar : // URL completa de Dropbox
-            (guest.avatar ? `/uploads/${guest.avatar}` : '/src/default-avatar.svg'); // Fallback local
+            guest.avatar : // URL completa de Dropbox/externa
+            (guest.avatar ? guest.avatar : '/src/default-avatar.svg'); // URL local relativa o fallback
         const displayName = guest.nickname ? `${guest.name} (${guest.nickname})` : guest.name;
         
         row.innerHTML = `
