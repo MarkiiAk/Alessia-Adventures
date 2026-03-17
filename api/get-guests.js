@@ -1,8 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+import { neon } from '@neondatabase/serverless';
 
-const prisma = new PrismaClient();
-
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
     // Configurar CORS
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -35,27 +33,28 @@ module.exports = async (req, res) => {
 
         console.log('Obteniendo invitados para evento:', eventId);
 
-        // Obtener invitados con datos completos de Guest e Invitation
-        const invitations = await prisma.invitation.findMany({
-            where: {
-                eventId: eventId
-            },
-            include: {
-                guest: true
-            },
-            orderBy: [
-                // Primero por estado: 1=CONFIRMED, 2=PENDING, 3=DECLINED
-                {
-                    status: 'asc'
-                },
-                // Luego por nombre alfabético
-                {
-                    guest: {
-                        name: 'asc'
-                    }
-                }
-            ]
-        });
+        // Conectar usando Neon serverless driver
+        const sql = neon(process.env.DATABASE_URL);
+
+        // Obtener invitados con datos completos usando JOIN
+        const invitations = await sql`
+            SELECT 
+                i.id as invitation_id,
+                i.status,
+                i.created_at as invitation_created,
+                g.id as guest_id,
+                g.name as guest_name,
+                g.email,
+                g.phone
+            FROM invitations i
+            JOIN guests g ON i.guest_id = g.id
+            WHERE i.event_id = (
+                SELECT id FROM events WHERE name = ${eventId} LIMIT 1
+            )
+            ORDER BY i.status ASC, g.name ASC
+        `;
+
+        console.log('Invitaciones encontradas:', invitations.length);
 
         // Contar estados (1=CONFIRMED, 2=PENDING, 3=DECLINED)
         const statusCounts = {
@@ -65,7 +64,6 @@ module.exports = async (req, res) => {
             total: invitations.length
         };
 
-        console.log('Invitaciones encontradas:', invitations.length);
         console.log('Estados:', statusCounts);
 
         // Formatear respuesta con datos completos
@@ -76,18 +74,18 @@ module.exports = async (req, res) => {
             else if (invitation.status === 3) status = 'DECLINED';
             
             return {
-                id: invitation.id,
-                name: invitation.guest.name,
-                email: invitation.guest.email,
-                phone: invitation.guest.phone || '',
+                id: invitation.invitation_id,
+                name: invitation.guest_name,
+                email: invitation.email,
+                phone: invitation.phone || '',
                 status: status,
-                avatar: '/src/default-avatar.png', // Por ahora usar default
-                role: 'Aventurero Mágico', // Role por defecto
-                createdAt: invitation.createdAt.toISOString()
+                avatar: '/src/default-avatar.png',
+                role: 'Aventurero Mágico',
+                createdAt: invitation.invitation_created
             };
         });
 
-        console.log('Invitados formateados:', formattedGuests);
+        console.log('Invitados formateados:', formattedGuests.length);
 
         return res.status(200).json({
             success: true,
@@ -101,10 +99,9 @@ module.exports = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener invitados:', error);
         return res.status(500).json({ 
+            success: false,
             error: 'Error interno del servidor',
             message: process.env.NODE_ENV === 'development' ? error.message : 'Error al cargar invitados'
         });
-    } finally {
-        await prisma.$disconnect();
     }
-};
+}
