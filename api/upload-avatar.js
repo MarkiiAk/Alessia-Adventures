@@ -93,7 +93,7 @@ export default async function handler(req, res) {
       console.log('🎯 Ruta destino:', `/${fileName}`);
       
       const uploadResponse = await dbx.filesUpload({
-        path: `/${fileName}`,
+        path: `/AlessiaEvents/${fileName}`,
         contents: fileBuffer,
         mode: 'add',
         autorename: true
