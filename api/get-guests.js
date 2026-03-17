@@ -61,11 +61,11 @@ export default async function handler(req, res) {
 
         console.log('Invitaciones encontradas:', invitations.length);
 
-        // Contar estados (1=CONFIRMED, 2=PENDING, 3=DECLINED)
+        // Contar estados (1=CONFIRMED, 2=DECLINED, 3=PENDING)
         const statusCounts = {
             confirmed: invitations.filter(i => i.status === 1).length,
-            pending: invitations.filter(i => i.status === 2).length,
-            declined: invitations.filter(i => i.status === 3).length,
+            pending: invitations.filter(i => i.status === 3).length,
+            declined: invitations.filter(i => i.status === 2).length,
             total: invitations.length
         };
 
