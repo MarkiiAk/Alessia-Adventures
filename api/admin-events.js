@@ -1,0 +1,316 @@
+import { neon } from '@neondatabase/serverless';
+
+export default async function handler(req, res) {
+  // Configurar CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  try {
+    console.log(`🎯 Admin API - ${req.method} request:`, req.url);
+    
+    // Conectar usando Neon serverless driver
+    const sql = neon(process.env.DATABASE_URL);
+    
+    // Extraer eventId de la query string
+    const { eventId } = req.query;
+    
+    if (!eventId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Se requiere eventId en la query string'
+      });
+    }
+
+    switch (req.method) {
+      case 'GET':
+        return await getEventData(sql, res, eventId);
+      
+      case 'PUT':
+        return await updateEvent(sql, res, eventId, req.body);
+      
+      case 'POST':
+        return await addGuest(sql, res, eventId, req.body);
+      
+      case 'DELETE':
+        return await deleteGuest(sql, res, req.body);
+        
+      default:
+        return res.status(405).json({ 
+          success: false, 
+          error: 'Method not allowed' 
+        });
+    }
+
+  } catch (error) {
+    console.error('❌ Admin API error:', error);
+    
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+}
+
+// GET: Obtener datos completos del evento
+async function getEventData(sql, res, eventId) {
+  try {
+    console.log('📋 Getting event data for:', eventId);
+    
+    // Obtener información del evento
+    const event = await sql`
+      SELECT id, name, description, event_date, invitation_route, created_at 
+      FROM events 
+      WHERE name = ${eventId}
+    `;
+    
+    if (event.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evento no encontrado'
+      });
+    }
+
+    // Obtener invitados del evento con información completa
+    const guests = await sql`
+      SELECT 
+        g.id as guest_id,
+        g.name,
+        g.email,
+        g.phone,
+        i.status,
+        i.responded_at,
+        i.created_at as invited_at
+      FROM guests g
+      INNER JOIN invitations i ON g.id = i.guest_id
+      INNER JOIN events e ON i.event_id = e.id
+      WHERE e.name = ${eventId}
+      ORDER BY g.name ASC
+    `;
+
+    // Calcular estadísticas
+    const totalGuests = guests.length;
+    const confirmedGuests = guests.filter(g => g.status === 1).length;
+    const pendingGuests = guests.filter(g => g.status === 3).length;
+    const declinedGuests = guests.filter(g => g.status === 2).length;
+
+    console.log('✅ Event data retrieved successfully');
+
+    res.status(200).json({
+      success: true,
+      event: event[0],
+      guests: guests,
+      stats: {
+        total: totalGuests,
+        confirmed: confirmedGuests,
+        pending: pendingGuests,
+        declined: declinedGuests
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error getting event data:', error);
+    throw error;
+  }
+}
+
+// PUT: Actualizar información general del evento
+async function updateEvent(sql, res, eventId, data) {
+  try {
+    console.log('💾 Updating event:', eventId, data);
+    
+    const { name, description, event_date } = data;
+    
+    if (!name) {
+      return res.status(400).json({
+        success: false,
+        error: 'El nombre del evento es requerido'
+      });
+    }
+
+    // Convertir fecha si existe
+    let eventDate = null;
+    if (event_date) {
+      eventDate = new Date(event_date);
+      if (isNaN(eventDate.getTime())) {
+        return res.status(400).json({
+          success: false,
+          error: 'Fecha del evento inválida'
+        });
+      }
+    }
+
+    const result = await sql`
+      UPDATE events 
+      SET 
+        name = ${name},
+        description = ${description || null},
+        event_date = ${eventDate}
+      WHERE name = ${eventId}
+      RETURNING id, name, description, event_date
+    `;
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evento no encontrado'
+      });
+    }
+
+    console.log('✅ Event updated successfully');
+
+    res.status(200).json({
+      success: true,
+      message: 'Evento actualizado exitosamente',
+      event: result[0]
+    });
+
+  } catch (error) {
+    console.error('❌ Error updating event:', error);
+    throw error;
+  }
+}
+
+// POST: Agregar nuevo invitado al evento
+async function addGuest(sql, res, eventId, data) {
+  try {
+    console.log('👤 Adding guest to event:', eventId, data);
+    
+    const { name, email, phone } = data;
+    
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: 'El nombre del invitado es requerido'
+      });
+    }
+
+    // Obtener el ID del evento
+    const event = await sql`
+      SELECT id FROM events WHERE name = ${eventId}
+    `;
+    
+    if (event.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evento no encontrado'
+      });
+    }
+
+    const eventDbId = event[0].id;
+
+    // Verificar si el invitado ya existe con este email o teléfono
+    let existingGuest = null;
+    if (email) {
+      const guestByEmail = await sql`
+        SELECT id FROM guests WHERE email = ${email}
+      `;
+      existingGuest = guestByEmail[0];
+    }
+
+    let guestId;
+    
+    if (existingGuest) {
+      // Verificar si ya está invitado a este evento
+      const existingInvitation = await sql`
+        SELECT id FROM invitations 
+        WHERE guest_id = ${existingGuest.id} AND event_id = ${eventDbId}
+      `;
+      
+      if (existingInvitation.length > 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Este invitado ya está registrado para el evento'
+        });
+      }
+      
+      guestId = existingGuest.id;
+    } else {
+      // Crear nuevo invitado
+      const newGuest = await sql`
+        INSERT INTO guests (name, email, phone)
+        VALUES (${name.trim()}, ${email || null}, ${phone || null})
+        RETURNING id
+      `;
+      guestId = newGuest[0].id;
+    }
+
+    // Crear la invitación
+    await sql`
+      INSERT INTO invitations (guest_id, event_id, status)
+      VALUES (${guestId}, ${eventDbId}, 3)
+    `;
+
+    console.log('✅ Guest added successfully');
+
+    res.status(201).json({
+      success: true,
+      message: 'Invitado agregado exitosamente',
+      guest_id: guestId
+    });
+
+  } catch (error) {
+    console.error('❌ Error adding guest:', error);
+    throw error;
+  }
+}
+
+// DELETE: Eliminar invitado del evento
+async function deleteGuest(sql, res, data) {
+  try {
+    console.log('🗑️ Deleting guest:', data);
+    
+    const { guestId, eventName } = data;
+    
+    if (!guestId || !eventName) {
+      return res.status(400).json({
+        success: false,
+        error: 'Se requieren guestId y eventName'
+      });
+    }
+
+    // Obtener el ID del evento
+    const event = await sql`
+      SELECT id FROM events WHERE name = ${eventName}
+    `;
+    
+    if (event.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evento no encontrado'
+      });
+    }
+
+    // Eliminar la invitación
+    const result = await sql`
+      DELETE FROM invitations 
+      WHERE guest_id = ${guestId} AND event_id = ${event[0].id}
+      RETURNING id
+    `;
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Invitación no encontrada'
+      });
+    }
+
+    console.log('✅ Guest removed successfully');
+
+    res.status(200).json({
+      success: true,
+      message: 'Invitado eliminado exitosamente'
+    });
+
+  } catch (error) {
+    console.error('❌ Error deleting guest:', error);
+    throw error;
+  }
+}

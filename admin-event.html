@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Evento - Alessia Adventures</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/styles/admin.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎛️ Administración de Evento</h1>
+            <button onclick="window.location.href='index.html'" class="back-btn">← Volver a eventos</button>
+        </header>
+
+        <div id="loading" class="loading">Cargando información del evento...</div>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="admin-content" style="display: none;">
+            <!-- Sección 1: Generales -->
+            <section class="admin-section">
+                <h2>📋 Información General</h2>
+                <form id="general-form">
+                    <div class="form-group">
+                        <label for="event-name">Nombre del evento:</label>
+                        <input type="text" id="event-name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="event-description">Descripción:</label>
+                        <textarea id="event-description" name="description" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="event-date">Fecha del evento:</label>
+                        <input type="datetime-local" id="event-date" name="event_date">
+                    </div>
+                    
+                    <button type="submit" class="save-btn">💾 Guardar cambios</button>
+                </form>
+            </section>
+
+            <!-- Sección 2: Invitados -->
+            <section class="admin-section">
+                <h2>👥 Gestión de Invitados</h2>
+                
+                <!-- Estadísticas -->
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total invitados:</span>
+                        <span id="total-guests" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Confirmados:</span>
+                        <span id="confirmed-guests" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Pendientes:</span>
+                        <span id="pending-guests" class="stat-value">0</span>
+                    </div>
+                </div>
+
+                <!-- Formulario para agregar invitado -->
+                <div class="add-guest-form">
+                    <h3>➕ Agregar nuevo invitado</h3>
+                    <form id="guest-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guest-name">Nombre completo:</label>
+                                <input type="text" id="guest-name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guest-email">Email:</label>
+                                <input type="email" id="guest-email" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="guest-phone">Teléfono:</label>
+                                <input type="tel" id="guest-phone" name="phone">
+                            </div>
+                        </div>
+                        <button type="submit" class="add-btn">👤 Agregar invitado</button>
+                    </form>
+                </div>
+
+                <!-- Lista de invitados -->
+                <div class="guests-list">
+                    <h3>📋 Lista de invitados</h3>
+                    <div id="no-guests" class="no-data" style="display: none;">
+                        No hay invitados registrados para este evento.
+                    </div>
+                    <table id="guests-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guests-tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="src/scripts/admin-event.js"></script>
+</body>
+</html>

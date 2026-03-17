@@ -69,11 +69,16 @@ function addButtonEventListeners() {
         });
     });
 
-    // Event listener para botones de administración (placeholder)
+    // Event listener para botones de administración
     const adminButtons = document.querySelectorAll('.admin-btn');
-    adminButtons.forEach(button => {
+    adminButtons.forEach((button, index) => {
         button.addEventListener('click', function() {
-            alert('Funcionalidad de administración próximamente');
+            // Obtener el nombre del evento desde la fila de la tabla
+            const row = this.closest('tr');
+            const eventName = row.querySelector('td:first-child').textContent;
+            
+            console.log('🎯 Redirecting to admin for event:', eventName);
+            window.location.href = `admin-event.html?event=${encodeURIComponent(eventName)}`;
         });
     });
 }
