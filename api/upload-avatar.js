@@ -29,37 +29,12 @@ export default async function handler(req, res) {
   try {
     console.log('🖼️ Avatar upload request received');
     
-    // Usar el refresh token para obtener un access token válido
-    const refreshToken = 'aB_rrZdU7xwAAAAAAAAAAZBe4R4qVXdlvSBv-kzJh_yKJKnkKNgUj1WojAMHuNOZ';
-    const appKey = 'l4ixtgvyqqzlq3n';
-    const appSecret = '1e8g5kbecjvfhwu';
+    // Usar directamente el OAuth2 token que me proporcionaste
+    const accessToken = 'sl.u.AGUoSIDwscJ3q0LOX9nniIafPTpLgEbcL3VfKx1zLWX3-8XIJWktVG6EvNc8T588VZlHCMvowK0tykdL5IdGj-Hot1LPAFWBMKXq5YOfnIV2R5LHS2vEQsx8NVvfbICcH6Yc2c2UOdIW4s2MeAAp88RdbRiMXANVmwRoUs3M9RXuJMsQZJKKk6iUnqlhLaXC2pf6pYn0k4zcfjNm5IyWPG_Af0fPHS_homZM7b65DyUZi7au7isxC2Ubk35uj5LyvjfPTNZh5sUidLVl1ylLAMzBH0r--oo3Oc3lNnfon-rUuqWE0zxXeN1KOTb58z72CR6EZP9etB-XTIpkp_iEarV5rtuCNg6RBRvhayWhnSo69Mi364Xh8CrAq2QF6voZphtc9kd3XFnCb8jCr_FqNC4SQYT8pjIVg4sOpahRHZFVbwX-JSR4Ih4jRl3vs7TWBYXhu20HOlKxOCLzjuFF7EwZcFe-qivc85-9XI2UTz9tDXLJHjvf0-w2QmIKDVY-rDVY17gUYKcvQsQDeXVPFjzt2IxIG_ZJKO7EH2lDeKiZYTr16RvwKj4SOSLtRNZ0_muFuSSI3rla1E5A_QtFlrTsdRi6wst2mh7FGvu8nrKeIqPui6VaOmE6tXA6qcrEwhM4WxHrb2tnJiF8ZTaAFcKOW17AX-HChy58HQz_MZ0gXwu54atPsNuGCTz614PNjKgCoNiyT1h14aMDT4I3mIl48m2lF9woA_JrSt5akSpwmFNvnucMnAYAtMmr-fq__QDdvgwN7F8mKBiNlHmrw4KS84OmMYiOOwqVk3l2ycr3gSWlN9d7rjSk6aHPN50Yn3QccS7MjUV3yauA7xOLLegWxsj68ViDg6AUyROcziL8UD0RbPNlY-8KJTRqDyjN6eKwFAS-wR4orKRMMhXhcSvGh64HG8y5PsRIIHZaU7IZ24QI4ZrVmnw05gu3yez4AJ_wRU_nRZYejC2gZTAYFyPlrllPgUGta_4MWe63icTnpNr1D49dskqBJ6iS3FI0UDSElYq5OYBISmgYEBt4MLdaFPDh_ouPFTL8JGqz4L2_2y0lBdCpD062Dlq7EEmJmYnkbYLyuhcI1ppyFy06ycEo240QjVeJn2NGjJdcGk8hNJWQu6gpZkSebbkqYdkdPubOcVlcgaqu9bOwMQdC1EIKLhSUa59fN7sjP0FOBnd3lHw-gYSuYFSNUehbaYYS7F4cynP7-QNewewTaLWsNQhT_q4A10_Bq7hOypJS_xRSQ5gxZqnfWg83eh5cMTKeHKkkuk5N0UvVmg9OE9HQrKBDPS2E8Wv7OumrVavnLeYd0cbRrq4Ps1wCszyVQGnfx34';
     
-    console.log('🔄 Obteniendo access token con refresh token...');
-    
-    // Generar nuevo access token usando refresh token
-    const tokenResponse = await fetch('https://api.dropboxapi.com/oauth2/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + Buffer.from(`${appKey}:${appSecret}`).toString('base64')
-      },
-      body: new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken
-      })
-    });
-
-    if (!tokenResponse.ok) {
-      const errorText = await tokenResponse.text();
-      console.error('❌ Error obteniendo token:', errorText);
-      throw new Error('No se pudo obtener access token de Dropbox');
-    }
-
-    const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.access_token;
-    
-    console.log('✅ Access token obtenido correctamente');
-    console.log('🔑 Token starts with:', accessToken?.substring(0, 15));
+    console.log('✅ Usando OAuth2 token directo de Dropbox');
+    console.log('🔑 Token length:', accessToken.length);
+    console.log('🔑 Token starts with:', accessToken.substring(0, 15));
 
     // Configurar cliente de Dropbox
     const dbx = new Dropbox({
