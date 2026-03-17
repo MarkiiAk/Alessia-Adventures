@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         // Conectar usando Neon serverless driver
         const sql = neon(process.env.DATABASE_URL);
 
-        // Obtener invitados con datos completos usando JOIN
+        // Obtener invitados con datos completos usando JOIN, incluyendo avatares y prioridad
         const invitations = await sql`
             SELECT 
                 i.id as invitation_id,
@@ -45,13 +45,18 @@ export default async function handler(req, res) {
                 g.id as guest_id,
                 g.name as guest_name,
                 g.email,
-                g.phone
+                g.phone,
+                g.avatar,
+                COALESCE(g.priority_order, 999) as priority_order
             FROM invitations i
             JOIN guests g ON i.guest_id = g.id
             WHERE i.event_id = (
                 SELECT id FROM events WHERE name = ${eventId} LIMIT 1
             )
-            ORDER BY i.status ASC, g.name ASC
+            ORDER BY 
+                COALESCE(g.priority_order, 999) ASC,
+                i.status ASC, 
+                g.name ASC
         `;
 
         console.log('Invitaciones encontradas:', invitations.length);
@@ -68,10 +73,19 @@ export default async function handler(req, res) {
 
         // Formatear respuesta con datos completos
         const formattedGuests = invitations.map(invitation => {
-            // Mapear status numérico a texto
+            // Mapear status numérico a texto correctamente
             let status = 'PENDING';
             if (invitation.status === 1) status = 'CONFIRMED';
-            else if (invitation.status === 3) status = 'DECLINED';
+            else if (invitation.status === 2) status = 'DECLINED';
+            // status === 3 es PENDING (default)
+            
+            // Log para debugging de avatares
+            console.log(`Avatar para ${invitation.guest_name}:`, invitation.avatar);
+            
+            // Procesar avatar igual que el admin
+            const avatarSrc = invitation.avatar && invitation.avatar.startsWith('http') ? 
+                invitation.avatar : 
+                (invitation.avatar ? invitation.avatar : '/src/default-avatar.png');
             
             return {
                 id: invitation.invitation_id,
@@ -79,13 +93,15 @@ export default async function handler(req, res) {
                 email: invitation.email,
                 phone: invitation.phone || '',
                 status: status,
-                avatar: '/src/default-avatar.png',
+                avatar: avatarSrc,
                 role: 'Aventurero Mágico',
+                priority: invitation.priority_order || 999,
                 createdAt: invitation.invitation_created
             };
         });
 
         console.log('Invitados formateados:', formattedGuests.length);
+        console.log('Sample guest data:', formattedGuests[0]);
 
         return res.status(200).json({
             success: true,

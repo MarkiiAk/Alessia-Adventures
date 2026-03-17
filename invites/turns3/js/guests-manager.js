@@ -55,9 +55,15 @@ class GuestsManager {
                 
                 // Identificar al invitado actual si hay invitación
                 if (this.currentInvitationId) {
+                    console.log('🎯 Buscando invitación ID:', this.currentInvitationId);
+                    console.log('🗃️ IDs disponibles:', this.guests.map(g => ({name: g.name, id: g.id})));
+                    
                     this.currentGuest = this.guests.find(guest => guest.id === this.currentInvitationId);
-                    console.log('🎯 Buscando invitación:', this.currentInvitationId);
                     console.log('🎭 Invitado encontrado:', this.currentGuest);
+                    
+                    if (!this.currentGuest) {
+                        console.warn('⚠️ No se encontró invitado con ID:', this.currentInvitationId);
+                    }
                 }
                 
                 // Renderizar invitados dinámicos
