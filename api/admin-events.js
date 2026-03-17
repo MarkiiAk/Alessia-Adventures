@@ -95,6 +95,8 @@ async function getEventData(sql, res, eventId) {
       SELECT 
         g.id as guest_id,
         g.name,
+        g.nickname,
+        g.avatar,
         g.email,
         g.phone,
         i.status,
@@ -195,7 +197,7 @@ async function addGuest(sql, res, eventId, data) {
   try {
     console.log('👤 Adding guest to event:', eventId, data);
     
-    const { name, email, phone } = data;
+    const { name, nickname, avatar, email, phone } = data;
     
     if (!name || !name.trim()) {
       return res.status(400).json({
@@ -247,8 +249,8 @@ async function addGuest(sql, res, eventId, data) {
     } else {
       // Crear nuevo invitado
       const newGuest = await sql`
-        INSERT INTO guests (name, email, phone)
-        VALUES (${name.trim()}, ${email || null}, ${phone || null})
+        INSERT INTO guests (name, nickname, avatar, email, phone)
+        VALUES (${name.trim()}, ${nickname || null}, ${avatar || null}, ${email || null}, ${phone || null})
         RETURNING id
       `;
       guestId = newGuest[0].id;

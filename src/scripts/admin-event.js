@@ -130,19 +130,26 @@ function fillGuestsTable(guests) {
                 break;
         }
         
+        // Crear celda de avatar
+        const avatarSrc = guest.avatar ? `/uploads/${guest.avatar}` : '/src/default-avatar.png';
+        const displayName = guest.nickname ? `${guest.name} (${guest.nickname})` : guest.name;
+        
         row.innerHTML = `
-            <td>${guest.name}</td>
+            <td class="avatar-cell">
+                <img src="${avatarSrc}" alt="Avatar de ${guest.name}" class="guest-avatar" onerror="this.src='/src/default-avatar.png'">
+            </td>
+            <td>${displayName}</td>
             <td>${guest.email || '-'}</td>
             <td>${guest.phone || '-'}</td>
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <button class="generate-invitation-btn" onclick="generateInvitation('${guest.name}', '${guest.email}')" title="Generar invitación personalizada">
-                                <i class="fas fa-link">Generar Invitacion</i>
-                            </button>
-                            <button class="delete-btn" onclick="deleteGuest(${guest.guest_id})" title="Eliminar invitado">
-                                <i class="fas fa-trash">Eliminar</i>
-                            </button>
-                        </td>
+            <td>
+                <button class="generate-invitation-btn" onclick="generateInvitation('${guest.name}', '${guest.email}')" title="Generar invitación personalizada">
+                    <i class="fas fa-link">Generar Invitacion</i>
+                </button>
+                <button class="delete-btn" onclick="deleteGuest(${guest.guest_id})" title="Eliminar invitado">
+                    <i class="fas fa-trash">Eliminar</i>
+                </button>
+            </td>
         `;
         
         tbody.appendChild(row);
@@ -156,6 +163,27 @@ function setupEventListeners() {
     
     // Formulario de agregar invitado
     document.getElementById('guest-form').addEventListener('submit', handleGuestFormSubmit);
+    
+    // Vista previa de avatar
+    const avatarInput = document.getElementById('guest-avatar');
+    const avatarPreview = document.getElementById('avatar-preview');
+    const previewImg = document.getElementById('preview-img');
+    
+    if (avatarInput && avatarPreview && previewImg) {
+        avatarInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    avatarPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                avatarPreview.style.display = 'none';
+            }
+        });
+    }
 }
 
 // Manejar envío del formulario general
@@ -209,8 +237,39 @@ async function handleGuestFormSubmit(e) {
     
     try {
         const formData = new FormData(e.target);
+        const avatarFile = formData.get('avatar');
+        
+        let avatarUrl = null;
+        
+        // Si hay un archivo de avatar, subirlo primero
+        if (avatarFile && avatarFile.size > 0) {
+            try {
+                const uploadFormData = new FormData();
+                uploadFormData.append('avatar', avatarFile);
+                
+                const uploadResponse = await fetch('/api/upload-avatar', {
+                    method: 'POST',
+                    body: uploadFormData
+                });
+                
+                const uploadResult = await uploadResponse.json();
+                
+                if (uploadResult.success) {
+                    avatarUrl = uploadResult.filename;
+                } else {
+                    throw new Error(uploadResult.error);
+                }
+            } catch (error) {
+                console.error('Error subiendo avatar:', error);
+                alert('Error subiendo la imagen del avatar: ' + error.message);
+                return;
+            }
+        }
+        
         const data = {
             name: formData.get('name').trim(),
+            nickname: formData.get('nickname').trim(),
+            avatar: avatarUrl,
             email: formData.get('email').trim(),
             phone: formData.get('phone').trim()
         };
@@ -238,6 +297,12 @@ async function handleGuestFormSubmit(e) {
         
         // Limpiar formulario
         e.target.reset();
+        
+        // Limpiar vista previa de avatar
+        const avatarPreview = document.getElementById('avatar-preview');
+        if (avatarPreview) {
+            avatarPreview.style.display = 'none';
+        }
         
         // Recargar datos
         await loadEventData();

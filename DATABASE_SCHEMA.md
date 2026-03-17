@@ -16,6 +16,8 @@
 |-------|------|---------------|-------------|
 | `id` | UUID | PRIMARY KEY, Auto-generated | ID único del invitado |
 | `name` | VARCHAR(255) | NOT NULL | Nombre completo del invitado |
+| `nickname` | VARCHAR(100) | NULLABLE | Apodo del invitado |
+| `avatar` | VARCHAR(255) | NULLABLE | Nombre del archivo de avatar |
 | `email` | VARCHAR(255) | NULLABLE | Email del invitado |
 | `phone` | VARCHAR(20) | NULLABLE | Teléfono del invitado |
 | `created_at` | TIMESTAMP(6) | DEFAULT now() | Fecha de creación |

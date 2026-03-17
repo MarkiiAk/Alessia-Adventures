@@ -276,6 +276,55 @@ table tr:hover {
     background-color: #c82333;
 }
 
+/* Estilos para vista previa de avatar */
+#avatar-preview {
+    display: none;
+    margin-top: 10px;
+}
+
+#preview-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+/* Estilos para avatares en la tabla */
+.avatar-cell {
+    text-align: center;
+    width: 60px;
+    padding: 8px !important;
+}
+
+.guest-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e9ecef;
+    background-color: #f8f9fa;
+}
+
+/* Ajustar tabla para nueva columna de avatar */
+.guests-table th:first-child,
+.guests-table td:first-child {
+    width: 60px;
+}
+
+/* Estilos para botón de subir archivo */
+input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+input[type="file"]:hover {
+    border-color: #007bff;
+}
+
 /* Media queries para dispositivos móviles */
 @media (max-width: 768px) {
     header {
@@ -301,5 +350,14 @@ table tr:hover {
     table th,
     table td {
         padding: 8px;
+    }
+    
+    .avatar-cell {
+        width: 50px;
+    }
+    
+    .guest-avatar {
+        width: 35px;
+        height: 35px;
     }
 }
