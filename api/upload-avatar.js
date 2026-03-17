@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     console.log('🖼️ Avatar upload request received');
     
     // Token de acceso actualizado - si este expira, necesitamos uno nuevo
-    const accessToken = 'sl.u.AGUoSIDwscJ3q0LOX9nniIafPTpLgEbcL3VfKx1zLWX3-8XIJWktVG6EvNc8T588VZlHCMvowK0tykdL5IdGj-Hot1LPAFWBMKXq5YOfnIV2R5LHS2vEQsx8NVvfbICcH6Yc2c2UOdIW4s2MeAAp88RdbRiMXANVmwRoUs3M9RXuJMsQZJKKk6iUnqlhLaXC2pf6pYn0k4zcfjNm5IyWPG_Af0fPHS_homZM7b65DyUZi7au7isxC2Ubk35uj5LyvjfPTNZh5sUidLVl1ylLAMzBH0r--oo3Oc3lNnfon-rUuqWE0zxXeN1KOTb58z72CR6EZP9etB-XTIpkp_iEarV5rtuCNg6RBRvhayWhnSo69Mi364Xh8CrAq2QF6voZphtc9kd3XFnCb8jCr_FqNC4SQYT8pjIVg4sOpahRHZFVbwX-JSR4Ih4jRl3vs7TWBYXhu20HOlKxOCLzjuFF7EwZcFe-qivc85-9XI2UTz9tDXLJHjvf0-w2QmIKDVY-rDVY17gUYKcvQsQDeXVPFjzt2IxIG_ZJKO7EH2lDeKiZYTr16RvwKj4SOSLtRNZ0_muFuSSI3rla1E5A_QtFlrTsdRi6wst2mh7FGvu8nrKeIqPui6VaOmE6tXA6qcrEwhM4WxHrb2tnJiF8ZTaAFcKOW17AX-HChy58HQz_MZ0gXwu54atPsNuGCTz614PNjKgCoNiyT1h14aMDT4I3mIl48m2lF9woA_JrSt5akSpwmFNvnucMnAYAtMmr-fq__QDdvgwN7F8mKBiNlHmrw4KS84OmMYiOOwqVk3l2ycr3gSWlN9d7rjSk6aHPN50Yn3QccS7MjUV3yauA7xOLLegWxsj68ViDg6AUyROcziL8UD0RbPNlY-8KJTRqDyjN6eKwFAS-wR4orKRMMhXhcSvGh64HG8y5PsRIIHZaU7IZ24QI4ZrVmnw05gu3yez4AJ_wRU_nRZYejC2gZTAYFyPlrllPgUGta_4MWe63icTnpNr1D49dskqBJ6iS3FI0UDSElYq5OYBISmgYEBt4MLdaFPDh_ouPFTL8JGqz4L2_2y0lBdCpD062Dlq7EEmJmYnkbYLyuhcI1ppyFy06ycEo240QjVeJn2NGjJdcGk8hNJWQu6gpZkSebbkqYdkdPubOcVlcgaqu9bOwMQdC1EIKLhSUa59fN7sjP0FOBnd3lHw-gYSuYFSNUehbaYYS7F4cynP7-QNewewTaLWsNQhT_q4A10_Bq7hOypJS_xRSQ5gxZqnfWg83eh5cMTKeHKkkuk5N0UvVmg9OE9HQrKBDPS2E8Wv7OumrVavnLeYd0cbRrq4Ps1wCszyVQGnfx34';
+    const accessToken = 'sl.u.AGUxYRYD2O7SSkIcCfat8uaqThx6ouWx2qlfhTzpuw0GxP9GasJapWGTEfHvkzghdyirBrzNlpoeNrNaNlsTxo4C0It9kLzVQoy2_9ahbuVcM8Mu0i5J9kPukp_shw3eUFitvT4Wa3XrmTm46N5HHp0Lx8_Ql9A-fxp8G2zpZQYqUXcuV3GuPbg2u8AdVeikH8WwgXek1WLuLfRcv0g7dmZkgHbcQQ-N7P5ue9TSoJQ6tsIEJ4M1o-FV2vkjCm3VZb2T6LiOoD9GWyoyxWAEplsEXWC0ga33QsiFlMYfTI3sFaO8in4qMHsvwcFS4FBiU1-IE-DwBNJ5_LDVrU5sfEsdnWJyE0YChyaHlZgVMLjW7GLwMRuTyzhBsJ6u6UwGCv3uHIMfkF5EftxHZJBEusc-oAPkbCqQAJD8uZGYa5KabZRHfJxN2jU6vW9rgOVLVL5B0suPH0zjhA9JYajlI2pCv7IxiVoyLeGaxFTqrUgQTKmfeZ5Zh6BeRDKzJMkHu5ULQMave9MIXoyHhYP_PQvFEa-mpXS0XFqTyBlKZY7u3hjX3jXySz57UU4uQxIq8uHBusPZ7VniRNCExVVMIx-4ZLdKjETfUnRA3Qe25LdLNh99POQAG_8XXkwgxilI5OEJPOpFTZBBo7VAv_pEvs7L4o-qXpteYWW8OGxLBLsdziVAeohEPo0q6ZJBX13mloWVn94wvXk01Q5GPuqaZLhAsX4b5BLIMu6aVgytG0g5xeDQXD-HCIJL31-NCECqw43FlCZCQT5EIJEXztgtYnCJDYSD9SWXnom2yng3Ewb5GN8uU-duP-IPR4NrP-Y0h_0c9QjECjqhZ3FJTnbcj0_pmhOL7BB68rRnGq1rYc-O-E8xnpz5HtyGEinfVwJQqGJgRf3wdlc6qvE3_C8IWa0TmwmRCOcyacAouDJvO-yqruFnDWMOxs7DZ2_1CqASJM8HbLdxJg3n6Pu63SRPs917LkDrlBaINvlR8UPbZCW85yNqA3lL6VfZUWbHPGW8_7_Xtq9GYVOGPGjjLM8x-WKn1OMtHdXMVc1EYJXRzlz9jAknzvOiJuRwowyAnnXzJGzNIEh2TJPiHrmkOXlsLNHcgYlFlW5wa32f9BBwXoI_l9ceL7xPnsjDmAqvRVHtDsv_T5Ckk5RBzeFu3u0nqIVH7hb1bYAQLvbhirUDOPUqEIAwWakIk6AKqJB-1hHk-l-DUCr8NeaWRea2cyOWdMoX7tpZY1Mj7_VruTfncOc2vXh4eDwuQpUmkqLipNAhydQRqAwEpFyUFzUVdfwKEszU3z-TMh2FNDye5w-3ZV-FaAd5vV5GXw1A42z6HNAl9Rc';
     
     console.log('🔑 Usando OAuth2 token de Dropbox');
     console.log('🔍 Token length:', accessToken.length);
@@ -103,28 +103,14 @@ export default async function handler(req, res) {
       
       console.log('✅ UPLOAD EXITOSO! File uploaded to Dropbox:', uploadResponse.result.path_display);
 
-      // Intentar obtener o crear enlace compartido
+      // Crear o obtener enlace compartido con manejo robusto de errores
       let directUrl;
       try {
-        console.log('🔗 Intentando obtener enlace compartido existente...');
+        console.log('🔗 Intentando crear enlace compartido...');
         
-        // Primero intentar listar enlaces existentes
         let shareLinkResponse;
         try {
-          const existingLinks = await dbx.sharingListSharedLinks({
-            path: uploadResponse.result.path_display
-          });
-          
-          if (existingLinks.result.links && existingLinks.result.links.length > 0) {
-            console.log('✅ Encontrado enlace existente:', existingLinks.result.links[0].url);
-            shareLinkResponse = { result: { url: existingLinks.result.links[0].url } };
-          } else {
-            throw new Error('No hay enlaces existentes');
-          }
-        } catch (listError) {
-          console.log('🔗 No hay enlaces existentes, creando uno nuevo...');
-          
-          // Si no hay enlaces existentes, crear uno nuevo
+          // Intentar crear enlace compartido directamente
           shareLinkResponse = await dbx.sharingCreateSharedLinkWithSettings({
             path: uploadResponse.result.path_display,
             settings: {
@@ -134,32 +120,59 @@ export default async function handler(req, res) {
             }
           });
           console.log('✅ Enlace compartido creado:', shareLinkResponse.result.url);
+          
+        } catch (createError) {
+          console.log('🔗 Error creando enlace:', createError.message);
+          
+          // Si el error es porque ya existe un enlace, buscar el existente
+          if (createError.error && 
+              (createError.error.error_summary?.includes('shared_link_already_exists') ||
+               createError.error['.tag'] === 'shared_link_already_exists')) {
+            console.log('🔗 Enlace ya existe, buscando existente...');
+            
+            const existingLinks = await dbx.sharingListSharedLinks({
+              path: uploadResponse.result.path_display
+            });
+            
+            if (existingLinks.result.links && existingLinks.result.links.length > 0) {
+              console.log('✅ Encontrado enlace existente:', existingLinks.result.links[0].url);
+              shareLinkResponse = { result: { url: existingLinks.result.links[0].url } };
+            } else {
+              throw new Error('No se pudo encontrar enlace existente');
+            }
+          } else {
+            // Si es cualquier otro error, fallar
+            throw createError;
+          }
         }
 
         // Convertir el enlace de Dropbox a URL directa
-        // Los nuevos enlaces tienen formato: https://www.dropbox.com/scl/fi/...?rlkey=...&st=...&dl=0
         directUrl = shareLinkResponse.result.url;
+        console.log('🔗 URL original:', directUrl);
         
-        // Si es el nuevo formato con /scl/fi/, convertir correctamente
+        // Convertir para formato /scl/fi/ (nuevo formato de Dropbox)
         if (directUrl.includes('/scl/fi/')) {
-          // Cambiar dropbox.com por dl.dropboxusercontent.com y mantener parámetros
+          // Cambiar www.dropbox.com por dl.dropboxusercontent.com
           directUrl = directUrl.replace('www.dropbox.com/scl/fi/', 'dl.dropboxusercontent.com/scl/fi/');
           // Cambiar dl=0 por dl=1 para descarga directa
           directUrl = directUrl.replace('&dl=0', '&dl=1');
           if (directUrl.includes('?dl=0')) {
             directUrl = directUrl.replace('?dl=0', '?dl=1');
           }
-        } else {
-          // Formato antiguo
+          console.log('✅ URL convertida (nuevo formato):', directUrl);
+        } 
+        // Convertir para formato antiguo
+        else if (directUrl.includes('dropbox.com')) {
           directUrl = directUrl.replace('dropbox.com', 'dl.dropboxusercontent.com');
           directUrl = directUrl.replace('?dl=0', '');
+          console.log('✅ URL convertida (formato antiguo):', directUrl);
         }
 
       } catch (shareError) {
-        console.error('🚨 FALLÓ OBTENER/CREAR ENLACE COMPARTIDO:', shareError.message);
+        console.error('🚨 FALLÓ CREAR/OBTENER ENLACE COMPARTIDO:', shareError.message);
         console.error('🚨 Share error details:', JSON.stringify(shareError, null, 2));
         
-        // Si falla crear el enlace, devolver error porque no tenemos URL válida
+        // Si falla todo, devolver error detallado
         throw new Error(`No se pudo crear enlace compartido de Dropbox: ${shareError.message}`);
       }
 
