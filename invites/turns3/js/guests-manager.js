@@ -155,7 +155,6 @@ class GuestsManager {
             <h3 class="adventurer-name">${guest.name}</h3>
             <p class="adventurer-role">${this.getGuestRoleIcon(guest)} ${guest.role || 'Aventurero Mágico'}</p>
             
-            ${isCurrentGuest ? '<div class="current-guest-badge">👑 ¡Eres Tú!</div>' : ''}
         `;
         
         // Animar entrada después de un momento
