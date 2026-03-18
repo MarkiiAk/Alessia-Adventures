@@ -144,6 +144,10 @@ class GuestsManager {
             : `<i class="fas fa-user"></i>`;
         
         card.innerHTML = `
+            ${isCurrentGuest ? '<div class="ribbon"></div>' : ''}
+            ${isCurrentGuest ? '<div class="current-guest-sparkles"></div>' : ''}
+            ${isCurrentGuest ? '<div class="ribbon-particles"></div>' : ''}
+            
             ${statusClass === 'confirmed' ? `<div class="confirmed-seal">${statusContent}</div>` : 
               statusClass === 'declined' ? `<div class="declined-seal">${statusContent}</div>` :
               `<div class="pending-indicator">${statusContent}</div>`}
