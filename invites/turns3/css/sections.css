@@ -1764,21 +1764,6 @@
     animation: highlightPulse 2s ease-in-out infinite;
 }
 
-/* Indicador de invitación personalizada */
-.invitation-indicator {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: linear-gradient(135deg, #10b981, #34d399);
-    color: white;
-    padding: 0.3rem 0.6rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    z-index: 10;
-    animation: bounce 2s ease-in-out infinite;
-}
 
 /* Botón RSVP confirmado */
 .rsvp-button.confirmed {

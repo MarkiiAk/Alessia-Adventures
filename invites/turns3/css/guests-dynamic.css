@@ -54,14 +54,14 @@
     --f: var(--ribbon-size); /* control del doblez */
     
     position: absolute;
-    top: 0;
-    left: 0;
-    line-height: 1.8;
-    padding-inline: 1lh;
+    top: 8px;
+    left: 8px;
+    line-height: 1.6;
+    padding-inline: 0.8lh;
     padding-bottom: var(--f);
     
-    /* Tipografía premium */
-    font-size: 28px;
+    /* Tipografía optimizada */
+    font-size: 20px;
     font-weight: 900;
     color: var(--ribbon-text);
     text-shadow: 
@@ -71,7 +71,7 @@
     
     z-index: 15;
     
-    /* Forma del ribbon diagonal avanzada */
+    /* Forma del ribbon diagonal optimizada */
     border-image: conic-gradient(rgba(0, 0, 0, 0.2) 0 0) 51%/var(--f);
     clip-path: polygon(
         100% calc(100% - var(--f)),
@@ -84,30 +84,23 @@
         calc(100% - 999px) calc(100% - var(--f) - 999px)
     );
     
-    transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg);
+    transform: translate(-5%, -5%) rotate(-45deg);
     transform-origin: 100% 100%;
     
-    /* Gradiente premium del ribbon */
-    background: linear-gradient(
-        135deg,
-        var(--ribbon-primary) 0%,
-        #ff8c42 25%,
-        var(--ribbon-primary) 50%,
-        #cc5d14 75%,
-        var(--ribbon-primary) 100%
-    );
+    /* Color sólido naranja */
+    background: var(--ribbon-primary);
     
-    /* Efectos premium */
+    /* Efectos premium simplificados */
     box-shadow: 
-        0 8px 25px var(--ribbon-shadow),
+        0 6px 20px var(--ribbon-shadow),
         inset 0 2px 0 rgba(255, 255, 255, 0.3),
         inset 0 -1px 0 rgba(0, 0, 0, 0.2),
-        0 0 30px var(--ribbon-glow);
+        0 0 25px var(--ribbon-glow);
         
     border: 2px solid rgba(255, 255, 255, 0.2);
     
-    /* Animación mágica del ribbon */
-    animation: ribbonMagicGlow 4s ease-in-out infinite;
+    /* Animación simplificada solo brillo */
+    animation: ribbonSimpleGlow 3s ease-in-out infinite;
     
     /* Efectos de interacción */
     transition: all 0.3s ease;
@@ -120,83 +113,37 @@
     white-space: nowrap;
 }
 
-/* Animación mágica premium */
-@keyframes ribbonMagicGlow {
+/* Animación simplificada solo brillo */
+@keyframes ribbonSimpleGlow {
     0%, 100% {
-        background: linear-gradient(
-            135deg,
-            var(--ribbon-primary) 0%,
-            #ff8c42 25%,
-            var(--ribbon-primary) 50%,
-            #cc5d14 75%,
-            var(--ribbon-primary) 100%
-        );
+        background: var(--ribbon-primary);
         box-shadow: 
-            0 8px 25px var(--ribbon-shadow),
+            0 6px 20px var(--ribbon-shadow),
             inset 0 2px 0 rgba(255, 255, 255, 0.3),
             inset 0 -1px 0 rgba(0, 0, 0, 0.2),
-            0 0 30px var(--ribbon-glow);
-        filter: brightness(1) saturate(1);
-    }
-    25% {
-        background: linear-gradient(
-            135deg,
-            #ff8c42 0%,
-            var(--ribbon-primary) 25%,
-            #ff8c42 50%,
-            var(--ribbon-primary) 75%,
-            #ff8c42 100%
-        );
-        box-shadow: 
-            0 12px 35px rgba(255, 140, 66, 0.5),
-            inset 0 2px 0 rgba(255, 255, 255, 0.4),
-            inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-            0 0 40px rgba(255, 140, 66, 0.7);
-        filter: brightness(1.1) saturate(1.2);
+            0 0 25px var(--ribbon-glow);
+        filter: brightness(1);
     }
     50% {
-        background: linear-gradient(
-            135deg,
-            var(--ribbon-primary) 0%,
-            #ffb366 25%,
-            var(--ribbon-primary) 50%,
-            #ffb366 75%,
-            var(--ribbon-primary) 100%
-        );
+        background: var(--ribbon-primary);
         box-shadow: 
-            0 15px 40px rgba(240, 120, 24, 0.6),
-            inset 0 3px 0 rgba(255, 255, 255, 0.5),
-            inset 0 -2px 0 rgba(0, 0, 0, 0.1),
-            0 0 50px rgba(240, 120, 24, 0.8);
-        filter: brightness(1.2) saturate(1.3);
-    }
-    75% {
-        background: linear-gradient(
-            135deg,
-            #ff8c42 0%,
-            var(--ribbon-primary) 25%,
-            #ff8c42 50%,
-            var(--ribbon-primary) 75%,
-            #ff8c42 100%
-        );
-        box-shadow: 
-            0 12px 35px rgba(255, 140, 66, 0.5),
+            0 8px 25px var(--ribbon-shadow),
             inset 0 2px 0 rgba(255, 255, 255, 0.4),
             inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-            0 0 40px rgba(255, 140, 66, 0.7);
-        filter: brightness(1.1) saturate(1.2);
+            0 0 35px var(--ribbon-glow);
+        filter: brightness(1.1);
     }
 }
 
-/* Efecto hover premium */
+/* Efecto hover optimizado */
 .adventurer-card.current-guest:hover .ribbon {
     animation-duration: 2s;
-    transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg) scale(1.05);
+    transform: translate(-5%, -5%) rotate(-45deg) scale(1.05);
     box-shadow: 
-        0 15px 45px var(--ribbon-shadow),
+        0 10px 30px var(--ribbon-shadow),
         inset 0 3px 0 rgba(255, 255, 255, 0.4),
         inset 0 -2px 0 rgba(0, 0, 0, 0.2),
-        0 0 60px var(--ribbon-glow);
+        0 0 40px var(--ribbon-glow);
 }
 
 /* Partículas mágicas alrededor del ribbon */
@@ -489,7 +436,7 @@
     }
     
     .adventurer-card.current-guest:hover .ribbon {
-        transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg) scale(1.03);
+        transform: translate(-5%, -5%) rotate(-45deg) scale(1.03);
     }
 }
 
@@ -518,21 +465,21 @@
 
 /* Efecto de entrada espectacular para el ribbon */
 .adventurer-card.current-guest .ribbon {
-    animation: ribbonMagicGlow 4s ease-in-out infinite, ribbonEntrance 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both;
+    animation: ribbonSimpleGlow 3s ease-in-out infinite, ribbonEntrance 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both;
 }
 
 @keyframes ribbonEntrance {
     0% {
         opacity: 0;
-        transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg) scale(0) rotateY(180deg);
+        transform: translate(-5%, -5%) rotate(-45deg) scale(0) rotateY(180deg);
     }
     60% {
         opacity: 1;
-        transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg) scale(1.1) rotateY(0deg);
+        transform: translate(-5%, -5%) rotate(-45deg) scale(1.1) rotateY(0deg);
     }
     100% {
         opacity: 1;
-        transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg) scale(1) rotateY(0deg);
+        transform: translate(-5%, -5%) rotate(-45deg) scale(1) rotateY(0deg);
     }
 }
 
