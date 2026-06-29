@@ -1346,6 +1346,36 @@ function initCharacterHover() {
 }
 
 // ===========================
+// HAMBURGER MENU — mobile nav
+// ===========================
+function initHamburgerMenu() {
+    const btn  = document.getElementById('nav-hamburger');
+    const menu = document.getElementById('nav-menu');
+    if (!btn || !menu) return;
+
+    const open  = () => { menu.classList.add('open');    btn.setAttribute('aria-expanded', 'true');  };
+    const close = () => { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); };
+    const toggle = () => menu.classList.contains('open') ? close() : open();
+
+    btn.addEventListener('click', toggle);
+
+    // Cierra al elegir un link
+    menu.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', close);
+    });
+
+    // Cierra al hacer tap fuera
+    document.addEventListener('click', e => {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) close();
+    }, { passive: true });
+
+    // Cierra con Escape
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') close();
+    });
+}
+
+// ===========================
 // FAIRY DUST — polvo de hadas al scroll
 // ===========================
 function initFairyDust() {
@@ -1402,6 +1432,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initStickyRSVP();
     initCharacterHover();
     initFairyDust();
+    initHamburgerMenu();
 });
 
 // Inicializar app después del loading (llamado desde LoadingScreen)
