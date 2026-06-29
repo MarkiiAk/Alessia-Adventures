@@ -1234,7 +1234,7 @@ class App {
 function initScrollReveal() {
     // Only static elements — dynamic ones (adventurer cards) are handled separately
     const revealTargets = [
-        { selector: '.section-header',                           cls: 'reveal' },
+        { selector: '.section-header',                           cls: 'reveal reveal-scale' },
         { selector: '.timeline-day:nth-child(odd) .day-content', cls: 'reveal-left' },
         { selector: '.timeline-day:nth-child(even) .day-content',cls: 'reveal-right' },
         { selector: '.day-marker',                               cls: 'reveal' },
@@ -1269,6 +1269,83 @@ function initScrollReveal() {
 }
 
 // ===========================
+// COUNTDOWN COUNTER ANIMATION
+// ===========================
+function initCountdownCounter() {
+    const countdownEl = document.querySelector('.countdown-timer');
+    if (!countdownEl) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const timeValues = countdownEl.querySelectorAll('.time-value');
+                timeValues.forEach(el => {
+                    const finalVal = parseInt(el.textContent, 10);
+                    if (isNaN(finalVal)) return;
+                    let start = 0;
+                    const duration = 900;
+                    const step = (timestamp) => {
+                        if (!start) start = timestamp;
+                        const progress = Math.min((timestamp - start) / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3); // ease-out-cubic
+                        el.textContent = String(Math.floor(eased * finalVal)).padStart(2, '0');
+                        if (progress < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    observer.observe(countdownEl);
+}
+
+// ===========================
+// STICKY RSVP BAR (MOBILE)
+// ===========================
+function initStickyRSVP() {
+    // Solo mobile
+    if (window.innerWidth > 768) return;
+
+    const bar = document.querySelector('.rsvp-sticky-bar');
+    if (!bar) return;
+
+    const rsvpSection = document.querySelector('#rsvp');
+
+    // Botón dentro del bar
+    const btn = bar.querySelector('.rsvp-sticky-btn');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            rsvpSection?.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const rsvpTop = rsvpSection ? rsvpSection.getBoundingClientRect().top + scrollY : Infinity;
+
+        if (scrollY > 400 && scrollY < rsvpTop - 200) {
+            bar.classList.add('visible');
+            bar.classList.remove('hidden');
+        } else {
+            bar.classList.remove('visible');
+            bar.classList.add('hidden');
+        }
+    }, { passive: true });
+}
+
+// ===========================
+// CHARACTER CARD HOVER
+// ===========================
+function initCharacterHover() {
+    document.querySelectorAll('.character-card').forEach(card => {
+        card.addEventListener('mouseenter', () => card.classList.add('card-hovered'));
+        card.addEventListener('mouseleave', () => card.classList.remove('card-hovered'));
+    });
+}
+
+// ===========================
 // INICIALIZACIÓN
 // ===========================
 document.addEventListener('DOMContentLoaded', () => {
@@ -1278,6 +1355,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Scroll reveal (starts after content is visible)
     setTimeout(initScrollReveal, 400);
+
+    // Animation enhancements
+    setTimeout(initCountdownCounter, 600);
+    initStickyRSVP();
+    initCharacterHover();
 });
 
 // Inicializar app después del loading (llamado desde LoadingScreen)
