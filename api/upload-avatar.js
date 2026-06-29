@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   try {
     const form = new IncomingForm({
-      maxFileSize: 5 * 1024 * 1024,
+      maxFileSize: 4 * 1024 * 1024, // 4MB — Vercel serverless limit is 4.5MB
       keepExtensions: true,
     });
 
