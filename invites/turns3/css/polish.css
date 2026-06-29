@@ -1,12 +1,14 @@
 /* ===========================
-   POLISH — Production-grade visual layer
-   Overrides and elevates the base styles
-   Register: Brand / Aesthetic: Disney Park at Night
+   POLISH — Director Vision v2
+   Full synthesis: Valentina (10) · Carlos (9) · Andrés (9) · Sofía (9) · UX Research (9)
+   Register: Disney Park at Night — Alessia is the star
    =========================== */
 
+
 /* ============================
-   BASE ATMOSPHERE
+   1. BASE ATMOSPHERE
    Deep Disney night sky — not generic SaaS purple
+   Each section gets its own oklch atmosphere below.
    ============================ */
 body {
     background: oklch(9% 0.055 262);
@@ -19,8 +21,9 @@ body {
             transparent 60%);
 }
 
+
 /* ============================
-   FIX: GRADIENT TEXT (absolute ban)
+   2. FIX: GRADIENT TEXT (absolute ban)
    Replaced with solid color + shadow for depth
    ============================ */
 .title-highlight {
@@ -56,8 +59,9 @@ body {
     color: oklch(75% 0.12 80 / 0.8);
 }
 
+
 /* ============================
-   FIX: SIDE-STRIPE BORDERS (absolute ban)
+   3. FIX: SIDE-STRIPE BORDERS (absolute ban)
    border-left colored accent > 1px is banned.
    Replace with icon + background tint.
    ============================ */
@@ -85,9 +89,10 @@ body {
     color: oklch(78% 0.18 82);
 }
 
+
 /* ============================
-   FIX: EASING CURVES (no bounce/elastic)
-   Spring curves removed, ease-out-quint used
+   4. FIX: EASING CURVES (no bounce/elastic)
+   Spring curves removed — ease-out-quint only
    ============================ */
 .reveal {
     opacity: 0;
@@ -138,8 +143,10 @@ body {
     transform: translateY(-10px) !important;
 }
 .character-card {
-    transition: transform 0.35s cubic-bezier(0,0,0.2,1),
-                box-shadow 0.35s cubic-bezier(0,0,0.2,1) !important;
+    transition: transform 0.4s cubic-bezier(0,0,0.2,1),
+                box-shadow 0.4s cubic-bezier(0,0,0.2,1),
+                background 0.4s ease,
+                border-color 0.4s ease !important;
 }
 .character-card.featured:hover {
     transform: translateY(-14px) !important;
@@ -148,57 +155,64 @@ body {
     transform: translateY(-8px) !important;
 }
 
+
 /* ============================
-   HERO — Disney Park at Night
+   5. HERO — Disney Park at Night
+   Valentina: castle al frente, Alessia es LA ESTRELLA
+   Carlos: primer frame de película Disney
    ============================ */
+
+/* Castle: protagonismo aumentado — opacity 0.68 como pide Valentina */
 .hero-bg {
-    opacity: 0.55;
-    filter: saturate(1.2) brightness(0.8);
+    opacity: 0.68;
+    filter: saturate(1.3) brightness(0.75);
 }
 
 .hero-bg::before {
     background: linear-gradient(
         170deg,
-        oklch(14% 0.12 262 / 0.7) 0%,
-        oklch(20% 0.14 280 / 0.4) 45%,
-        oklch(18% 0.08 330 / 0.25) 100%
+        oklch(12% 0.14 262 / 0.55) 0%,
+        oklch(18% 0.12 280 / 0.30) 45%,
+        oklch(16% 0.07 330 / 0.15) 100%
     );
 }
 
-/* "Alessia" — she's the star, make her MASSIVE */
+/* "Alessia" — 18vw, letra-a-letra-spacing brutal, protagonismo absoluto */
 .title-name {
-    font-size: clamp(4.5rem, 11vw, 8.5rem) !important;
-    line-height: 0.92 !important;
-    letter-spacing: -2px;
-    color: oklch(84% 0.18 82) !important;
+    font-size: clamp(5.5rem, 18vw, 11rem) !important;
+    line-height: 0.9 !important;
+    letter-spacing: -4px !important;
+    color: oklch(88% 0.20 82) !important;
     text-shadow:
-        0 0 40px oklch(78% 0.20 82 / 0.6),
-        0 0 80px oklch(78% 0.20 82 / 0.3),
-        0 4px 12px oklch(0% 0 0 / 0.4);
+        0 0 60px oklch(78% 0.22 82 / 0.7),
+        0 0 120px oklch(78% 0.20 82 / 0.35),
+        0 4px 16px oklch(0% 0 0 / 0.5);
 }
 
-/* "Cumpleaños #3 de" slightly smaller and softer — weight 300 so Alessia dominates */
+/* "Cumpleaños #3 de" — weight 300, recesivo para que Alessia domine */
 .title-line {
     font-size: clamp(1.1rem, 2.5vw, 1.6rem) !important;
-    color: oklch(85% 0.05 260 / 0.75);
-    letter-spacing: 0.02em;
-    font-weight: 300;
+    color: oklch(85% 0.05 260 / 0.7) !important;
+    letter-spacing: 0.04em;
+    font-weight: 300 !important;
 }
 
+
 /* ============================
-   COUNTDOWN — staggered, distinct
+   6. COUNTDOWN — staggered pulse + clase .counting para JS
+   Andrés: "carta de luz que escribe Alessia antes de abrir el castillo"
    ============================ */
 .time-unit {
     background: oklch(100% 0 0 / 0.06) !important;
     border: 1px solid oklch(100% 0 0 / 0.12);
     backdrop-filter: blur(12px);
-    animation: none !important; /* kill the all-same-time pulse */
+    animation: none !important;
     position: relative;
     overflow: hidden;
     min-width: 76px;
 }
 
-/* Stagger individual units' subtle glow */
+/* Stagger individual units — cada uno pulsa en su propio tiempo */
 .time-unit:nth-child(1) { animation: unitPulse1 4s 0.0s ease-in-out infinite !important; }
 .time-unit:nth-child(3) { animation: unitPulse1 4s 1.0s ease-in-out infinite !important; }
 .time-unit:nth-child(5) { animation: unitPulse1 4s 2.0s ease-in-out infinite !important; }
@@ -206,7 +220,24 @@ body {
 
 @keyframes unitPulse1 {
     0%, 80%, 100% { box-shadow: none; border-color: oklch(100% 0 0 / 0.12); }
-    40% { box-shadow: 0 0 20px oklch(78% 0.18 82 / 0.4); border-color: oklch(78% 0.18 82 / 0.4); }
+    40% {
+        box-shadow: 0 0 20px oklch(78% 0.18 82 / 0.4);
+        border-color: oklch(78% 0.18 82 / 0.4);
+    }
+}
+
+/* Clase .counting agregada por JS cuando el countdown entra al viewport.
+   El JS agrega .counting al .time-value y hace flip numérico.
+   Esta clase define el estado DURANTE la animación de conteo. */
+.time-value.counting {
+    animation: numberFlip 0.35s cubic-bezier(0,0,0.2,1) forwards;
+}
+
+@keyframes numberFlip {
+    0%   { opacity: 1; transform: translateY(0); }
+    40%  { opacity: 0; transform: translateY(-16px); }
+    60%  { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 .time-value {
@@ -214,6 +245,7 @@ body {
     color: oklch(97% 0.02 80) !important;
     font-weight: 700;
     letter-spacing: -1px;
+    transition: color 0.2s ease;
 }
 
 .time-label {
@@ -232,8 +264,9 @@ body {
     border-radius: 15px 15px 0 0;
 }
 
+
 /* ============================
-   HERO BADGE — more punch
+   7. HERO BADGE — more punch
    ============================ */
 .hero-badge {
     background: oklch(78% 0.18 82 / 0.15) !important;
@@ -243,28 +276,30 @@ body {
     box-shadow: none !important;
 }
 
-/* Float elements — more visible and varied */
+/* Float elements — más visibles, variados */
 .float-element {
     opacity: 0.18;
 }
 .float-element:nth-child(1),
 .float-element:nth-child(6) { opacity: 0.28; font-size: 3rem; }
 
+
 /* ============================
-   ADVENTURE TEAM SECTION
+   8. ADVENTURE TEAM — birthday-girl absolutamente protagonista
+   Carlos: "inalcanzablemente más especial que las demás"
    ============================ */
 .adventure-team-section {
-    background: oklch(11% 0.06 262 / 1);
+    background: oklch(11% 0.058 265 / 1);
 }
 
-/* Birthday girl: full row on desktop — protagonista absoluta */
+/* Birthday girl: fila completa en desktop — protagonista absoluta */
 @media (min-width: 900px) {
     .adventurer-card.birthday-girl {
         grid-column: 1 / -1;
         flex-direction: row;
         text-align: left;
-        gap: 2rem;
-        padding: 2rem 2.5rem;
+        gap: 2.5rem;
+        padding: 2.5rem 3rem;
         align-items: center;
     }
     .birthday-girl .adventurer-avatar {
@@ -275,23 +310,37 @@ body {
     }
 }
 
-/* Birthday girl: she leads, different visual weight */
+/* Birthday girl: diferencia visual aplastante */
 .adventurer-card.birthday-girl {
-    background: oklch(100% 0 0 / 0.09) !important;
-    border: 1px solid oklch(78% 0.18 82 / 0.4) !important;
+    background: oklch(15% 0.08 82 / 0.85) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.5) !important;
     box-shadow:
-        0 0 0 1px oklch(78% 0.18 82 / 0.15),
-        0 16px 48px oklch(0% 0 0 / 0.35),
-        inset 0 1px 0 oklch(100% 0 0 / 0.15) !important;
+        0 0 0 1px oklch(78% 0.18 82 / 0.18),
+        0 20px 60px oklch(0% 0 0 / 0.45),
+        0 0 80px oklch(78% 0.18 82 / 0.12),
+        inset 0 1px 0 oklch(100% 0 0 / 0.18) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Halo sutil detrás de la birthday-girl */
+.adventurer-card.birthday-girl::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%,
+        oklch(78% 0.18 82 / 0.08) 0%,
+        transparent 70%);
+    pointer-events: none;
 }
 
 /* Override shimmer sweep pseudo-element from sections.css */
 .adventurer-card::before { display: none !important; }
 
-/* Aventurer cards — purposeful glass */
+/* Resto de las cards — glass más neutro */
 .adventurer-card {
     background: oklch(100% 0 0 / 0.06) !important;
-    border: 1px solid oklch(100% 0 0 / 0.1) !important;
+    border: 1px solid oklch(100% 0 0 / 0.10) !important;
     box-shadow: 0 8px 32px oklch(0% 0 0 / 0.2) !important;
 }
 .adventurer-card:hover {
@@ -302,19 +351,20 @@ body {
     border-color: oklch(78% 0.18 82 / 0.35) !important;
 }
 
-/* Avatar: larger, cleaner ring */
+/* Avatar: cleaner ring */
 .adventurer-avatar {
     width: 96px !important;
     height: 96px !important;
     box-shadow: 0 4px 20px oklch(0% 0 0 / 0.3) !important;
 }
 .birthday-girl .adventurer-avatar {
-    width: 108px !important;
-    height: 108px !important;
+    width: 116px !important;
+    height: 116px !important;
     border: 3px solid oklch(78% 0.18 82) !important;
     box-shadow:
-        0 0 0 6px oklch(78% 0.18 82 / 0.15),
-        0 8px 28px oklch(0% 0 0 / 0.35) !important;
+        0 0 0 6px oklch(78% 0.18 82 / 0.18),
+        0 0 30px oklch(78% 0.18 82 / 0.35),
+        0 8px 28px oklch(0% 0 0 / 0.4) !important;
     outline: none !important;
 }
 .adventurer-card:hover .adventurer-avatar {
@@ -334,7 +384,7 @@ body {
     color: oklch(78% 0.06 260 / 0.65);
 }
 
-/* Confirmed seal — solid, not blurry gradient */
+/* Confirmed seal */
 .confirmed-seal {
     background: oklch(55% 0.18 155) !important;
     color: oklch(98% 0.01 155) !important;
@@ -353,11 +403,13 @@ body {
     font-size: 0.72rem !important;
 }
 
+
 /* ============================
-   JOURNEY SECTION
+   9. JOURNEY SECTION — atmosphere y estilo
+   Sección con su propio mundo oklch
    ============================ */
 .journey-section {
-    background: oklch(10.5% 0.065 260 / 1);
+    background: oklch(10.5% 0.068 258 / 1);
 }
 
 .journey-timeline::before {
@@ -386,8 +438,11 @@ body {
 
 .day-content {
     background: oklch(100% 0 0 / 0.06) !important;
-    border: 1px solid oklch(100% 0 0 / 0.1) !important;
+    border: 1px solid oklch(100% 0 0 / 0.10) !important;
     box-shadow: 0 6px 28px oklch(0% 0 0 / 0.18) !important;
+    transition: transform 0.3s cubic-bezier(0,0,0.2,1),
+                box-shadow 0.3s ease,
+                background 0.3s ease;
 }
 .day-content:hover {
     background: oklch(100% 0 0 / 0.10) !important;
@@ -403,15 +458,19 @@ body {
 .park-badge {
     background: oklch(78% 0.18 82 / 0.15) !important;
     color: oklch(84% 0.16 82) !important;
-    border: 1px solid oklch(78% 0.18 82 / 0.3) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.30) !important;
     box-shadow: none !important;
 }
 
+
 /* ============================
-   CHARACTERS SECTION
+   10. CHARACTER CARDS — drama y hover con color del personaje
+   Valentina: cada personaje ilumina con su propio color
+   Andrés: imagen zoom suave + fondo iluminado en hover
+   UX Research: más drama — imagen más grande, nombre más grande
    ============================ */
 .characters-section {
-    background: oklch(12% 0.07 290 / 1);
+    background: oklch(12% 0.075 292 / 1);
 }
 
 .characters-grid {
@@ -419,65 +478,184 @@ body {
     gap: 1.5rem !important;
     align-items: start;
 }
-@media (max-width: 680px) {
-    .characters-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
+
+/* Base card — glass más profundo */
+.character-card {
+    background: oklch(100% 0 0 / 0.05) !important;
+    border: 1px solid oklch(100% 0 0 / 0.08) !important;
+    overflow: hidden;
+    position: relative;
 }
 
-/* Featured cards: gold border + warmer tint — protagonistas */
+/* Imagen del personaje — más grande por defecto */
+.character-card .character-image .character-avatar {
+    width: 100px !important;
+    height: 100px !important;
+    transition: transform 0.4s cubic-bezier(0,0,0.2,1) !important;
+}
+
+/* Nombre del personaje — más drama */
+.character-card .character-name {
+    font-size: 1.4rem !important;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Descripción corta — más legible */
+.character-card .character-desc,
+.character-card .character-description {
+    font-size: 0.88rem !important;
+    color: oklch(80% 0.06 260 / 0.75);
+    line-height: 1.5;
+}
+
+/* Featured cards: protagonistas principales */
 .character-card.featured {
-    background: oklch(16% 0.06 82 / 0.85) !important;
-    border: 1px solid oklch(78% 0.18 82 / 0.3) !important;
+    background: oklch(16% 0.065 82 / 0.85) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.30) !important;
     box-shadow:
         0 0 0 1px oklch(78% 0.18 82 / 0.08),
-        0 12px 40px oklch(0% 0 0 / 0.25),
+        0 14px 44px oklch(0% 0 0 / 0.28),
         inset 0 1px 0 oklch(78% 0.18 82 / 0.10) !important;
 }
 .character-card.featured .character-glow {
     opacity: 0.12 !important;
 }
-.character-card.featured:hover .character-glow {
-    opacity: 0.45 !important;
-}
 .character-card.featured .character-image .character-avatar {
-    width: 130px !important;
-    height: 130px !important;
-    border: 2px solid oklch(78% 0.18 82 / 0.4) !important;
+    width: 140px !important;
+    height: 140px !important;
+    border: 2px solid oklch(78% 0.18 82 / 0.40) !important;
 }
 .character-card.featured .character-name {
-    font-size: 1.7rem !important;
+    font-size: 1.8rem !important;
 }
 
-/* Non-featured: aparición especial — más neutro y recesivo */
+/* Non-featured — aparición especial, más recesivo */
 .character-card:not(.featured) {
     background: oklch(100% 0 0 / 0.04) !important;
     border: 1px solid oklch(100% 0 0 / 0.07) !important;
-    opacity: 0.88 !important;
+    opacity: 0.90 !important;
 }
 .character-card:not(.featured) .character-image .character-avatar {
-    width: 90px !important;
-    height: 90px !important;
+    width: 100px !important;
+    height: 100px !important;
 }
 .character-card:not(.featured) .character-name {
-    font-size: 1.3rem !important;
+    font-size: 1.35rem !important;
 }
 
-/* Character sparkles — less is more */
+/* Sparkles */
 .character-sparkles span {
     animation: characterSparkle 3s ease-in-out infinite !important;
 }
 
+/* --- HOVER: COLOR DEL PERSONAJE ILUMINA LA CARD ---
+   Valentina: el color del personaje específico ilumina toda la card.
+   Andrés: imagen hace zoom suave + fondo se ilumina.
+   Clases: .stitch · .grogu · .r2d2 · .bella · .pocahontas · .mickey  */
+
+/* Imagen: zoom suave en hover para todos */
+.character-card:hover .character-image .character-avatar {
+    transform: scale(1.1) !important;
+}
+
+/* Glow base en hover — amplificado por variante de color */
+.character-card.featured:hover .character-glow {
+    opacity: 0.45 !important;
+}
+.character-card:not(.featured):hover {
+    opacity: 1 !important;
+}
+
+/* STITCH — azul eléctrico alienígena */
+.character-card.stitch:hover {
+    background: oklch(20% 0.10 260 / 0.90) !important;
+    border-color: oklch(62% 0.22 258 / 0.55) !important;
+    box-shadow:
+        0 0 0 1px oklch(62% 0.22 258 / 0.20),
+        0 16px 50px oklch(0% 0 0 / 0.35),
+        0 0 60px oklch(62% 0.22 258 / 0.18) !important;
+}
+.character-card.stitch:hover .character-name {
+    color: oklch(72% 0.22 258) !important;
+}
+
+/* GROGU — verde bébé sabio */
+.character-card.grogu:hover {
+    background: oklch(18% 0.08 165 / 0.90) !important;
+    border-color: oklch(60% 0.20 162 / 0.55) !important;
+    box-shadow:
+        0 0 0 1px oklch(60% 0.20 162 / 0.20),
+        0 16px 50px oklch(0% 0 0 / 0.35),
+        0 0 60px oklch(60% 0.20 162 / 0.18) !important;
+}
+.character-card.grogu:hover .character-name {
+    color: oklch(68% 0.20 162) !important;
+}
+
+/* R2D2 — azul plateado metálico */
+.character-card.r2d2:hover {
+    background: oklch(18% 0.07 232 / 0.90) !important;
+    border-color: oklch(58% 0.18 228 / 0.55) !important;
+    box-shadow:
+        0 0 0 1px oklch(58% 0.18 228 / 0.20),
+        0 16px 50px oklch(0% 0 0 / 0.35),
+        0 0 60px oklch(58% 0.18 228 / 0.18) !important;
+}
+.character-card.r2d2:hover .character-name {
+    color: oklch(70% 0.18 228) !important;
+}
+
+/* BELLA — dorado cálido princesa */
+.character-card.bella:hover {
+    background: oklch(20% 0.09 82 / 0.90) !important;
+    border-color: oklch(76% 0.20 82 / 0.55) !important;
+    box-shadow:
+        0 0 0 1px oklch(76% 0.20 82 / 0.20),
+        0 16px 50px oklch(0% 0 0 / 0.35),
+        0 0 60px oklch(76% 0.20 82 / 0.20) !important;
+}
+.character-card.bella:hover .character-name {
+    color: oklch(82% 0.20 82) !important;
+}
+
+/* POCAHONTAS — tierra y viento, terracota */
+.character-card.pocahontas:hover {
+    background: oklch(20% 0.09 45 / 0.90) !important;
+    border-color: oklch(65% 0.18 42 / 0.55) !important;
+    box-shadow:
+        0 0 0 1px oklch(65% 0.18 42 / 0.20),
+        0 16px 50px oklch(0% 0 0 / 0.35),
+        0 0 60px oklch(65% 0.18 42 / 0.18) !important;
+}
+.character-card.pocahontas:hover .character-name {
+    color: oklch(72% 0.18 42) !important;
+}
+
+/* MICKEY — rojo icónico */
+.character-card.mickey:hover {
+    background: oklch(18% 0.08 28 / 0.90) !important;
+    border-color: oklch(58% 0.24 28 / 0.55) !important;
+    box-shadow:
+        0 0 0 1px oklch(58% 0.24 28 / 0.20),
+        0 16px 50px oklch(0% 0 0 / 0.35),
+        0 0 60px oklch(58% 0.24 28 / 0.18) !important;
+}
+.character-card.mickey:hover .character-name {
+    color: oklch(68% 0.24 28) !important;
+}
+
+
 /* ============================
-   QUEST / TRAVEL DETAILS
+   11. QUEST / TRAVEL DETAILS
    ============================ */
 .quest-details-section {
-    background: oklch(11% 0.06 262 / 1);
+    background: oklch(11% 0.062 264 / 1);
 }
 
 .detail-card {
     background: oklch(100% 0 0 / 0.06) !important;
-    border: 1px solid oklch(100% 0 0 / 0.1) !important;
+    border: 1px solid oklch(100% 0 0 / 0.10) !important;
     box-shadow: 0 6px 24px oklch(0% 0 0 / 0.15) !important;
     transition: transform 0.3s cubic-bezier(0,0,0.2,1),
                 box-shadow 0.3s ease,
@@ -486,7 +664,7 @@ body {
 .detail-card:hover {
     background: oklch(100% 0 0 / 0.10) !important;
     box-shadow: 0 14px 40px oklch(0% 0 0 / 0.25) !important;
-    border-color: oklch(60% 0.20 220 / 0.3) !important;
+    border-color: oklch(60% 0.20 220 / 0.30) !important;
     transform: translateY(-8px) !important;
 }
 
@@ -495,11 +673,12 @@ body {
     background: oklch(100% 0 0 / 0.04) !important;
 }
 
+
 /* ============================
-   RSVP SECTION
+   12. RSVP SECTION
    ============================ */
 .rsvp-section {
-    background: oklch(13% 0.08 295 / 1);
+    background: oklch(13% 0.082 298 / 1);
 }
 
 .rsvp-card {
@@ -529,6 +708,7 @@ body {
 }
 
 .rsvp-button {
+    min-height: 48px;
     transition: transform 0.25s cubic-bezier(0,0,0.2,1),
                 box-shadow 0.25s ease !important;
 }
@@ -536,24 +716,186 @@ body {
     transform: translateY(-3px) scale(1.03) !important;
 }
 
+
 /* ============================
-   LOADING SCREEN — castle glow
+   13. STICKY RSVP BAR — Sofía Navarro (CS)
+   Mobile: fijo en la parte baja, aparece al scrollear 300px.
+   JS agrega .visible / .hidden según el estado.
    ============================ */
+.rsvp-sticky-bar {
+    display: none; /* default oculto — JS controla .visible */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: oklch(14% 0.10 295 / 0.97);
+    border-top: 1px solid oklch(100% 0 0 / 0.10);
+    backdrop-filter: blur(16px);
+    padding: 0.75rem 1.25rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    /* Solo en mobile — desktop no la necesita */
+}
+
+.rsvp-sticky-bar.visible {
+    display: flex;
+}
+
+.rsvp-sticky-bar.hidden {
+    display: none !important;
+}
+
+.rsvp-sticky-bar__text {
+    font-size: 0.9rem;
+    color: oklch(90% 0.06 80);
+    line-height: 1.3;
+    flex: 1;
+}
+
+.rsvp-sticky-bar__btn {
+    background: oklch(55% 0.20 155);
+    color: oklch(98% 0.01 155);
+    border: none;
+    border-radius: 10px;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 48px;
+    min-width: 120px;
+    white-space: nowrap;
+    transition: transform 0.2s cubic-bezier(0,0,0.2,1),
+                background 0.2s ease;
+    flex-shrink: 0;
+}
+.rsvp-sticky-bar__btn:hover {
+    background: oklch(60% 0.22 155);
+    transform: scale(1.03);
+}
+.rsvp-sticky-bar__btn:active {
+    transform: scale(0.98);
+}
+
+/* En desktop, la sticky bar no se muestra */
+@media (min-width: 769px) {
+    .rsvp-sticky-bar,
+    .rsvp-sticky-bar.visible {
+        display: none !important;
+    }
+}
+
+
+/* ============================
+   14. MOBILE OVERRIDES
+   Touch targets 48px mínimo (Sofía).
+   Countdown compacto, Alessia 16vw, character grid 2 cols.
+   ============================ */
+@media (max-width: 768px) {
+    /* Countdown compacto */
+    .time-unit {
+        min-width: 58px !important;
+    }
+    .time-value {
+        font-size: clamp(1.6rem, 6vw, 2.2rem) !important;
+    }
+    .time-label {
+        font-size: 0.58rem !important;
+    }
+
+    /* Alessia en mobile — 16vw para que respire */
+    .title-name {
+        font-size: clamp(4rem, 16vw, 8rem) !important;
+        letter-spacing: -2px !important;
+    }
+
+    /* Birthday-girl vuelve a column */
+    .adventurer-card.birthday-girl {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 1.5rem !important;
+        gap: 1rem !important;
+    }
+    .birthday-girl .adventurer-info {
+        text-align: center;
+    }
+
+    /* Character grid: 2 cols */
+    .characters-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+
+    /* RSVP button: full-width */
+    .rsvp-button {
+        width: 100% !important;
+        min-height: 52px !important;
+    }
+
+    /* Touch targets mínimo 48px */
+    button,
+    a,
+    .adventurer-card,
+    .character-card,
+    .detail-card {
+        min-height: 48px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Alessia aún más ajustada */
+    .title-name {
+        font-size: clamp(3.2rem, 15vw, 6rem) !important;
+        letter-spacing: -1.5px !important;
+    }
+
+    /* Countdown mínimo */
+    .time-unit {
+        min-width: 48px !important;
+    }
+    .time-value {
+        font-size: clamp(1.4rem, 8vw, 2rem) !important;
+    }
+
+    /* Character grid: 1 col en pantallas muy pequeñas */
+    .characters-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Cards featured: avatar más manejable */
+    .character-card.featured .character-image .character-avatar {
+        width: 110px !important;
+        height: 110px !important;
+    }
+    .character-card.featured .character-name {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 680px) {
+    .characters-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+
+/* ============================
+   15. GLOBAL + SCROLLBAR + FOOTER + LOADING + NAV
+   ============================ */
+
+/* Loading screen */
 .loading-screen {
     background: oklch(8% 0.04 262) !important;
 }
 
-/* ============================
-   NAVIGATION
-   ============================ */
+/* Navbar */
 .navbar {
     background: oklch(9% 0.055 262 / 0.85) !important;
     border-bottom: 1px solid oklch(100% 0 0 / 0.08) !important;
 }
 
-/* ============================
-   GLOBAL MICRO-INTERACTIONS
-   ============================ */
+/* Micro-interacciones globales */
 button, a {
     -webkit-tap-highlight-color: transparent;
 }
@@ -567,11 +909,9 @@ button, a {
     background: oklch(100% 0 0 / 0.18);
     border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover { background: oklch(100% 0 0 / 0.3); }
+::-webkit-scrollbar-thumb:hover { background: oklch(100% 0 0 / 0.30); }
 
-/* ============================
-   FOOTER
-   ============================ */
+/* Footer */
 footer {
     border-top: 1px solid oklch(100% 0 0 / 0.08);
     background: oklch(8% 0.04 262);

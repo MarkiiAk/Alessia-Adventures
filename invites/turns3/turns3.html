@@ -24,6 +24,18 @@
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏰</text></svg>">
+
+    <style>
+    .reveal-scale {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+        transition: opacity 0.65s cubic-bezier(0,0,0.2,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-scale.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    </style>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="✨ ¡Únete a la aventura más mágica! 6 - 9 Septiembre en Disneyland California 🎢 Castillos, princesas, montañas rusas y pura diversión en Disney ✨🏰">
@@ -300,12 +312,116 @@
         </div>
     </section>
 
+    <!-- Characters Section -->
+    <section id="characters" class="characters-section">
+        <div class="section-bg">
+            <div class="characters-pattern"></div>
+        </div>
+        
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-decoration">🌟</span>
+                    Personajes Favoritos de Alessia
+                    <span class="title-decoration">🌟</span>
+                </h2>
+                <p class="section-subtitle">Los amigos mágicos que encontraremos</p>
+            </div>
+            
+            <div class="characters-grid">
+                <div class="character-card featured stitch">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <img src="src/personajestitch.jpg" alt="Stitch" class="character-avatar">
+                        <div class="character-sparkles">
+                            <span>💙</span>
+                            <span>✨</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Stitch</h3>
+                    <p class="character-description">El alienígena más tierno del universo</p>
+                    <div class="character-badge">Favorito #1</div>
+                </div>
+                
+                <div class="character-card featured grogu">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <img src="src/personajegrogu.jpg" alt="Grogu" class="character-avatar">
+                        <div class="character-sparkles">
+                            <span>💚</span>
+                            <span>🌟</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Grogu</h3>
+                    <p class="character-description">Baby Yoda y sus poderes Jedi</p>
+                    <div class="character-badge">Favorito #2</div>
+                </div>
+                
+                <div class="character-card featured r2d2">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <img src="src/personajer2d2.jpg" alt="R2-D2" class="character-avatar">
+                        <div class="character-sparkles">
+                            <span>🔵</span>
+                            <span>⚡</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">R2-D2</h3>
+                    <p class="character-description">El droide más valiente de la galaxia</p>
+                    <div class="character-badge">Favorito #3</div>
+                </div>
+                
+                <div class="character-card featured bella">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <img src="src/personajebella.jpg" alt="Bella" class="character-avatar">
+                        <div class="character-sparkles">
+                            <span>💛</span>
+                            <span>📚</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Bella</h3>
+                    <p class="character-description">La princesa amante de los libros</p>
+                    <div class="character-badge">Favorito #4</div>
+                </div>
+                
+                <div class="character-card featured pocahontas">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <img src="src/personajepocahontas.jpg" alt="Pocahontas" class="character-avatar">
+                        <div class="character-sparkles">
+                            <span>💜</span>
+                            <span>🍃</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Pocahontas</h3>
+                    <p class="character-description">La valiente princesa de la naturaleza</p>
+                    <div class="character-badge">Favorito #5</div>
+                </div>
+                
+                <div class="character-card mickey">
+                    <div class="character-glow"></div>
+                    <div class="character-image">
+                        <img src="src/personajeminnimickey.jpg" alt="Mickey & Minnie" class="character-avatar">
+                        <div class="character-sparkles">
+                            <span>🔴</span>
+                            <span>⚫</span>
+                        </div>
+                    </div>
+                    <h3 class="character-name">Mickey & Minnie</h3>
+                    <p class="character-description">Los ratones más famosos del mundo</p>
+                    <div class="character-badge">Clásicos Disney</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Journey Section -->
     <section id="journey" class="journey-section">
         <div class="section-bg">
             <div class="journey-pattern"></div>
         </div>
-        
+
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">
@@ -315,7 +431,7 @@
                 </h2>
                 <p class="section-subtitle">Desayuno con personajes el lunes, dos parques completos, y el castillo de la Bella Durmiente de fondo</p>
             </div>
-            
+
             <div class="journey-timeline">
                 <!-- Day 1 -->
                 <div class="timeline-day">
@@ -463,110 +579,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Characters Section -->
-    <section id="characters" class="characters-section">
-        <div class="section-bg">
-            <div class="characters-pattern"></div>
-        </div>
-        
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="title-decoration">🌟</span>
-                    Personajes Favoritos de Alessia
-                    <span class="title-decoration">🌟</span>
-                </h2>
-                <p class="section-subtitle">Los amigos mágicos que encontraremos</p>
-            </div>
-            
-            <div class="characters-grid">
-                <div class="character-card featured stitch">
-                    <div class="character-glow"></div>
-                    <div class="character-image">
-                        <img src="src/personajestitch.jpg" alt="Stitch" class="character-avatar">
-                        <div class="character-sparkles">
-                            <span>💙</span>
-                            <span>✨</span>
-                        </div>
-                    </div>
-                    <h3 class="character-name">Stitch</h3>
-                    <p class="character-description">El alienígena más tierno del universo</p>
-                    <div class="character-badge">Favorito #1</div>
-                </div>
-                
-                <div class="character-card featured grogu">
-                    <div class="character-glow"></div>
-                    <div class="character-image">
-                        <img src="src/personajegrogu.jpg" alt="Grogu" class="character-avatar">
-                        <div class="character-sparkles">
-                            <span>💚</span>
-                            <span>🌟</span>
-                        </div>
-                    </div>
-                    <h3 class="character-name">Grogu</h3>
-                    <p class="character-description">Baby Yoda y sus poderes Jedi</p>
-                    <div class="character-badge">Favorito #2</div>
-                </div>
-                
-                <div class="character-card featured r2d2">
-                    <div class="character-glow"></div>
-                    <div class="character-image">
-                        <img src="src/personajer2d2.jpg" alt="R2-D2" class="character-avatar">
-                        <div class="character-sparkles">
-                            <span>🔵</span>
-                            <span>⚡</span>
-                        </div>
-                    </div>
-                    <h3 class="character-name">R2-D2</h3>
-                    <p class="character-description">El droide más valiente de la galaxia</p>
-                    <div class="character-badge">Favorito #3</div>
-                </div>
-                
-                <div class="character-card featured bella">
-                    <div class="character-glow"></div>
-                    <div class="character-image">
-                        <img src="src/personajebella.jpg" alt="Bella" class="character-avatar">
-                        <div class="character-sparkles">
-                            <span>💛</span>
-                            <span>📚</span>
-                        </div>
-                    </div>
-                    <h3 class="character-name">Bella</h3>
-                    <p class="character-description">La princesa amante de los libros</p>
-                    <div class="character-badge">Favorito #4</div>
-                </div>
-                
-                <div class="character-card featured pocahontas">
-                    <div class="character-glow"></div>
-                    <div class="character-image">
-                        <img src="src/personajepocahontas.jpg" alt="Pocahontas" class="character-avatar">
-                        <div class="character-sparkles">
-                            <span>💜</span>
-                            <span>🍃</span>
-                        </div>
-                    </div>
-                    <h3 class="character-name">Pocahontas</h3>
-                    <p class="character-description">La valiente princesa de la naturaleza</p>
-                    <div class="character-badge">Favorito #5</div>
-                </div>
-                
-                <div class="character-card mickey">
-                    <div class="character-glow"></div>
-                    <div class="character-image">
-                        <img src="src/personajeminnimickey.jpg" alt="Mickey & Minnie" class="character-avatar">
-                        <div class="character-sparkles">
-                            <span>🔴</span>
-                            <span>⚫</span>
-                        </div>
-                    </div>
-                    <h3 class="character-name">Mickey & Minnie</h3>
-                    <p class="character-description">Los ratones más famosos del mundo</p>
-                    <div class="character-badge">Clásicos Disney</div>
                 </div>
             </div>
         </div>
@@ -809,5 +821,11 @@
     
     <!-- React Integration -->
     <script src="react-integration.js"></script>
+
+    <!-- Sticky RSVP Bar — Mobile Only (shown via JS after 400px scroll) -->
+    <div class="rsvp-sticky-bar hidden">
+      <p class="rsvp-sticky-text">¿Listo para Disneyland? ✨</p>
+      <button class="rsvp-sticky-btn">Confirmar asistencia</button>
+    </div>
 </body>
 </html>
