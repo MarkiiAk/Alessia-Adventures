@@ -1,653 +1,498 @@
-// Variables globales
+// ============================
+// ADMIN EVENT — ALESSIA ADVENTURES
+// ============================
+
 let currentEventName = '';
 let eventData = null;
+let pendingStatusGuestId = null;
+let currentInvitationUrl = '';
 
-// Inicializar la página cuando esté lista
-document.addEventListener('DOMContentLoaded', function() {
-    // Obtener el nombre del evento de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    currentEventName = urlParams.get('event');
-    
-    if (!currentEventName) {
-        showError('No se especificó el evento a administrar');
-        return;
-    }
-    
-    // Cargar datos del evento
-    loadEventData();
-    
-    // Configurar event listeners
-    setupEventListeners();
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  currentEventName = urlParams.get('event');
+
+  if (!currentEventName) {
+    showError('No se especificó el evento a administrar. Agrega ?event=NombreDelEvento a la URL.');
+    return;
+  }
+
+  loadEventData();
+  setupFormListeners();
 });
 
-// Cargar datos completos del evento
+// ============================
+// CARGA DE DATOS
+// ============================
 async function loadEventData() {
-    try {
-        console.log('🎯 Loading event data for:', currentEventName);
-        showLoading(true);
-        
-        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`);
-        const data = await response.json();
-        
-        if (!data.success) {
-            throw new Error(data.error || 'Error desconocido');
-        }
-        
-        eventData = data;
-        
-        // Llenar formulario de información general
-        fillGeneralForm(data.event);
-        
-        // Actualizar estadísticas
-        updateStats(data.stats);
-        
-        // Llenar tabla de invitados
-        fillGuestsTable(data.guests);
-        
-        showLoading(false);
-        document.getElementById('admin-content').style.display = 'block';
-        
-        console.log('✅ Event data loaded successfully');
-        
-    } catch (error) {
-        console.error('❌ Error loading event data:', error);
-        showError(`Error cargando datos del evento: ${error.message}`);
-        showLoading(false);
-    }
+  showLoading(true);
+  try {
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`);
+    const data = await res.json();
+
+    if (!data.success) throw new Error(data.error || 'Error desconocido');
+
+    eventData = data;
+    fillGeneralForm(data.event);
+    updateStats(data.stats);
+    fillGuestsTable(data.guests);
+    showLoading(false);
+    document.getElementById('admin-content').style.display = 'block';
+  } catch (err) {
+    showError(`Error cargando datos: ${err.message}`);
+    showLoading(false);
+  }
 }
 
-// Mostrar/ocultar loading
+// ============================
+// UI HELPERS
+// ============================
 function showLoading(show) {
-    document.getElementById('loading').style.display = show ? 'block' : 'none';
+  document.getElementById('loading').style.display = show ? 'block' : 'none';
 }
 
-// Mostrar error
-function showError(message) {
-    const errorDiv = document.getElementById('error');
-    errorDiv.textContent = message;
-    errorDiv.style.display = 'block';
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
-// Llenar formulario de información general
+function toast(msg, type = 'success') {
+  // Remove any existing toast
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+
+  const icons = { success: '✅', error: '❌', info: '💡' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span class="toast-icon">${icons[type] || '💬'}</span><span class="toast-msg">${msg}</span>`;
+  document.body.appendChild(t);
+
+  setTimeout(() => {
+    t.style.animation = 'toastOut 0.3s ease forwards';
+    setTimeout(() => t.remove(), 300);
+  }, 3500);
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+// ============================
+// FORMULARIO GENERAL
+// ============================
 function fillGeneralForm(event) {
-    document.getElementById('event-name').value = event.name || '';
-    document.getElementById('event-description').value = event.description || '';
-    
-    // Formatear fecha para input datetime-local
-    if (event.event_date) {
-        const date = new Date(event.event_date);
-        const formattedDate = date.getFullYear() + '-' + 
-                            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-                            String(date.getDate()).padStart(2, '0') + 'T' + 
-                            String(date.getHours()).padStart(2, '0') + ':' + 
-                            String(date.getMinutes()).padStart(2, '0');
-        document.getElementById('event-date').value = formattedDate;
-    }
+  document.getElementById('event-name').value = event.name || '';
+  document.getElementById('event-description').value = event.description || '';
+  if (event.event_date) {
+    const d = new Date(event.event_date);
+    const pad = n => String(n).padStart(2, '0');
+    document.getElementById('event-date').value =
+      `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
 }
 
-// Actualizar estadísticas
 function updateStats(stats) {
-    document.getElementById('total-guests').textContent = stats.total;
-    document.getElementById('confirmed-guests').textContent = stats.confirmed;
-    document.getElementById('pending-guests').textContent = stats.pending;
+  document.getElementById('total-guests').textContent = stats.total;
+  document.getElementById('confirmed-guests').textContent = stats.confirmed;
+  document.getElementById('pending-guests').textContent = stats.pending;
 }
 
-// Llenar tabla de invitados con funcionalidad de ordenamiento
-function fillGuestsTable(guests) {
-    const tbody = document.getElementById('guests-tbody');
-    const noGuests = document.getElementById('no-guests');
-    const table = document.getElementById('guests-table');
-    
-    if (guests.length === 0) {
-        noGuests.style.display = 'block';
-        table.style.display = 'none';
-        return;
-    }
-    
-    noGuests.style.display = 'none';
-    table.style.display = 'table';
-    
-    tbody.innerHTML = '';
-    
-    guests.forEach((guest, index) => {
-        const row = document.createElement('tr');
-        row.draggable = true;
-        row.dataset.guestId = guest.guest_id;
-        row.dataset.currentIndex = index;
-        
-        // Determinar clase de estado
-        let statusText, statusClass;
-        switch (guest.status) {
-            case 1:
-                statusText = 'Confirmado';
-                statusClass = 'status-confirmed';
-                break;
-            case 2:
-                statusText = 'Declinado';
-                statusClass = 'status-declined';
-                break;
-            case 3:
-            default:
-                statusText = 'Pendiente';
-                statusClass = 'status-pending';
-                break;
-        }
-        
-        // Crear celda de avatar
-        const avatarSrc = guest.avatar && guest.avatar.startsWith('http') ? 
-            guest.avatar : 
-            (guest.avatar ? guest.avatar : '/src/default-avatar.svg');
-        const displayName = guest.nickname ? `${guest.name} (${guest.nickname})` : guest.name;
-        
-        // Botones de control de prioridad
-        const priorityControls = `
-            <div class="priority-controls">
-                <button class="priority-btn move-top" onclick="moveTo(${index}, 'top')" title="Mover al inicio" ${index === 0 ? 'disabled' : ''}>⬆⬆</button>
-                <button class="priority-btn move-up" onclick="moveTo(${index}, 'up')" title="Subir" ${index === 0 ? 'disabled' : ''}>⬆</button>
-                <button class="priority-btn move-down" onclick="moveTo(${index}, 'down')" title="Bajar" ${index === guests.length - 1 ? 'disabled' : ''}>⬇</button>
-                <button class="priority-btn move-bottom" onclick="moveTo(${index}, 'bottom')" title="Mover al final" ${index === guests.length - 1 ? 'disabled' : ''}>⬇⬇</button>
-            </div>
-        `;
-        
-        row.innerHTML = `
-            <td class="priority-col">
-                <span class="priority-number">${guest.priority_order || (index + 1)}</span>
-            </td>
-            <td class="drag-col">
-                <span class="drag-handle">≡≡</span>
-            </td>
-            <td class="avatar-cell">
-                <img src="${avatarSrc}" alt="Avatar de ${guest.name}" class="guest-avatar" onerror="this.src='/src/default-avatar.png'">
-            </td>
-            <td>${displayName}</td>
-            <td>${guest.email || '-'}</td>
-            <td>${guest.phone || '-'}</td>
-            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-            <td>${priorityControls}</td>
-            <td>
-                <button class="generate-invitation-btn" onclick="generateInvitation('${guest.name}', '${guest.email}')" title="Generar invitación personalizada">
-                    Generar Invitación
-                </button>
-                <button class="delete-btn" onclick="deleteGuest(${guest.guest_id})" title="Eliminar invitado">
-                    Eliminar
-                </button>
-            </td>
-        `;
-        
-        tbody.appendChild(row);
-    });
-    
-    // Configurar drag and drop después de llenar la tabla
-    setupDragAndDrop();
-}
-
-// Configurar event listeners
-function setupEventListeners() {
-    // Formulario de información general
-    document.getElementById('general-form').addEventListener('submit', handleGeneralFormSubmit);
-    
-    // Formulario de agregar invitado
-    document.getElementById('guest-form').addEventListener('submit', handleGuestFormSubmit);
-    
-    // Vista previa de avatar
-    const avatarInput = document.getElementById('guest-avatar');
-    const avatarPreview = document.getElementById('avatar-preview');
-    const previewImg = document.getElementById('preview-img');
-    
-    if (avatarInput && avatarPreview && previewImg) {
-        avatarInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    previewImg.src = e.target.result;
-                    avatarPreview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                avatarPreview.style.display = 'none';
-            }
-        });
-    }
-}
-
-// Manejar envío del formulario general
 async function handleGeneralFormSubmit(e) {
-    e.preventDefault();
-    
-    try {
-        const formData = new FormData(e.target);
-        const data = {
-            name: formData.get('name'),
-            description: formData.get('description'),
-            event_date: formData.get('event_date')
-        };
-        
-        console.log('💾 Updating event info:', data);
-        
-        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-            throw new Error(result.error || 'Error actualizando evento');
-        }
-        
-        // Actualizar nombre actual si cambió
-        currentEventName = data.name;
-        
-        // Actualizar URL sin recargar página
-        const newUrl = window.location.pathname + '?event=' + encodeURIComponent(currentEventName);
-        window.history.replaceState({}, '', newUrl);
-        
-        showSuccessMessage('Información del evento actualizada exitosamente');
-        
-        console.log('✅ Event info updated successfully');
-        
-    } catch (error) {
-        console.error('❌ Error updating event info:', error);
-        alert(`Error: ${error.message}`);
-    }
-}
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = {
+    name: fd.get('name'),
+    description: fd.get('description'),
+    event_date: fd.get('event_date')
+  };
 
-// Manejar envío del formulario de invitado
-async function handleGuestFormSubmit(e) {
-    e.preventDefault();
-    
-    try {
-        const formData = new FormData(e.target);
-        const avatarFile = formData.get('avatar');
-        
-        let avatarUrl = null;
-        
-        // Si hay un archivo de avatar, subirlo primero
-        if (avatarFile && avatarFile.size > 0) {
-            try {
-                const uploadFormData = new FormData();
-                uploadFormData.append('avatar', avatarFile);
-                
-                const uploadResponse = await fetch('/api/upload-avatar', {
-                    method: 'POST',
-                    body: uploadFormData
-                });
-                
-                const uploadResult = await uploadResponse.json();
-                
-                if (uploadResult.success) {
-                    avatarUrl = uploadResult.url; // Usar la URL directa de Dropbox
-                } else {
-                    throw new Error(uploadResult.error);
-                }
-            } catch (error) {
-                console.error('Error subiendo avatar:', error);
-                alert('Error subiendo la imagen del avatar: ' + error.message);
-                return;
-            }
-        }
-        
-        const data = {
-            name: formData.get('name').trim(),
-            nickname: formData.get('nickname').trim(),
-            avatar: avatarUrl,
-            email: formData.get('email').trim(),
-            phone: formData.get('phone').trim()
-        };
-        
-        if (!data.name) {
-            alert('El nombre del invitado es requerido');
-            return;
-        }
-        
-        console.log('👤 Adding guest:', data);
-        
-        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-            throw new Error(result.error || 'Error agregando invitado');
-        }
-        
-        // Limpiar formulario
-        e.target.reset();
-        
-        // Limpiar vista previa de avatar
-        const avatarPreview = document.getElementById('avatar-preview');
-        if (avatarPreview) {
-            avatarPreview.style.display = 'none';
-        }
-        
-        // Recargar datos
-        await loadEventData();
-        
-        showSuccessMessage('Invitado agregado exitosamente');
-        
-        console.log('✅ Guest added successfully');
-        
-    } catch (error) {
-        console.error('❌ Error adding guest:', error);
-        alert(`Error: ${error.message}`);
-    }
-}
-
-// Eliminar invitado
-async function deleteGuest(guestId) {
-    if (!confirm('¿Estás seguro de que deseas eliminar este invitado del evento?')) {
-        return;
-    }
-    
-    try {
-        console.log('🗑️ Deleting guest:', guestId);
-        
-        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                guestId: guestId,
-                eventName: currentEventName
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-            throw new Error(result.error || 'Error eliminando invitado');
-        }
-        
-        // Recargar datos
-        await loadEventData();
-        
-        showSuccessMessage('Invitado eliminado exitosamente');
-        
-        console.log('✅ Guest deleted successfully');
-        
-    } catch (error) {
-        console.error('❌ Error deleting guest:', error);
-        alert(`Error: ${error.message}`);
-    }
-}
-
-// Generar invitación personalizada
-async function generateInvitation(guestName, guestEmail) {
-    try {
-        console.log('🔗 Generating invitation for:', guestName);
-        
-        // Mostrar indicador de carga en el botón
-        const button = event.target.closest('button');
-        const originalHTML = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        button.disabled = true;
-        
-        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                action: 'generate_invitation',
-                eventName: currentEventName,
-                guestName: guestName,
-                guestEmail: guestEmail
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-            throw new Error(result.error || 'Error generando invitación');
-        }
-        
-        // Crear URL personalizada
-        const baseUrl = window.location.origin;
-        const invitationUrl = `${baseUrl}/invites/turns3/turns3.html?invitation=${result.invitationId}`;
-        
-        // Copiar al portapapeles
-        await navigator.clipboard.writeText(invitationUrl);
-        
-        // Restaurar botón
-        button.innerHTML = originalHTML;
-        button.disabled = false;
-        
-        showSuccessMessage(`✅ Invitación generada y copiada al portapapeles!\n${invitationUrl}`);
-        
-        console.log('✅ Invitation generated successfully:', invitationUrl);
-        
-    } catch (error) {
-        console.error('❌ Error generating invitation:', error);
-        
-        // Restaurar botón en caso de error
-        if (button) {
-            button.innerHTML = originalHTML;
-            button.disabled = false;
-        }
-        
-        alert(`Error generando invitación: ${error.message}`);
-    }
-}
-
-// Mostrar mensaje de éxito temporal
-function showSuccessMessage(message) {
-    // Crear elemento de mensaje
-    const messageDiv = document.createElement('div');
-    messageDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: #d4edda;
-        color: #155724;
-        padding: 15px 20px;
-        border-radius: 5px;
-        border: 1px solid #c3e6cb;
-        z-index: 1000;
-        animation: slideIn 0.3s ease-in-out;
-    `;
-    messageDiv.textContent = message;
-    
-    document.body.appendChild(messageDiv);
-    
-    // Remover después de 3 segundos
-    setTimeout(() => {
-        messageDiv.style.animation = 'slideOut 0.3s ease-in-out';
-        setTimeout(() => {
-            document.body.removeChild(messageDiv);
-        }, 300);
-    }, 3000);
-}
-
-// Mover invitado manualmente (botones de control)
-async function moveTo(fromIndex, direction) {
-    try {
-        if (!eventData || !eventData.guests) return;
-        
-        const guests = [...eventData.guests];
-        const guest = guests[fromIndex];
-        
-        let newIndex;
-        
-        switch (direction) {
-            case 'top':
-                newIndex = 0;
-                break;
-            case 'up':
-                newIndex = Math.max(0, fromIndex - 1);
-                break;
-            case 'down':
-                newIndex = Math.min(guests.length - 1, fromIndex + 1);
-                break;
-            case 'bottom':
-                newIndex = guests.length - 1;
-                break;
-            default:
-                return;
-        }
-        
-        // Si no hay cambio, no hacer nada
-        if (newIndex === fromIndex) return;
-        
-        // Reordenar array localmente
-        guests.splice(fromIndex, 1);
-        guests.splice(newIndex, 0, guest);
-        
-        // Enviar nuevo orden al servidor
-        await saveNewOrder(guests);
-        
-    } catch (error) {
-        console.error('❌ Error moving guest:', error);
-        alert(`Error moviendo invitado: ${error.message}`);
-    }
-}
-
-// Configurar drag and drop
-function setupDragAndDrop() {
-    const tbody = document.getElementById('guests-tbody');
-    if (!tbody) return;
-    
-    let draggedElement = null;
-    let draggedIndex = null;
-    
-    // Event listeners para cada fila
-    const rows = tbody.querySelectorAll('tr');
-    
-    rows.forEach((row, index) => {
-        // Drag start
-        row.addEventListener('dragstart', (e) => {
-            draggedElement = row;
-            draggedIndex = index;
-            row.classList.add('dragging');
-            
-            // Configurar dataTransfer
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', row.outerHTML);
-        });
-        
-        // Drag end
-        row.addEventListener('dragend', (e) => {
-            row.classList.remove('dragging');
-            
-            // Remover todas las clases de drag-over
-            rows.forEach(r => r.classList.remove('drag-over'));
-        });
-        
-        // Drag over
-        row.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            
-            if (draggedElement !== row) {
-                // Remover drag-over de otros elementos
-                rows.forEach(r => r.classList.remove('drag-over'));
-                row.classList.add('drag-over');
-            }
-        });
-        
-        // Drag enter
-        row.addEventListener('dragenter', (e) => {
-            e.preventDefault();
-        });
-        
-        // Drag leave
-        row.addEventListener('dragleave', (e) => {
-            // Solo remover si realmente salimos del elemento
-            if (!row.contains(e.relatedTarget)) {
-                row.classList.remove('drag-over');
-            }
-        });
-        
-        // Drop
-        row.addEventListener('drop', async (e) => {
-            e.preventDefault();
-            
-            if (draggedElement !== row) {
-                const currentIndex = draggedIndex;
-                const targetIndex = Array.from(tbody.children).indexOf(row);
-                
-                console.log('🎯 Dropping guest from', currentIndex, 'to', targetIndex);
-                
-                // Reordenar array
-                const guests = [...eventData.guests];
-                const movedGuest = guests.splice(currentIndex, 1)[0];
-                guests.splice(targetIndex, 0, movedGuest);
-                
-                // Enviar nuevo orden al servidor
-                await saveNewOrder(guests);
-            }
-            
-            // Limpiar clases
-            rows.forEach(r => r.classList.remove('drag-over'));
-        });
+  try {
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+
+    currentEventName = data.name;
+    window.history.replaceState({}, '', `?event=${encodeURIComponent(currentEventName)}`);
+    toast('Información del evento guardada ✨');
+  } catch (err) {
+    toast(`Error: ${err.message}`, 'error');
+  }
 }
 
-// Enviar nuevo orden al servidor
-async function saveNewOrder(reorderedGuests) {
+// ============================
+// TABLA DE INVITADOS
+// ============================
+function fillGuestsTable(guests) {
+  const tbody = document.getElementById('guests-tbody');
+  const noGuests = document.getElementById('no-guests');
+  const table = document.getElementById('guests-table');
+
+  if (!guests || guests.length === 0) {
+    noGuests.style.display = 'block';
+    table.style.display = 'none';
+    return;
+  }
+
+  noGuests.style.display = 'none';
+  table.style.display = 'table';
+  tbody.innerHTML = '';
+
+  guests.forEach((guest, index) => {
+    const row = document.createElement('tr');
+    row.draggable = true;
+    row.dataset.guestId = guest.guest_id;
+    row.dataset.index = index;
+
+    const statusLabels = { 1: 'Confirmado', 2: 'Declinado', 3: 'Pendiente' };
+    const statusClasses = { 1: 'status-confirmed', 2: 'status-declined', 3: 'status-pending' };
+    const statusText  = statusLabels[guest.status]  || 'Pendiente';
+    const statusClass = statusClasses[guest.status] || 'status-pending';
+
+    const avatarSrc = guest.avatar && guest.avatar.startsWith('http')
+      ? guest.avatar
+      : '/src/default-avatar.png';
+
+    const displayName = guest.nickname
+      ? `${guest.name} <span style="color:var(--text-muted);font-size:0.82rem">(${guest.nickname})</span>`
+      : guest.name;
+
+    const priorityControls = `
+      <div class="priority-controls">
+        <button class="priority-btn move-top"   onclick="moveTo(${index},'top')"    title="Al inicio" ${index === 0 ? 'disabled' : ''}>⬆⬆</button>
+        <button class="priority-btn move-up"    onclick="moveTo(${index},'up')"     title="Subir"     ${index === 0 ? 'disabled' : ''}>⬆</button>
+        <button class="priority-btn move-down"  onclick="moveTo(${index},'down')"   title="Bajar"     ${index === guests.length-1 ? 'disabled' : ''}>⬇</button>
+        <button class="priority-btn move-bottom" onclick="moveTo(${index},'bottom')" title="Al final"  ${index === guests.length-1 ? 'disabled' : ''}>⬇⬇</button>
+      </div>`;
+
+    row.innerHTML = `
+      <td class="priority-col">
+        <span class="priority-number">${guest.priority_order || (index+1)}</span>
+      </td>
+      <td class="drag-col"><span class="drag-handle">⠿</span></td>
+      <td class="avatar-cell">
+        <img src="${avatarSrc}" alt="${guest.name}" class="guest-avatar"
+             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(guest.name)}&background=1e3a8a&color=fff&size=80'">
+      </td>
+      <td>${displayName}</td>
+      <td style="color:var(--text-secondary);font-size:0.85rem">${guest.email || '—'}</td>
+      <td style="color:var(--text-secondary);font-size:0.85rem">${guest.phone || '—'}</td>
+      <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+      <td>${priorityControls}</td>
+      <td>
+        <div class="action-btns">
+          <button class="generate-invitation-btn"
+                  onclick="generateInvitation(this, '${guest.name}', '${guest.email || ''}', '${guest.guest_id}')"
+                  title="Generar URL de invitación">
+            <i class="fas fa-link"></i> Invitación
+          </button>
+          <button class="change-status-btn"
+                  onclick="openStatusModal('${guest.invitation_id}', '${guest.name}')"
+                  title="Cambiar estado">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="delete-btn"
+                  onclick="deleteGuest('${guest.guest_id}')"
+                  title="Eliminar invitado">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>`;
+
+    tbody.appendChild(row);
+  });
+
+  setupDragAndDrop();
+}
+
+// ============================
+// AGREGAR INVITADO
+// ============================
+async function handleGuestFormSubmit(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const avatarFile = fd.get('avatar');
+  let avatarUrl = null;
+
+  if (avatarFile && avatarFile.size > 0) {
     try {
-        console.log('💾 Saving new guest order...');
-        
-        // Preparar datos para el API
-        const guestsData = reorderedGuests.map((guest, index) => ({
-            guest_id: guest.guest_id,
-            new_priority: index + 1
-        }));
-        
-        const response = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                action: 'reorder_guests',
-                guests: guestsData
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-            throw new Error(result.error || 'Error reordenando invitados');
-        }
-        
-        console.log('✅ New order saved successfully');
-        
-        // Recargar datos para actualizar la vista
-        await loadEventData();
-        
-        // Mostrar mensaje de éxito temporal
-        showSuccessMessage('Orden de invitados actualizado exitosamente');
-        
-    } catch (error) {
-        console.error('❌ Error saving new order:', error);
-        alert(`Error guardando nuevo orden: ${error.message}`);
-        
-        // Recargar datos para restaurar el estado original
-        await loadEventData();
+      const uploadFd = new FormData();
+      uploadFd.append('avatar', avatarFile);
+      const uploadRes = await fetch('/api/upload-avatar', { method: 'POST', body: uploadFd });
+      const uploadResult = await uploadRes.json();
+      if (!uploadResult.success) throw new Error(uploadResult.error);
+      avatarUrl = uploadResult.url;
+    } catch (err) {
+      toast(`Error subiendo imagen: ${err.message}`, 'error');
+      return;
     }
+  }
+
+  const data = {
+    name:     fd.get('name').trim(),
+    nickname: fd.get('nickname').trim(),
+    avatar:   avatarUrl,
+    email:    fd.get('email').trim(),
+    phone:    fd.get('phone').trim()
+  };
+
+  if (!data.name) { toast('El nombre es requerido', 'error'); return; }
+
+  try {
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+
+    e.target.reset();
+    document.getElementById('avatar-preview').style.display = 'none';
+    await loadEventData();
+    toast(`${data.name} agregado a la aventura 🎉`);
+  } catch (err) {
+    toast(`Error: ${err.message}`, 'error');
+  }
 }
 
-// Agregar estilos de animación
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
+// ============================
+// ELIMINAR INVITADO
+// ============================
+async function deleteGuest(guestId) {
+  if (!confirm('¿Eliminar este invitado del evento?')) return;
+
+  try {
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestId, eventName: currentEventName })
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+
+    await loadEventData();
+    toast('Invitado eliminado');
+  } catch (err) {
+    toast(`Error: ${err.message}`, 'error');
+  }
+}
+
+// ============================
+// GENERAR INVITACIÓN (modal)
+// ============================
+async function generateInvitation(btn, guestName, guestEmail, guestId) {
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'generate_invitation',
+        eventName: currentEventName,
+        guestName,
+        guestEmail
+      })
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+
+    const invitationUrl = `${window.location.origin}/invites/turns3/turns3.html?invitation=${result.invitationId}`;
+    showInvitationModal(guestName, invitationUrl);
+  } catch (err) {
+    toast(`Error generando invitación: ${err.message}`, 'error');
+  } finally {
+    btn.innerHTML = originalHTML;
+    btn.disabled = false;
+  }
+}
+
+function showInvitationModal(guestName, url) {
+  currentInvitationUrl = url;
+  document.getElementById('modal-guest-name').textContent = guestName;
+  document.getElementById('modal-url').textContent = url;
+
+  // WhatsApp message
+  const waMsg = encodeURIComponent(
+    `✨ ¡Hola ${guestName}! 🏰\n\nTe esperamos en la aventura Disney de Alessia 🎂\nAquí está tu invitación personalizada:\n${url}`
+  );
+  document.getElementById('btn-whatsapp').href = `https://wa.me/?text=${waMsg}`;
+
+  // Reset copy button
+  const copyBtn = document.getElementById('btn-copy');
+  copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar URL';
+  copyBtn.classList.remove('copied');
+
+  document.getElementById('invitation-modal').style.display = 'flex';
+}
+
+async function copyInvitationUrl() {
+  try {
+    await navigator.clipboard.writeText(currentInvitationUrl);
+    const btn = document.getElementById('btn-copy');
+    btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-copy"></i> Copiar URL';
+      btn.classList.remove('copied');
+    }, 2500);
+  } catch {
+    toast('No se pudo copiar — cópialo manualmente', 'error');
+  }
+}
+
+// ============================
+// CAMBIAR ESTADO (modal)
+// ============================
+function openStatusModal(guestId, guestName) {
+  pendingStatusGuestId = guestId;
+  document.getElementById('status-modal-guest').textContent = guestName;
+  document.getElementById('status-modal').style.display = 'flex';
+}
+
+async function setGuestStatus(status) {
+  if (!pendingStatusGuestId) return;
+  closeModal('status-modal');
+
+  try {
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'confirm_rsvp',
+        invitationId: pendingStatusGuestId,
+        statusOverride: status
+      })
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+
+    const labels = { 1: 'confirmado ✅', 2: 'declinado ❌', 3: 'pendiente ⏳' };
+    await loadEventData();
+    toast(`Estado actualizado a ${labels[status] || status}`);
+  } catch (err) {
+    toast(`Error: ${err.message}`, 'error');
+  } finally {
+    pendingStatusGuestId = null;
+  }
+}
+
+// ============================
+// REORDENAMIENTO
+// ============================
+async function moveTo(fromIndex, direction) {
+  if (!eventData?.guests) return;
+  const guests = [...eventData.guests];
+  const len = guests.length;
+  const targets = { top: 0, up: Math.max(0, fromIndex-1), down: Math.min(len-1, fromIndex+1), bottom: len-1 };
+  const newIndex = targets[direction];
+  if (newIndex === fromIndex) return;
+
+  const [guest] = guests.splice(fromIndex, 1);
+  guests.splice(newIndex, 0, guest);
+  await saveNewOrder(guests);
+}
+
+function setupDragAndDrop() {
+  const tbody = document.getElementById('guests-tbody');
+  if (!tbody) return;
+
+  let draggedIndex = null;
+  const rows = tbody.querySelectorAll('tr');
+
+  rows.forEach((row, index) => {
+    row.addEventListener('dragstart', e => {
+      draggedIndex = index;
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      rows.forEach(r => r.classList.remove('drag-over'));
+    });
+
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (draggedIndex !== index) {
+        rows.forEach(r => r.classList.remove('drag-over'));
+        row.classList.add('drag-over');
+      }
+    });
+
+    row.addEventListener('dragleave', e => {
+      if (!row.contains(e.relatedTarget)) row.classList.remove('drag-over');
+    });
+
+    row.addEventListener('drop', async e => {
+      e.preventDefault();
+      if (draggedIndex !== null && draggedIndex !== index) {
+        const guests = [...eventData.guests];
+        const [moved] = guests.splice(draggedIndex, 1);
+        guests.splice(index, 0, moved);
+        await saveNewOrder(guests);
+      }
+      rows.forEach(r => r.classList.remove('drag-over'));
+    });
+  });
+}
+
+async function saveNewOrder(reorderedGuests) {
+  try {
+    const guestsData = reorderedGuests.map((g, i) => ({ guest_id: g.guest_id, new_priority: i+1 }));
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reorder_guests', guests: guestsData })
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+    await loadEventData();
+    toast('Orden guardado');
+  } catch (err) {
+    toast(`Error guardando orden: ${err.message}`, 'error');
+    await loadEventData();
+  }
+}
+
+// ============================
+// EVENT LISTENERS
+// ============================
+function setupFormListeners() {
+  document.getElementById('general-form').addEventListener('submit', handleGeneralFormSubmit);
+  document.getElementById('guest-form').addEventListener('submit', handleGuestFormSubmit);
+
+  const avatarInput = document.getElementById('guest-avatar');
+  const preview = document.getElementById('avatar-preview');
+  const previewImg = document.getElementById('preview-img');
+
+  if (avatarInput) {
+    avatarInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          previewImg.src = ev.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+  }
+
+  // Close modals on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeModal('invitation-modal');
+      closeModal('status-modal');
     }
-    
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
+  });
+}

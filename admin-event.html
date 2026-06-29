@@ -1,133 +1,200 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Evento - Alessia Adventures</title>
-    <link rel="stylesheet" href="src/styles/main.css">
-    <link rel="stylesheet" href="src/styles/admin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Alessia Adventures ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="src/styles/admin.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🎛️ Administración de Evento</h1>
-            <button onclick="window.location.href='index.html'" class="back-btn">← Volver a eventos</button>
-        </header>
+  <div class="container">
 
-        <div id="loading" class="loading">Cargando información del evento...</div>
-        <div id="error" class="error" style="display: none;"></div>
-
-        <div id="admin-content" style="display: none;">
-            <!-- Sección 1: Generales -->
-            <section class="admin-section">
-                <h2>📋 Información General</h2>
-                <form id="general-form">
-                    <div class="form-group">
-                        <label for="event-name">Nombre del evento:</label>
-                        <input type="text" id="event-name" name="name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="event-description">Descripción:</label>
-                        <textarea id="event-description" name="description" rows="4"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="event-date">Fecha del evento:</label>
-                        <input type="datetime-local" id="event-date" name="event_date">
-                    </div>
-                    
-                    <button type="submit" class="save-btn">💾 Guardar cambios</button>
-                </form>
-            </section>
-
-            <!-- Sección 2: Invitados -->
-            <section class="admin-section">
-                <h2>👥 Gestión de Invitados</h2>
-                
-                <!-- Estadísticas -->
-                <div class="stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Total invitados:</span>
-                        <span id="total-guests" class="stat-value">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Confirmados:</span>
-                        <span id="confirmed-guests" class="stat-value">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Pendientes:</span>
-                        <span id="pending-guests" class="stat-value">0</span>
-                    </div>
-                </div>
-
-                <!-- Formulario para agregar invitado -->
-                <div class="add-guest-form">
-                    <h3>➕ Agregar nuevo invitado</h3>
-                    <form id="guest-form" enctype="multipart/form-data">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="guest-name">Nombre completo:</label>
-                                <input type="text" id="guest-name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="guest-nickname">Apodo (opcional):</label>
-                                <input type="text" id="guest-nickname" name="nickname" placeholder="Ej: Panchito">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="guest-email">Email:</label>
-                                <input type="email" id="guest-email" name="email">
-                            </div>
-                            <div class="form-group">
-                                <label for="guest-phone">Teléfono:</label>
-                                <input type="tel" id="guest-phone" name="phone">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group avatar-upload">
-                                <label for="guest-avatar">Foto de avatar:</label>
-                                <input type="file" id="guest-avatar" name="avatar" accept="image/*">
-                                <div class="avatar-preview" id="avatar-preview" style="display: none;">
-                                    <img id="preview-img" src="" alt="Preview">
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="add-btn">👤 Agregar invitado</button>
-                    </form>
-                </div>
-
-                <!-- Lista de invitados -->
-                <div class="guests-list">
-                    <h3>📋 Lista de invitados</h3>
-                    <div id="no-guests" class="no-data" style="display: none;">
-                        No hay invitados registrados para este evento.
-                    </div>
-                    <div class="guests-table-container">
-                        <table id="guests-table" style="display: none;">
-                            <thead>
-                                <tr>
-                                    <th class="priority-col">#</th>
-                                    <th class="drag-col">≡≡</th>
-                                    <th>Avatar</th>
-                                    <th>Nombre</th>
-                                    <th>Email</th>
-                                    <th>Teléfono</th>
-                                    <th>Estado</th>
-                                    <th>Controles</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="guests-tbody" class="sortable-list">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+    <header>
+      <div class="header-left">
+        <span class="header-icon">🏰</span>
+        <div>
+          <h1>Panel de Administración</h1>
+          <p class="header-subtitle">Alessia Adventures — Gestión de Eventos</p>
         </div>
-    </div>
+      </div>
+      <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Volver a Eventos
+      </a>
+    </header>
 
-    <script src="src/scripts/admin-event.js"></script>
+    <div id="loading" class="loading">Cargando magia del evento…</div>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div id="admin-content" style="display:none;">
+
+      <!-- ====== SECCIÓN 1: INFO GENERAL ====== -->
+      <section class="admin-section">
+        <h2><i class="fas fa-wand-magic-sparkles" style="color:var(--disney-gold)"></i> Información General</h2>
+        <form id="general-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event-name">Nombre del Evento</label>
+              <input type="text" id="event-name" name="name" required placeholder="Ej: Cumpleaños de Alessia">
+            </div>
+            <div class="form-group">
+              <label for="event-date">Fecha del Evento</label>
+              <input type="datetime-local" id="event-date" name="event_date">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="event-description">Descripción</label>
+            <textarea id="event-description" name="description" rows="3" placeholder="Describe la aventura…"></textarea>
+          </div>
+          <button type="submit" class="save-btn">
+            <i class="fas fa-floppy-disk"></i> Guardar Cambios
+          </button>
+        </form>
+      </section>
+
+      <!-- ====== SECCIÓN 2: INVITADOS ====== -->
+      <section class="admin-section">
+        <h2><i class="fas fa-users" style="color:var(--disney-purple)"></i> Gestión de Invitados</h2>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-label">Total</span>
+            <span id="total-guests" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Confirmados</span>
+            <span id="confirmed-guests" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Pendientes</span>
+            <span id="pending-guests" class="stat-value">0</span>
+          </div>
+        </div>
+
+        <!-- Agregar invitado -->
+        <div class="add-guest-form">
+          <h3><i class="fas fa-user-plus"></i> Nuevo Invitado</h3>
+          <form id="guest-form" enctype="multipart/form-data">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="guest-name">Nombre Completo *</label>
+                <input type="text" id="guest-name" name="name" required placeholder="Ej: Marco Moreno">
+              </div>
+              <div class="form-group">
+                <label for="guest-nickname">Apodo</label>
+                <input type="text" id="guest-nickname" name="nickname" placeholder="Ej: Panchito">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="guest-email">Email</label>
+                <input type="email" id="guest-email" name="email" placeholder="hola@ejemplo.com">
+              </div>
+              <div class="form-group">
+                <label for="guest-phone">Teléfono / WhatsApp</label>
+                <input type="tel" id="guest-phone" name="phone" placeholder="+52 55 0000 0000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="guest-avatar">Foto de Perfil</label>
+              <div class="avatar-upload-wrapper">
+                <input type="file" id="guest-avatar" name="avatar" accept="image/*">
+                <div class="avatar-preview" id="avatar-preview">
+                  <img id="preview-img" src="" alt="Preview">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="add-btn">
+              <i class="fas fa-user-plus"></i> Agregar Invitado
+            </button>
+          </form>
+        </div>
+
+        <!-- Lista de invitados -->
+        <div class="guests-list">
+          <h3><i class="fas fa-list-ul"></i> Lista de Invitados</h3>
+          <div id="no-guests" class="no-data" style="display:none;">
+            Aún no hay invitados para este evento.
+          </div>
+          <div class="guests-table-container">
+            <table id="guests-table" style="display:none;">
+              <thead>
+                <tr>
+                  <th class="priority-col">#</th>
+                  <th class="drag-col">≡</th>
+                  <th>Avatar</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
+                  <th>Estado</th>
+                  <th>Orden</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="guests-tbody" class="sortable-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /admin-content -->
+  </div><!-- /container -->
+
+  <!-- ====== MODAL: URL DE INVITACIÓN ====== -->
+  <div id="invitation-modal" class="modal-overlay" style="display:none;" onclick="closeModal('invitation-modal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('invitation-modal')">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon">🔗</div>
+        <h2 class="modal-title">Invitación Generada</h2>
+        <p class="modal-subtitle">
+          URL personalizada para <span id="modal-guest-name" class="modal-guest-name"></span>
+        </p>
+      </div>
+      <div id="modal-url" class="url-box"></div>
+      <div class="modal-actions">
+        <button class="btn-copy" id="btn-copy" onclick="copyInvitationUrl()">
+          <i class="fas fa-copy"></i> Copiar URL
+        </button>
+        <a id="btn-whatsapp" class="btn-whatsapp" href="#" target="_blank">
+          <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== MODAL: CAMBIAR ESTADO ====== -->
+  <div id="status-modal" class="modal-overlay" style="display:none;" onclick="closeModal('status-modal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('status-modal')">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon">🎯</div>
+        <h2 class="modal-title">Cambiar Estado</h2>
+        <p class="modal-subtitle">
+          <span id="status-modal-guest" class="modal-guest-name"></span>
+        </p>
+      </div>
+      <div class="status-options">
+        <button class="status-option-btn confirm" onclick="setGuestStatus(1)">
+          <span class="status-emoji">✅</span>
+          Confirmado
+        </button>
+        <button class="status-option-btn pending" onclick="setGuestStatus(3)">
+          <span class="status-emoji">⏳</span>
+          Pendiente
+        </button>
+        <button class="status-option-btn decline" onclick="setGuestStatus(2)">
+          <span class="status-emoji">❌</span>
+          Declinado
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="src/scripts/admin-event.js"></script>
 </body>
 </html>

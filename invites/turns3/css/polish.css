@@ -1,0 +1,282 @@
+/* ===========================
+   POLISH — Visual enhancements layer
+   Imported last in main.css to override and elevate
+   =========================== */
+
+/* ============================
+   SECTION TITLES — Gradient + shimmer
+   ============================ */
+.section-title {
+    background: linear-gradient(135deg, #ffffff 20%, var(--disney-golden-yellow) 50%, #ffffff 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleShimmer 4s linear infinite;
+}
+
+@keyframes titleShimmer {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* ============================
+   HERO — richer bg overlay
+   ============================ */
+.hero-bg {
+    opacity: 0.4;
+    filter: saturate(1.15) brightness(0.85);
+}
+
+.hero-bg::before {
+    background: linear-gradient(
+        160deg,
+        rgba(30, 58, 138, 0.55) 0%,
+        rgba(124, 58, 237, 0.3) 50%,
+        rgba(236, 72, 153, 0.2) 100%
+    );
+}
+
+/* Floating elements más visibles */
+.float-element {
+    opacity: 0.22;
+}
+
+/* ============================
+   ADVENTURER CARDS — deeper glass
+   ============================ */
+.adventurer-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.adventurer-card:hover {
+    background: rgba(255, 255, 255, 0.13);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(251, 191, 36, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+    transform: translateY(-12px) scale(1.02);
+}
+
+/* Avatar ring effect */
+.adventurer-avatar {
+    width: 90px;
+    height: 90px;
+    outline: 3px solid transparent;
+    outline-offset: 3px;
+    transition: all 0.4s ease;
+}
+
+.adventurer-card:hover .adventurer-avatar {
+    outline-color: rgba(251, 191, 36, 0.5);
+    transform: scale(1.1) rotate(3deg);
+}
+
+.birthday-girl .adventurer-avatar {
+    outline: 3px solid var(--disney-golden-yellow);
+    outline-offset: 3px;
+}
+
+/* Name + role polish */
+.adventurer-name {
+    font-size: 1.4rem;
+    letter-spacing: -0.3px;
+}
+
+.adventurer-role {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* Status seal polish */
+.confirmed-seal {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    letter-spacing: 0.2px;
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.85), rgba(16, 185, 129, 0.85));
+    backdrop-filter: blur(8px);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* ============================
+   CHARACTER SECTION — featured size up
+   ============================ */
+.characters-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    align-items: start;
+}
+
+/* Featured character cards stand out */
+.character-card.featured {
+    transform-origin: center top;
+    background: rgba(255, 255, 255, 0.13);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.character-card.featured .character-image i {
+    font-size: 5rem;
+    padding: 2.2rem;
+}
+
+.character-card.featured .character-image .character-avatar {
+    width: 140px;
+    height: 140px;
+}
+
+.character-card.featured .character-name {
+    font-size: 2rem;
+}
+
+.character-card.featured:hover {
+    transform: translateY(-18px) scale(1.06);
+}
+
+/* Non-featured still look great but subtly smaller */
+.character-card:not(.featured) {
+    opacity: 0.88;
+}
+
+.character-card:not(.featured):hover {
+    opacity: 1;
+    transform: translateY(-12px) scale(1.03);
+}
+
+/* Character glow always-on for featured */
+.character-card.featured .character-glow {
+    opacity: 0.15;
+}
+
+.character-card.featured:hover .character-glow {
+    opacity: 0.5;
+}
+
+/* ============================
+   JOURNEY TIMELINE — enhanced
+   ============================ */
+.journey-timeline::before {
+    background: linear-gradient(180deg,
+        transparent 0%,
+        var(--disney-magic-purple) 5%,
+        var(--disney-golden-yellow) 50%,
+        var(--disney-princess-pink) 95%,
+        transparent 100%);
+    width: 3px;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+}
+
+.day-number {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.timeline-day.featured .day-number {
+    box-shadow: 0 0 24px rgba(251, 191, 36, 0.6), 0 6px 20px rgba(0,0,0,0.25);
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+}
+
+.day-content {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.day-content:hover {
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+}
+
+/* ============================
+   QUEST / COST SECTION
+   ============================ */
+.cost-item {
+    border-left-width: 5px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.cost-item:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18), -5px 0 0 var(--disney-golden-yellow);
+}
+
+.detail-card {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+}
+
+/* ============================
+   RSVP SECTION — scrollier scroll
+   ============================ */
+.rsvp-card {
+    box-shadow: 0 24px 80px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.scroll-decoration {
+    height: 18px;
+}
+
+/* ============================
+   SCROLL REVEAL — fade-in on scroll
+   ============================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-32px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reveal-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(32px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reveal-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Stagger delays for grid children */
+.reveal-stagger > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger > *:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger > *:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger > *:nth-child(6) { transition-delay: 400ms; }
+
+/* ============================
+   FOOTER POLISH
+   ============================ */
+footer {
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ============================
+   GLOBAL — smooth hover on buttons
+   ============================ */
+button, a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Active states for mobile */
+.adventurer-card:active { transform: scale(0.98); }
+.character-card:active  { transform: scale(0.97); }
+
+/* Better scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }

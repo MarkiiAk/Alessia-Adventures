@@ -96,7 +96,7 @@ async function getEventData(sql, res, eventId) {
 
     // Obtener invitados del evento con información completa ordenados por prioridad
     const guests = await sql`
-      SELECT 
+      SELECT
         g.id as guest_id,
         g.name,
         g.nickname,
@@ -104,6 +104,7 @@ async function getEventData(sql, res, eventId) {
         g.email,
         g.phone,
         g.priority_order,
+        i.id as invitation_id,
         i.status,
         i.responded_at,
         i.created_at as invited_at
@@ -487,13 +488,18 @@ async function getInvitationData(sql, res, query) {
   }
 }
 
-// Confirmar RSVP desde invitación personalizada
+// Confirmar RSVP desde invitación personalizada (o cambiar estado desde admin)
 async function confirmRSVPFromInvitation(sql, res, data, eventId) {
   try {
-    const { invitationId } = data;
-    
-    console.log('✅ Confirming RSVP for invitation ID:', invitationId);
-    
+    const { invitationId, statusOverride } = data;
+    // statusOverride allows admin to set any status: 1=confirmed, 2=declined, 3=pending
+    // When called from guest invitation page, no statusOverride → defaults to confirmed (1)
+    const newStatus = (statusOverride && [1,2,3].includes(Number(statusOverride)))
+      ? Number(statusOverride)
+      : 1;
+
+    console.log('✅ Setting RSVP status', newStatus, 'for invitation ID:', invitationId);
+
     if (!invitationId) {
       return res.status(400).json({
         success: false,
@@ -517,10 +523,10 @@ async function confirmRSVPFromInvitation(sql, res, data, eventId) {
       });
     }
 
-    // Actualizar el estado a confirmado (1) y registrar fecha de respuesta
+    // Actualizar estado y registrar fecha de respuesta
     const result = await sql`
-      UPDATE invitations 
-      SET status = 1, responded_at = NOW()
+      UPDATE invitations
+      SET status = ${newStatus}, responded_at = NOW()
       WHERE id = ${invitationId}
       RETURNING id, status, responded_at
     `;

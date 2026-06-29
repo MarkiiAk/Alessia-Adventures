@@ -1229,12 +1229,60 @@ class App {
 }
 
 // ===========================
+// SCROLL REVEAL
+// ===========================
+function initScrollReveal() {
+    // Mark sections and cards for reveal
+    const revealTargets = [
+        { selector: '.section-header',         cls: 'reveal' },
+        { selector: '.adventurers-grid',        cls: 'reveal reveal-stagger' },
+        { selector: '.adventurer-card',         cls: 'reveal' },
+        { selector: '.timeline-day:nth-child(odd) .day-content',  cls: 'reveal-left' },
+        { selector: '.timeline-day:nth-child(even) .day-content', cls: 'reveal-right' },
+        { selector: '.day-marker',              cls: 'reveal' },
+        { selector: '.characters-grid',         cls: 'reveal reveal-stagger' },
+        { selector: '.character-card',          cls: 'reveal' },
+        { selector: '.cost-breakdown',          cls: 'reveal' },
+        { selector: '.cost-item',               cls: 'reveal' },
+        { selector: '.payment-plan',            cls: 'reveal' },
+        { selector: '.detail-card',             cls: 'reveal' },
+        { selector: '.rsvp-content',            cls: 'reveal' },
+        { selector: '.final-message',           cls: 'reveal' },
+    ];
+
+    revealTargets.forEach(({ selector, cls }) => {
+        document.querySelectorAll(selector).forEach(el => {
+            cls.split(' ').forEach(c => el.classList.add(c));
+        });
+    });
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// ===========================
 // INICIALIZACIÓN
 // ===========================
 document.addEventListener('DOMContentLoaded', () => {
     // Inicializar loading screen
     const loadingScreen = new LoadingScreen();
     loadingScreen.init();
+
+    // Scroll reveal (starts after content is visible)
+    setTimeout(initScrollReveal, 400);
 });
 
 // Inicializar app después del loading (llamado desde LoadingScreen)
