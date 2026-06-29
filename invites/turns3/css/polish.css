@@ -408,54 +408,168 @@ body {
     background: oklch(10.5% 0.068 258 / 1);
 }
 
+/* ---- TIMELINE COMO LIBRO DE CUENTOS ---- */
+
+/* Línea vertical: lomo del libro, izquierda */
 .journey-timeline::before {
+    left: 44px !important;
+    transform: none !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 2px !important;
     background: linear-gradient(180deg,
         transparent 0%,
-        oklch(45% 0.20 290) 8%,
-        oklch(78% 0.18 82) 50%,
-        oklch(60% 0.24 340) 92%,
+        oklch(78% 0.18 82 / 0.4) 5%,
+        oklch(78% 0.18 82 / 0.6) 50%,
+        oklch(78% 0.18 82 / 0.4) 95%,
         transparent 100%) !important;
-    width: 2px !important;
-    box-shadow: 0 0 8px oklch(78% 0.18 82 / 0.35) !important;
-}
-
-.day-number {
-    box-shadow: 0 0 16px oklch(40% 0.18 262 / 0.5), 0 4px 12px oklch(0% 0 0 / 0.3) !important;
-}
-.timeline-day.featured .day-number {
-    width: 62px !important;
-    height: 62px !important;
-    font-size: 1.8rem !important;
-    box-shadow:
-        0 0 0 4px oklch(78% 0.18 82 / 0.2),
-        0 0 24px oklch(78% 0.18 82 / 0.5),
-        0 6px 20px oklch(0% 0 0 / 0.35) !important;
-}
-
-.day-content {
-    background: oklch(100% 0 0 / 0.06) !important;
-    border: 1px solid oklch(100% 0 0 / 0.10) !important;
-    box-shadow: 0 6px 28px oklch(0% 0 0 / 0.18) !important;
-    transition: transform 0.3s cubic-bezier(0,0,0.2,1),
-                box-shadow 0.3s ease,
-                background 0.3s ease;
-}
-.day-content:hover {
-    background: oklch(100% 0 0 / 0.10) !important;
-    box-shadow: 0 12px 40px oklch(0% 0 0 / 0.25) !important;
-    transform: translateY(-4px);
-}
-.timeline-day.featured .day-content {
-    border-color: oklch(78% 0.18 82 / 0.25) !important;
-}
-
-.day-title { color: oklch(97% 0.01 80); }
-.day-date  { color: oklch(78% 0.18 82); font-weight: 600; }
-.park-badge {
-    background: oklch(78% 0.18 82 / 0.15) !important;
-    color: oklch(84% 0.16 82) !important;
-    border: 1px solid oklch(78% 0.18 82 / 0.30) !important;
     box-shadow: none !important;
+}
+
+/* Cada día: una página nueva del libro */
+.timeline-day {
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 0 !important;
+    margin-bottom: 3rem !important;
+    padding-left: 0 !important;
+}
+
+/* Cancelar el flip de pares */
+.timeline-day:nth-child(even) {
+    flex-direction: row !important;
+}
+.timeline-day:nth-child(even) .day-content {
+    text-align: left !important;
+}
+
+/* Marcador del día: pegado a la izquierda */
+.day-marker {
+    position: relative !important;
+    left: auto !important;
+    transform: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0 !important;
+    min-width: 90px !important;
+    padding-top: 4px;
+    flex-shrink: 0;
+}
+
+/* Número del capítulo: grande, Disney font, como portada de capítulo */
+.day-number {
+    width: auto !important;
+    height: auto !important;
+    background: none !important;
+    border-radius: 0 !important;
+    font-family: var(--font-disney-regular), var(--font-display), cursive !important;
+    font-size: clamp(3rem, 6vw, 4.5rem) !important;
+    font-weight: 400 !important;
+    color: oklch(78% 0.18 82) !important;
+    line-height: 1 !important;
+    text-shadow:
+        0 0 30px oklch(78% 0.18 82 / 0.5),
+        0 2px 8px oklch(0% 0 0 / 0.4) !important;
+    box-shadow: none !important;
+}
+
+/* Destacados: número más brillante */
+.timeline-day.featured .day-number {
+    width: auto !important;
+    height: auto !important;
+    font-size: clamp(3.5rem, 7vw, 5.5rem) !important;
+    color: oklch(88% 0.22 82) !important;
+    text-shadow:
+        0 0 40px oklch(78% 0.20 82 / 0.7),
+        0 0 80px oklch(78% 0.18 82 / 0.35),
+        0 2px 8px oklch(0% 0 0 / 0.4) !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: none !important;
+    animation: none !important;
+}
+
+/* Ícono del día: pequeño, debajo del número */
+.day-icon {
+    width: 32px !important;
+    height: 32px !important;
+    background: oklch(78% 0.18 82 / 0.12) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.25) !important;
+    margin-top: 8px;
+    font-size: 0.9rem !important;
+}
+
+/* Página del capítulo: cálida, como papel antiguo iluminado */
+.day-content {
+    flex: 1 !important;
+    max-width: none !important;
+    background: oklch(14% 0.05 55 / 0.88) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.18) !important;
+    border-left: 3px solid oklch(78% 0.18 82 / 0.5) !important;
+    border-radius: 0 16px 16px 0 !important;
+    padding: 1.8rem 2rem !important;
+    box-shadow:
+        0 4px 24px oklch(0% 0 0 / 0.25),
+        inset 0 1px 0 oklch(100% 0 0 / 0.06) !important;
+    transition: transform 0.3s cubic-bezier(0,0,0.2,1),
+                box-shadow 0.3s ease;
+}
+
+.day-content:hover {
+    transform: translateX(4px) !important;
+    box-shadow: 0 8px 36px oklch(0% 0 0 / 0.35) !important;
+    border-left-color: oklch(84% 0.20 82 / 0.8) !important;
+    background: oklch(16% 0.06 55 / 0.92) !important;
+}
+
+.timeline-day.featured .day-content {
+    background: oklch(15% 0.07 55 / 0.92) !important;
+    border-left-color: oklch(84% 0.20 82) !important;
+    border-left-width: 4px !important;
+}
+
+/* Título del capítulo: Disney font, protagonista */
+.day-title {
+    font-family: var(--font-disney-regular), var(--font-display), cursive !important;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem) !important;
+    color: oklch(92% 0.10 80) !important;
+    margin-bottom: 0.3rem !important;
+    line-height: 1.3 !important;
+}
+
+.day-date {
+    color: oklch(78% 0.18 82) !important;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.03em;
+}
+
+.park-badge {
+    background: oklch(78% 0.18 82 / 0.12) !important;
+    color: oklch(84% 0.16 82) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.28) !important;
+    box-shadow: none !important;
+    font-size: 0.82rem !important;
+}
+
+/* Mobile: compactar */
+@media (max-width: 768px) {
+    .journey-timeline::before {
+        left: 28px !important;
+    }
+    .day-marker {
+        min-width: 64px !important;
+    }
+    .day-number {
+        font-size: clamp(2.2rem, 8vw, 3.2rem) !important;
+    }
+    .timeline-day.featured .day-number {
+        font-size: clamp(2.5rem, 9vw, 3.8rem) !important;
+    }
+    .day-content {
+        padding: 1.2rem 1.4rem !important;
+    }
 }
 
 
