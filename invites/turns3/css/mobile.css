@@ -67,7 +67,7 @@ body { overflow-x: clip; -webkit-tap-highlight-color: transparent; }
     .nav-hamburger { display: flex; }
 
     .nav-menu {
-        display: none;
+        display: flex;
         flex-direction: column;
         position: absolute;
         top: 100%;
@@ -81,9 +81,20 @@ body { overflow-x: clip; -webkit-tap-highlight-color: transparent; }
         z-index: 999;
         gap: 0;
         list-style: none;
+        /* Use opacity/visibility (not display) to match responsive.css animation system */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
     }
 
-    .nav-menu.open { display: flex; }
+    /* Both .open (new) and .active (Navigation class) show the menu */
+    .nav-menu.open,
+    .nav-menu.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
 
     .nav-menu li { width: 100%; }
 
