@@ -369,26 +369,11 @@ class Navigation {
     }
 
     initMobileMenu() {
-        // Crear botón de menú móvil si no existe
-        let toggleButton = Utils.$('.mobile-menu-toggle');
-        if (!toggleButton) {
-            toggleButton = document.createElement('button');
-            toggleButton.className = 'mobile-menu-toggle';
-            toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
-            toggleButton.setAttribute('aria-label', 'Toggle Mobile Menu');
-            
-            // Insertar después del logo
-            const navLogo = Utils.$('.nav-logo');
-            if (navLogo && navLogo.parentNode) {
-                navLogo.parentNode.insertBefore(toggleButton, navLogo.nextSibling);
-            }
-        }
-
-        // Eventos del menú móvil
-        toggleButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.toggleMobileMenu();
-        });
+        // El nuevo .nav-hamburger en el HTML reemplaza al botón dinámico
+        // initHamburgerMenu() lo maneja con clase .open
+        // Aquí solo registramos los eventos de cierre para compatibilidad
+        let toggleButton = Utils.$('.nav-hamburger') || Utils.$('.mobile-menu-toggle');
+        if (!toggleButton) return;
 
         // Cerrar menú al hacer clic fuera
         document.addEventListener('click', (e) => {
@@ -427,30 +412,22 @@ class Navigation {
 
     openMobileMenu() {
         const navMenu = Utils.$('.nav-menu');
-        const toggleButton = Utils.$('.mobile-menu-toggle');
-        
-        if (navMenu) navMenu.classList.add('active');
-        if (toggleButton) {
-            toggleButton.classList.add('active');
-            const icon = toggleButton.querySelector('i');
-            if (icon) icon.className = 'fas fa-times';
-        }
-        
+        const toggleButton = Utils.$('.nav-hamburger') || Utils.$('.mobile-menu-toggle');
+
+        if (navMenu) { navMenu.classList.add('open'); navMenu.classList.add('active'); }
+        if (toggleButton) toggleButton.setAttribute('aria-expanded', 'true');
+
         this.mobileMenuOpen = true;
         document.body.style.overflow = 'hidden';
     }
 
     closeMobileMenu() {
         const navMenu = Utils.$('.nav-menu');
-        const toggleButton = Utils.$('.mobile-menu-toggle');
-        
-        if (navMenu) navMenu.classList.remove('active');
-        if (toggleButton) {
-            toggleButton.classList.remove('active');
-            const icon = toggleButton.querySelector('i');
-            if (icon) icon.className = 'fas fa-bars';
-        }
-        
+        const toggleButton = Utils.$('.nav-hamburger') || Utils.$('.mobile-menu-toggle');
+
+        if (navMenu) { navMenu.classList.remove('open'); navMenu.classList.remove('active'); }
+        if (toggleButton) toggleButton.setAttribute('aria-expanded', 'false');
+
         this.mobileMenuOpen = false;
         document.body.style.overflow = '';
     }
