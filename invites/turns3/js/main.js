@@ -8,7 +8,7 @@
 // ===========================
 const CONFIG = {
     // Fecha del viaje
-    tripDate: new Date('2026-08-31T07:25:00'),
+    tripDate: new Date('2026-09-06T06:05:00'),
     
     // Configuración de animaciones
     animations: {
