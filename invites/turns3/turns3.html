@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>✨¡Aventura Mágica de Alessia! 🎂 Cumpleaños #3 en Disneyland ✨</title>
     
     <!-- Preload critical resources -->
@@ -144,7 +144,12 @@
                 <img src="src/castlemickey.svg" class="nav-castle-icon" width="50" height="50" alt="Castillo Disney"/>
                 <span>Alessia's Adventure</span>
             </div>
-            <ul class="nav-menu">
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+                <span class="ham-line"></span>
+                <span class="ham-line"></span>
+                <span class="ham-line"></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
                 <li><a href="#hero" class="nav-link active">Inicio</a></li>
                 <li><a href="#adventure-team" class="nav-link">El Elenco</a></li>
                 <li><a href="#characters" class="nav-link">El Reino</a></li>
@@ -269,7 +274,7 @@
     </section>
 
     <!-- Adventure Team Section -->
-    <section id="adventure-team" class="adventure-team-section">
+    <section id="adventure-team" class="adventure-team-section" style="scroll-margin-top: 80px">
         <div class="section-bg">
             <div class="bg-pattern"></div>
         </div>
@@ -289,7 +294,7 @@
                 <div class="adventurer-card birthday-girl">
                     <div class="card-glow"></div>
                     <div class="adventurer-avatar">
-                        <img src="src/aleavatar.png" alt="Alessia" class="avatar-image">
+                        <img src="src/aleavatar.png" alt="Alessia" class="avatar-image" loading="lazy" decoding="async">
                         <div class="crown-sparkles">
                             <span>✨</span>
                             <span>⭐</span>
@@ -309,7 +314,7 @@
     </section>
 
     <!-- Characters Section -->
-    <section id="characters" class="characters-section">
+    <section id="characters" class="characters-section" style="scroll-margin-top: 80px">
         <div class="section-bg">
             <div class="characters-pattern"></div>
         </div>
@@ -328,7 +333,7 @@
                 <div class="character-card featured stitch">
                     <div class="character-glow"></div>
                     <div class="character-image">
-                        <img src="src/personajestitch.jpg" alt="Stitch" class="character-avatar">
+                        <img src="src/personajestitch.jpg" alt="Stitch" class="character-avatar" loading="lazy" decoding="async" width="300" height="300">
                         <div class="character-sparkles">
                             <span>💙</span>
                             <span>✨</span>
@@ -342,7 +347,7 @@
                 <div class="character-card featured grogu">
                     <div class="character-glow"></div>
                     <div class="character-image">
-                        <img src="src/personajegrogu.jpg" alt="Grogu" class="character-avatar">
+                        <img src="src/personajegrogu.jpg" alt="Grogu" class="character-avatar" loading="lazy" decoding="async" width="300" height="300">
                         <div class="character-sparkles">
                             <span>💚</span>
                             <span>🌟</span>
@@ -356,7 +361,7 @@
                 <div class="character-card featured r2d2">
                     <div class="character-glow"></div>
                     <div class="character-image">
-                        <img src="src/personajer2d2.jpg" alt="R2-D2" class="character-avatar">
+                        <img src="src/personajer2d2.jpg" alt="R2-D2" class="character-avatar" loading="lazy" decoding="async" width="300" height="300">
                         <div class="character-sparkles">
                             <span>🔵</span>
                             <span>⚡</span>
@@ -370,7 +375,7 @@
                 <div class="character-card featured bella">
                     <div class="character-glow"></div>
                     <div class="character-image">
-                        <img src="src/personajebella.jpg" alt="Bella" class="character-avatar">
+                        <img src="src/personajebella.jpg" alt="Bella" class="character-avatar" loading="lazy" decoding="async" width="300" height="300">
                         <div class="character-sparkles">
                             <span>💛</span>
                             <span>📚</span>
@@ -384,7 +389,7 @@
                 <div class="character-card featured pocahontas">
                     <div class="character-glow"></div>
                     <div class="character-image">
-                        <img src="src/personajepocahontas.jpg" alt="Pocahontas" class="character-avatar">
+                        <img src="src/personajepocahontas.jpg" alt="Pocahontas" class="character-avatar" loading="lazy" decoding="async" width="300" height="300">
                         <div class="character-sparkles">
                             <span>💜</span>
                             <span>🍃</span>
@@ -398,7 +403,7 @@
                 <div class="character-card mickey">
                     <div class="character-glow"></div>
                     <div class="character-image">
-                        <img src="src/personajeminnimickey.jpg" alt="Mickey & Minnie" class="character-avatar">
+                        <img src="src/personajeminnimickey.jpg" alt="Mickey & Minnie" class="character-avatar" loading="lazy" decoding="async" width="300" height="300">
                         <div class="character-sparkles">
                             <span>🔴</span>
                             <span>⚫</span>
@@ -413,7 +418,7 @@
     </section>
 
     <!-- Journey Section -->
-    <section id="journey" class="journey-section">
+    <section id="journey" class="journey-section" style="scroll-margin-top: 80px">
         <div class="section-bg">
             <div class="journey-pattern"></div>
         </div>
@@ -582,7 +587,7 @@
     </section>
 
     <!-- Quest Details Section -->
-    <section id="quest-details" class="quest-details-section">
+    <section id="quest-details" class="quest-details-section" style="scroll-margin-top: 80px">
         <div class="section-bg">
             <div class="details-pattern"></div>
         </div>
@@ -646,7 +651,7 @@
     </section>
 
     <!-- RSVP Section -->
-    <section id="rsvp" class="rsvp-section">
+    <section id="rsvp" class="rsvp-section" style="scroll-margin-top: 80px">
         <div class="section-bg">
             <div class="rsvp-pattern"></div>
         </div>
