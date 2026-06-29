@@ -4,15 +4,40 @@
    =========================== */
 
 /* ============================
-   SECTION TITLES — Gradient + shimmer
+   SECTION TITLES — Gradient shimmer
+   Only applies to the text node, not child spans (emojis)
    ============================ */
 .section-title {
+    position: relative;
+}
+
+/* Wrap only direct text — done via a pseudo gradient overlay instead of text-clip
+   so emoji .title-decoration spans stay visible */
+.section-title .title-text {
     background: linear-gradient(135deg, #ffffff 20%, var(--disney-golden-yellow) 50%, #ffffff 80%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: titleShimmer 4s linear infinite;
+    display: inline;
+}
+
+/* Fallback: if no .title-text wrapper, just shimmer the whole title */
+.section-title:not(:has(.title-text)) {
+    background: linear-gradient(135deg, #ffffff 20%, var(--disney-golden-yellow) 50%, #ffffff 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleShimmer 4s linear infinite;
+}
+
+/* Keep decorations (emojis) fully visible */
+.section-title .title-decoration {
+    -webkit-text-fill-color: initial;
+    background: none;
+    animation: decorationSpin 3s ease-in-out infinite;
 }
 
 @keyframes titleShimmer {

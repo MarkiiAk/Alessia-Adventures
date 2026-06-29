@@ -1232,22 +1232,17 @@ class App {
 // SCROLL REVEAL
 // ===========================
 function initScrollReveal() {
-    // Mark sections and cards for reveal
+    // Only static elements — dynamic ones (adventurer cards) are handled separately
     const revealTargets = [
-        { selector: '.section-header',         cls: 'reveal' },
-        { selector: '.adventurers-grid',        cls: 'reveal reveal-stagger' },
-        { selector: '.adventurer-card',         cls: 'reveal' },
-        { selector: '.timeline-day:nth-child(odd) .day-content',  cls: 'reveal-left' },
-        { selector: '.timeline-day:nth-child(even) .day-content', cls: 'reveal-right' },
-        { selector: '.day-marker',              cls: 'reveal' },
-        { selector: '.characters-grid',         cls: 'reveal reveal-stagger' },
-        { selector: '.character-card',          cls: 'reveal' },
-        { selector: '.cost-breakdown',          cls: 'reveal' },
-        { selector: '.cost-item',               cls: 'reveal' },
-        { selector: '.payment-plan',            cls: 'reveal' },
-        { selector: '.detail-card',             cls: 'reveal' },
-        { selector: '.rsvp-content',            cls: 'reveal' },
-        { selector: '.final-message',           cls: 'reveal' },
+        { selector: '.section-header',                           cls: 'reveal' },
+        { selector: '.timeline-day:nth-child(odd) .day-content', cls: 'reveal-left' },
+        { selector: '.timeline-day:nth-child(even) .day-content',cls: 'reveal-right' },
+        { selector: '.day-marker',                               cls: 'reveal' },
+        { selector: '.character-card',                           cls: 'reveal' },
+        { selector: '.detail-card',                              cls: 'reveal' },
+        { selector: '.travel-details',                           cls: 'reveal' },
+        { selector: '.rsvp-content',                             cls: 'reveal' },
+        { selector: '.final-message',                            cls: 'reveal' },
     ];
 
     revealTargets.forEach(({ selector, cls }) => {

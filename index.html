@@ -1,29 +1,223 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventos Disponibles - Alessia Adventures</title>
-    <link rel="stylesheet" href="src/styles/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alessia Adventures ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏰</text></svg>">
+  <style>
+    :root {
+      --blue: #1e3a8a; --purple: #7c3aed; --gold: #fbbf24;
+      --pink: #ec4899; --green: #10b981;
+      --font-d: 'Fredoka', sans-serif; --font-b: 'Poppins', sans-serif;
+      --surface: rgba(255,255,255,0.06); --border: rgba(255,255,255,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-b);
+      background: #0f1629;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(30,58,138,.25) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 90%, rgba(124,58,237,.2) 0%, transparent 60%);
+      min-height: 100vh; color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* HEADER */
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+    .logo-icon {
+      font-size: 4rem;
+      filter: drop-shadow(0 0 20px rgba(251,191,36,.5));
+      animation: logoBob 3s ease-in-out infinite;
+    }
+    @keyframes logoBob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    header h1 {
+      font-family: var(--font-d);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 20%, var(--gold) 50%, #fff 80%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
+      margin: 12px 0 8px;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    header p {
+      color: rgba(255,255,255,.55);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* STATES */
+    .state {
+      text-align: center;
+      padding: 80px 20px;
+      color: rgba(255,255,255,.45);
+      font-size: 1rem;
+    }
+    .state-icon {
+      font-size: 3rem; display: block; margin-bottom: 12px;
+      animation: spinGlow 2s ease-in-out infinite;
+    }
+    @keyframes spinGlow {
+      0%,100% { filter: drop-shadow(0 0 8px rgba(251,191,36,.3)); }
+      50%      { filter: drop-shadow(0 0 18px rgba(251,191,36,.7)); transform: rotate(15deg) scale(1.1); }
+    }
+    .error-state { color: #fca5a5; }
+
+    /* EVENTS GRID */
+    .events-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .event-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .event-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
+    }
+    .event-card:hover {
+      border-color: rgba(251,191,36,.35);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,.35), 0 0 0 1px rgba(251,191,36,.15);
+    }
+
+    .event-info { flex: 1; min-width: 0; }
+    .event-icon {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 10px rgba(251,191,36,.4));
+    }
+    .event-name {
+      font-family: var(--font-d);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .event-meta {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,.45);
+      font-weight: 500;
+      letter-spacing: .3px;
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 20px;
+      border-radius: 50px; border: none; cursor: pointer;
+      font-family: var(--font-b); font-size: 0.88rem; font-weight: 600;
+      transition: all .25s ease; text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-invitation {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(124,58,237,.35);
+    }
+    .btn-invitation:hover {
+      filter: brightness(1.12); transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(124,58,237,.5);
+    }
+    .btn-admin {
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.75);
+      border: 1px solid var(--border);
+    }
+    .btn-admin:hover {
+      background: rgba(255,255,255,.12); color: #fff;
+      border-color: rgba(251,191,36,.4);
+      box-shadow: 0 4px 14px rgba(251,191,36,.15);
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 0 20px 40px;
+      color: rgba(255,255,255,.2);
+      font-size: 0.8rem;
+    }
+    footer span { color: rgba(251,191,36,.5); }
+
+    @media (max-width: 600px) {
+      .event-card { flex-direction: column; align-items: flex-start; padding: 22px 20px; }
+      .event-actions { width: 100%; }
+      .btn { flex: 1; justify-content: center; }
+    }
+  </style>
 </head>
 <body>
-    <h1>🎉 Eventos Disponibles</h1>
-    
-    <div id="loading" class="loading">Cargando eventos...</div>
-    <div id="error" class="error" style="display: none;"></div>
-    <div id="no-events" class="no-events" style="display: none;">No hay eventos disponibles</div>
-    
-    <table id="events-table" style="display: none;">
-        <thead>
-            <tr>
-                <th>Nombre del Evento</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="events-tbody">
-        </tbody>
-    </table>
 
-    <script src="src/scripts/events.js"></script>
+  <header>
+    <div class="logo-icon">🏰</div>
+    <h1>Alessia Adventures</h1>
+    <p>Panel de Eventos Mágicos</p>
+  </header>
+
+  <div class="container">
+    <div id="loading" class="state">
+      <span class="state-icon">✨</span>
+      Cargando la magia…
+    </div>
+    <div id="error" class="state error-state" style="display:none;">
+      <span style="font-size:2.5rem;display:block;margin-bottom:10px">😬</span>
+      <span id="error-msg"></span>
+    </div>
+    <div id="no-events" class="state" style="display:none;">
+      <span style="font-size:2.5rem;display:block;margin-bottom:10px">🌙</span>
+      No hay eventos disponibles por el momento.
+    </div>
+    <div id="events-grid" class="events-grid" style="display:none;"></div>
+  </div>
+
+  <footer>
+    Hecho con <span>✨</span> para Alessia — Cumpleaños #3 Disneyland 2026
+  </footer>
+
+  <script src="src/scripts/events.js"></script>
 </body>
 </html>

@@ -189,6 +189,11 @@ function fillGuestsTable(guests) {
             <i class="fas fa-link"></i> Invitación
           </button>
           <button class="change-status-btn"
+                  onclick="openEditModal('${guest.guest_id}', '${guest.name}', '${guest.nickname || ''}', '${guest.email || ''}', '${guest.phone || ''}')"
+                  title="Editar invitado" style="background:rgba(251,191,36,0.1);color:var(--disney-gold);border-color:rgba(251,191,36,0.3)">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="change-status-btn"
                   onclick="openStatusModal('${guest.invitation_id}', '${guest.name}')"
                   title="Cambiar estado">
             <i class="fas fa-pen"></i>
@@ -347,6 +352,68 @@ async function copyInvitationUrl() {
 }
 
 // ============================
+// EDITAR INVITADO (modal)
+// ============================
+function openEditModal(guestId, name, nickname, email, phone) {
+  document.getElementById('edit-guest-id').value   = guestId;
+  document.getElementById('edit-name').value       = name;
+  document.getElementById('edit-nickname').value   = nickname;
+  document.getElementById('edit-email').value      = email;
+  document.getElementById('edit-phone').value      = phone;
+  document.getElementById('edit-modal-name').textContent = name;
+  document.getElementById('edit-avatar-preview').style.display = 'none';
+  document.getElementById('edit-avatar').value = '';
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+
+async function handleEditFormSubmit(e) {
+  e.preventDefault();
+  const guestId = document.getElementById('edit-guest-id').value;
+  const avatarFile = document.getElementById('edit-avatar').files[0];
+  let avatarUrl = undefined;
+
+  if (avatarFile && avatarFile.size > 0) {
+    try {
+      const fd = new FormData();
+      fd.append('avatar', avatarFile);
+      const uploadRes = await fetch('/api/upload-avatar', { method: 'POST', body: fd });
+      const uploadResult = await uploadRes.json();
+      if (!uploadResult.success) throw new Error(uploadResult.error);
+      avatarUrl = uploadResult.url;
+    } catch (err) {
+      toast(`Error subiendo imagen: ${err.message}`, 'error');
+      return;
+    }
+  }
+
+  const data = {
+    action:   'update_guest',
+    guestId,
+    name:     document.getElementById('edit-name').value.trim(),
+    nickname: document.getElementById('edit-nickname').value.trim(),
+    email:    document.getElementById('edit-email').value.trim(),
+    phone:    document.getElementById('edit-phone').value.trim(),
+  };
+  if (avatarUrl !== undefined) data.avatar = avatarUrl;
+
+  try {
+    const res = await fetch(`/api/admin-events?eventId=${encodeURIComponent(currentEventName)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (!result.success) throw new Error(result.error);
+
+    closeModal('edit-modal');
+    await loadEventData();
+    toast(`${data.name} actualizado ✨`);
+  } catch (err) {
+    toast(`Error: ${err.message}`, 'error');
+  }
+}
+
+// ============================
 // CAMBIAR ESTADO (modal)
 // ============================
 function openStatusModal(guestId, guestName) {
@@ -467,6 +534,7 @@ async function saveNewOrder(reorderedGuests) {
 function setupFormListeners() {
   document.getElementById('general-form').addEventListener('submit', handleGeneralFormSubmit);
   document.getElementById('guest-form').addEventListener('submit', handleGuestFormSubmit);
+  document.getElementById('edit-guest-form').addEventListener('submit', handleEditFormSubmit);
 
   const avatarInput = document.getElementById('guest-avatar');
   const preview = document.getElementById('avatar-preview');
@@ -488,11 +556,29 @@ function setupFormListeners() {
     });
   }
 
+  // Edit avatar preview
+  const editAvatar = document.getElementById('edit-avatar');
+  if (editAvatar) {
+    editAvatar.addEventListener('change', e => {
+      const file = e.target.files[0];
+      const preview = document.getElementById('edit-avatar-preview');
+      const img = document.getElementById('edit-preview-img');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = ev => { img.src = ev.target.result; preview.style.display = 'block'; };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+  }
+
   // Close modals on Escape
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       closeModal('invitation-modal');
       closeModal('status-modal');
+      closeModal('edit-modal');
     }
   });
 }

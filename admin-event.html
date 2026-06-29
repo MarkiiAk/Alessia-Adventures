@@ -167,6 +167,59 @@
     </div>
   </div>
 
+  <!-- ====== MODAL: EDITAR INVITADO ====== -->
+  <div id="edit-modal" class="modal-overlay" style="display:none;" onclick="closeModal('edit-modal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('edit-modal')">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon">✏️</div>
+        <h2 class="modal-title">Editar Invitado</h2>
+        <p class="modal-subtitle"><span id="edit-modal-name" class="modal-guest-name"></span></p>
+      </div>
+      <form id="edit-guest-form" enctype="multipart/form-data">
+        <input type="hidden" id="edit-guest-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-name">Nombre</label>
+            <input type="text" id="edit-name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-nickname">Apodo</label>
+            <input type="text" id="edit-nickname" name="nickname" placeholder="Opcional">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-email">Email</label>
+            <input type="email" id="edit-email" name="email">
+          </div>
+          <div class="form-group">
+            <label for="edit-phone">Teléfono</label>
+            <input type="tel" id="edit-phone" name="phone">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-avatar">Nueva foto de perfil</label>
+          <div class="avatar-upload-wrapper">
+            <input type="file" id="edit-avatar" name="avatar" accept="image/*">
+            <div id="edit-avatar-preview" style="display:none;">
+              <img id="edit-preview-img" src="" alt="Preview" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--disney-gold);">
+            </div>
+          </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:6px">Deja vacío para conservar la foto actual</p>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-copy">
+            <i class="fas fa-floppy-disk"></i> Guardar Cambios
+          </button>
+          <button type="button" class="btn-whatsapp" style="background:var(--admin-surface);border:1px solid var(--admin-border);color:var(--text-secondary)" onclick="closeModal('edit-modal')">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ====== MODAL: CAMBIAR ESTADO ====== -->
   <div id="status-modal" class="modal-overlay" style="display:none;" onclick="closeModal('status-modal')">
     <div class="modal" onclick="event.stopPropagation()">

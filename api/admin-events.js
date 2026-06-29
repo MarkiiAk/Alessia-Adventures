@@ -36,9 +36,11 @@ export default async function handler(req, res) {
         return await getEventData(sql, res, eventId);
       
       case 'PUT':
-        // Manejar reordenamiento de invitados
         if (req.body.action === 'reorder_guests') {
           return await reorderGuests(sql, res, eventId, req.body);
+        }
+        if (req.body.action === 'update_guest') {
+          return await updateGuest(sql, res, req.body);
         }
         return await updateEvent(sql, res, eventId, req.body);
       
@@ -607,6 +609,49 @@ async function reorderGuests(sql, res, eventId, data) {
 
   } catch (error) {
     console.error('❌ Error reordering guests:', error);
+    throw error;
+  }
+}
+
+// PUT: Actualizar datos de un invitado (nombre, apodo, email, teléfono, avatar)
+async function updateGuest(sql, res, data) {
+  try {
+    const { guestId, name, nickname, email, phone, avatar } = data;
+
+    if (!guestId) {
+      return res.status(400).json({ success: false, error: 'Se requiere guestId' });
+    }
+
+    // Construir campos a actualizar dinámicamente
+    const updates = [];
+    if (name     !== undefined) updates.push({ field: 'name',     value: name });
+    if (nickname !== undefined) updates.push({ field: 'nickname', value: nickname });
+    if (email    !== undefined) updates.push({ field: 'email',    value: email });
+    if (phone    !== undefined) updates.push({ field: 'phone',    value: phone });
+    if (avatar   !== undefined && avatar !== null) updates.push({ field: 'avatar', value: avatar });
+
+    if (updates.length === 0) {
+      return res.status(400).json({ success: false, error: 'No hay campos para actualizar' });
+    }
+
+    // Neon tagged-template doesn't support dynamic column names; run individual updates
+    for (const { field, value } of updates) {
+      if (field === 'name')     await sql`UPDATE guests SET name     = ${value} WHERE id = ${guestId}`;
+      if (field === 'nickname') await sql`UPDATE guests SET nickname = ${value} WHERE id = ${guestId}`;
+      if (field === 'email')    await sql`UPDATE guests SET email    = ${value} WHERE id = ${guestId}`;
+      if (field === 'phone')    await sql`UPDATE guests SET phone    = ${value} WHERE id = ${guestId}`;
+      if (field === 'avatar')   await sql`UPDATE guests SET avatar   = ${value} WHERE id = ${guestId}`;
+    }
+
+    console.log('✅ Guest updated:', guestId);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Invitado actualizado exitosamente'
+    });
+
+  } catch (error) {
+    console.error('❌ Error updating guest:', error);
     throw error;
   }
 }
