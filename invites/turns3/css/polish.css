@@ -43,11 +43,12 @@ body {
     color: oklch(97% 0.015 80);
 }
 
-/* Decorations keep spinning */
+/* Decorations keep spinning — glow integrado con el tema nocturno */
 .section-title .title-decoration {
     background: none;
     -webkit-text-fill-color: initial;
     animation: decorationSpin 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px oklch(78% 0.18 82 / 0.4));
 }
 
 /* Section headers: gold accent on subtitle */
@@ -176,12 +177,12 @@ body {
         0 4px 12px oklch(0% 0 0 / 0.4);
 }
 
-/* "Cumpleaños #3 de" slightly smaller and softer */
+/* "Cumpleaños #3 de" slightly smaller and softer — weight 300 so Alessia dominates */
 .title-line {
     font-size: clamp(1.1rem, 2.5vw, 1.6rem) !important;
-    color: oklch(90% 0.04 260 / 0.8);
+    color: oklch(85% 0.05 260 / 0.75);
     letter-spacing: 0.02em;
-    font-weight: 500;
+    font-weight: 300;
 }
 
 /* ============================
@@ -221,6 +222,16 @@ body {
     letter-spacing: 0.08em;
 }
 
+/* Subtle top-edge shine on each countdown box */
+.time-unit::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: oklch(100% 0 0 / 0.15);
+    border-radius: 15px 15px 0 0;
+}
+
 /* ============================
    HERO BADGE — more punch
    ============================ */
@@ -246,6 +257,24 @@ body {
     background: oklch(11% 0.06 262 / 1);
 }
 
+/* Birthday girl: full row on desktop — protagonista absoluta */
+@media (min-width: 900px) {
+    .adventurer-card.birthday-girl {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        text-align: left;
+        gap: 2rem;
+        padding: 2rem 2.5rem;
+        align-items: center;
+    }
+    .birthday-girl .adventurer-avatar {
+        flex-shrink: 0;
+    }
+    .birthday-girl .adventurer-info {
+        flex: 1;
+    }
+}
+
 /* Birthday girl: she leads, different visual weight */
 .adventurer-card.birthday-girl {
     background: oklch(100% 0 0 / 0.09) !important;
@@ -255,6 +284,9 @@ body {
         0 16px 48px oklch(0% 0 0 / 0.35),
         inset 0 1px 0 oklch(100% 0 0 / 0.15) !important;
 }
+
+/* Override shimmer sweep pseudo-element from sections.css */
+.adventurer-card::before { display: none !important; }
 
 /* Aventurer cards — purposeful glass */
 .adventurer-card {
@@ -393,13 +425,14 @@ body {
     }
 }
 
-/* Featured cards: gold border, always-on glow */
+/* Featured cards: gold border + warmer tint — protagonistas */
 .character-card.featured {
-    background: oklch(100% 0 0 / 0.09) !important;
+    background: oklch(16% 0.06 82 / 0.85) !important;
     border: 1px solid oklch(78% 0.18 82 / 0.3) !important;
     box-shadow:
         0 0 0 1px oklch(78% 0.18 82 / 0.08),
-        0 12px 40px oklch(0% 0 0 / 0.25) !important;
+        0 12px 40px oklch(0% 0 0 / 0.25),
+        inset 0 1px 0 oklch(78% 0.18 82 / 0.10) !important;
 }
 .character-card.featured .character-glow {
     opacity: 0.12 !important;
@@ -416,11 +449,11 @@ body {
     font-size: 1.7rem !important;
 }
 
-/* Non-featured: clearly secondary */
+/* Non-featured: aparición especial — más neutro y recesivo */
 .character-card:not(.featured) {
-    background: oklch(100% 0 0 / 0.05) !important;
-    border: 1px solid oklch(100% 0 0 / 0.08) !important;
-    opacity: 1 !important;
+    background: oklch(100% 0 0 / 0.04) !important;
+    border: 1px solid oklch(100% 0 0 / 0.07) !important;
+    opacity: 0.88 !important;
 }
 .character-card:not(.featured) .character-image .character-avatar {
     width: 90px !important;
