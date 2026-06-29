@@ -1,307 +1,545 @@
 /* ===========================
-   POLISH — Visual enhancements layer
-   Imported last in main.css to override and elevate
+   POLISH — Production-grade visual layer
+   Overrides and elevates the base styles
+   Register: Brand / Aesthetic: Disney Park at Night
    =========================== */
 
 /* ============================
-   SECTION TITLES — Gradient shimmer
-   Only applies to the text node, not child spans (emojis)
+   BASE ATMOSPHERE
+   Deep Disney night sky — not generic SaaS purple
    ============================ */
-.section-title {
-    position: relative;
+body {
+    background: oklch(9% 0.055 262);
+    background-image:
+        radial-gradient(ellipse 120% 60% at 50% -10%,
+            oklch(18% 0.12 270 / 0.9) 0%,
+            transparent 70%),
+        radial-gradient(ellipse 80% 50% at 0% 100%,
+            oklch(15% 0.10 295 / 0.6) 0%,
+            transparent 60%);
 }
 
-/* Wrap only direct text — done via a pseudo gradient overlay instead of text-clip
-   so emoji .title-decoration spans stay visible */
-.section-title .title-text {
-    background: linear-gradient(135deg, #ffffff 20%, var(--disney-golden-yellow) 50%, #ffffff 80%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: titleShimmer 4s linear infinite;
-    display: inline;
+/* ============================
+   FIX: GRADIENT TEXT (absolute ban)
+   Replaced with solid color + shadow for depth
+   ============================ */
+.title-highlight {
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: oklch(73% 0.22 340) !important;
+    animation: none !important;
+    filter: drop-shadow(0 0 24px oklch(60% 0.25 340 / 0.5));
 }
 
-/* Fallback: if no .title-text wrapper, just shimmer the whole title */
+.section-title,
+.section-title .title-text,
 .section-title:not(:has(.title-text)) {
-    background: linear-gradient(135deg, #ffffff 20%, var(--disney-golden-yellow) 50%, #ffffff 80%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: titleShimmer 4s linear infinite;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    animation: none !important;
+    color: oklch(97% 0.015 80);
 }
 
-/* Keep decorations (emojis) fully visible */
+/* Decorations keep spinning */
 .section-title .title-decoration {
-    -webkit-text-fill-color: initial;
     background: none;
+    -webkit-text-fill-color: initial;
     animation: decorationSpin 3s ease-in-out infinite;
 }
 
-@keyframes titleShimmer {
-    0%   { background-position: 0% center; }
-    100% { background-position: 200% center; }
+/* Section headers: gold accent on subtitle */
+.section-subtitle {
+    color: oklch(75% 0.12 80 / 0.8);
 }
 
 /* ============================
-   HERO — richer bg overlay
+   FIX: SIDE-STRIPE BORDERS (absolute ban)
+   border-left colored accent > 1px is banned.
+   Replace with icon + background tint.
    ============================ */
-.hero-bg {
-    opacity: 0.4;
-    filter: saturate(1.15) brightness(0.85);
+.activity {
+    border-left: none !important;
+    background: oklch(100% 0 0 / 0.05);
+    border: 1px solid oklch(100% 0 0 / 0.07);
+    border-radius: 12px;
 }
 
-.hero-bg::before {
-    background: linear-gradient(
-        160deg,
-        rgba(30, 58, 138, 0.55) 0%,
-        rgba(124, 58, 237, 0.3) 50%,
-        rgba(236, 72, 153, 0.2) 100%
-    );
+.activity.featured {
+    background: oklch(78% 0.18 82 / 0.1) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.28) !important;
 }
 
-/* Floating elements más visibles */
-.float-element {
-    opacity: 0.22;
-}
-
-/* ============================
-   ADVENTURER CARDS — deeper glass
-   ============================ */
-.adventurer-card {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.adventurer-card:hover {
-    background: rgba(255, 255, 255, 0.13);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(251, 191, 36, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
-    transform: translateY(-12px) scale(1.02);
-}
-
-/* Avatar ring effect */
-.adventurer-avatar {
-    width: 90px;
-    height: 90px;
-    outline: 3px solid transparent;
-    outline-offset: 3px;
-    transition: all 0.4s ease;
-}
-
-.adventurer-card:hover .adventurer-avatar {
-    outline-color: rgba(251, 191, 36, 0.5);
-    transform: scale(1.1) rotate(3deg);
-}
-
-.birthday-girl .adventurer-avatar {
-    outline: 3px solid var(--disney-golden-yellow);
-    outline-offset: 3px;
-}
-
-/* Name + role polish */
-.adventurer-name {
-    font-size: 1.4rem;
-    letter-spacing: -0.3px;
-}
-
-.adventurer-role {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.65);
-}
-
-/* Status seal polish */
-.confirmed-seal {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.9rem;
-    letter-spacing: 0.2px;
-    background: linear-gradient(135deg, rgba(52, 211, 153, 0.85), rgba(16, 185, 129, 0.85));
-    backdrop-filter: blur(8px);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+.activity i {
+    width: 32px;
+    height: 32px;
+    background: oklch(78% 0.18 82 / 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: oklch(78% 0.18 82);
 }
 
 /* ============================
-   CHARACTER SECTION — featured size up
-   ============================ */
-.characters-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    align-items: start;
-}
-
-/* Featured character cards stand out */
-.character-card.featured {
-    transform-origin: center top;
-    background: rgba(255, 255, 255, 0.13);
-    border-color: rgba(255, 255, 255, 0.18);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.12);
-}
-
-.character-card.featured .character-image i {
-    font-size: 5rem;
-    padding: 2.2rem;
-}
-
-.character-card.featured .character-image .character-avatar {
-    width: 140px;
-    height: 140px;
-}
-
-.character-card.featured .character-name {
-    font-size: 2rem;
-}
-
-.character-card.featured:hover {
-    transform: translateY(-18px) scale(1.06);
-}
-
-/* Non-featured still look great but subtly smaller */
-.character-card:not(.featured) {
-    opacity: 0.88;
-}
-
-.character-card:not(.featured):hover {
-    opacity: 1;
-    transform: translateY(-12px) scale(1.03);
-}
-
-/* Character glow always-on for featured */
-.character-card.featured .character-glow {
-    opacity: 0.15;
-}
-
-.character-card.featured:hover .character-glow {
-    opacity: 0.5;
-}
-
-/* ============================
-   JOURNEY TIMELINE — enhanced
-   ============================ */
-.journey-timeline::before {
-    background: linear-gradient(180deg,
-        transparent 0%,
-        var(--disney-magic-purple) 5%,
-        var(--disney-golden-yellow) 50%,
-        var(--disney-princess-pink) 95%,
-        transparent 100%);
-    width: 3px;
-    box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
-}
-
-.day-number {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.timeline-day.featured .day-number {
-    box-shadow: 0 0 24px rgba(251, 191, 36, 0.6), 0 6px 20px rgba(0,0,0,0.25);
-    width: 70px;
-    height: 70px;
-    font-size: 2rem;
-}
-
-.day-content {
-    box-shadow: 0 8px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
-}
-
-.day-content:hover {
-    background: rgba(255, 255, 255, 0.14);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
-}
-
-/* ============================
-   QUEST / COST SECTION
-   ============================ */
-.cost-item {
-    border-left-width: 5px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-}
-
-.cost-item:hover {
-    box-shadow: 0 8px 28px rgba(0,0,0,0.18), -5px 0 0 var(--disney-golden-yellow);
-}
-
-.detail-card {
-    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
-}
-
-/* ============================
-   RSVP SECTION — scrollier scroll
-   ============================ */
-.rsvp-card {
-    box-shadow: 0 24px 80px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.scroll-decoration {
-    height: 18px;
-}
-
-/* ============================
-   SCROLL REVEAL — fade-in on scroll
+   FIX: EASING CURVES (no bounce/elastic)
+   Spring curves removed, ease-out-quint used
    ============================ */
 .reveal {
     opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateY(28px);
+    transition: opacity 0.6s cubic-bezier(0,0,0.2,1),
+                transform 0.6s cubic-bezier(0.22,1,0.36,1);
 }
-
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
 }
-
 .reveal-left {
     opacity: 0;
-    transform: translateX(-32px);
-    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateX(-28px);
+    transition: opacity 0.6s cubic-bezier(0,0,0.2,1),
+                transform 0.6s cubic-bezier(0.22,1,0.36,1);
 }
-
 .reveal-left.visible {
     opacity: 1;
     transform: translateX(0);
 }
-
 .reveal-right {
     opacity: 0;
-    transform: translateX(32px);
-    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateX(28px);
+    transition: opacity 0.6s cubic-bezier(0,0,0.2,1),
+                transform 0.6s cubic-bezier(0.22,1,0.36,1);
 }
-
 .reveal-right.visible {
     opacity: 1;
     transform: translateX(0);
 }
 
-/* Stagger delays for grid children */
 .reveal-stagger > *:nth-child(1) { transition-delay: 0ms; }
-.reveal-stagger > *:nth-child(2) { transition-delay: 80ms; }
-.reveal-stagger > *:nth-child(3) { transition-delay: 160ms; }
-.reveal-stagger > *:nth-child(4) { transition-delay: 240ms; }
-.reveal-stagger > *:nth-child(5) { transition-delay: 320ms; }
-.reveal-stagger > *:nth-child(6) { transition-delay: 400ms; }
+.reveal-stagger > *:nth-child(2) { transition-delay: 70ms; }
+.reveal-stagger > *:nth-child(3) { transition-delay: 140ms; }
+.reveal-stagger > *:nth-child(4) { transition-delay: 210ms; }
+.reveal-stagger > *:nth-child(5) { transition-delay: 280ms; }
+.reveal-stagger > *:nth-child(6) { transition-delay: 350ms; }
 
-/* ============================
-   FOOTER POLISH
-   ============================ */
-footer {
-    border-top: 1px solid rgba(255,255,255,0.1);
+/* Card hover: ease-out only */
+.adventurer-card {
+    transition: transform 0.35s cubic-bezier(0,0,0.2,1),
+                box-shadow 0.35s cubic-bezier(0,0,0.2,1),
+                background 0.35s ease,
+                border-color 0.35s ease !important;
+}
+.adventurer-card:hover {
+    transform: translateY(-10px) !important;
+}
+.character-card {
+    transition: transform 0.35s cubic-bezier(0,0,0.2,1),
+                box-shadow 0.35s cubic-bezier(0,0,0.2,1) !important;
+}
+.character-card.featured:hover {
+    transform: translateY(-14px) !important;
+}
+.character-card:not(.featured):hover {
+    transform: translateY(-8px) !important;
 }
 
 /* ============================
-   GLOBAL — smooth hover on buttons
+   HERO — Disney Park at Night
+   ============================ */
+.hero-bg {
+    opacity: 0.55;
+    filter: saturate(1.2) brightness(0.8);
+}
+
+.hero-bg::before {
+    background: linear-gradient(
+        170deg,
+        oklch(14% 0.12 262 / 0.7) 0%,
+        oklch(20% 0.14 280 / 0.4) 45%,
+        oklch(18% 0.08 330 / 0.25) 100%
+    );
+}
+
+/* "Alessia" — she's the star, make her MASSIVE */
+.title-name {
+    font-size: clamp(4.5rem, 11vw, 8.5rem) !important;
+    line-height: 0.92 !important;
+    letter-spacing: -2px;
+    color: oklch(84% 0.18 82) !important;
+    text-shadow:
+        0 0 40px oklch(78% 0.20 82 / 0.6),
+        0 0 80px oklch(78% 0.20 82 / 0.3),
+        0 4px 12px oklch(0% 0 0 / 0.4);
+}
+
+/* "Cumpleaños #3 de" slightly smaller and softer */
+.title-line {
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem) !important;
+    color: oklch(90% 0.04 260 / 0.8);
+    letter-spacing: 0.02em;
+    font-weight: 500;
+}
+
+/* ============================
+   COUNTDOWN — staggered, distinct
+   ============================ */
+.time-unit {
+    background: oklch(100% 0 0 / 0.06) !important;
+    border: 1px solid oklch(100% 0 0 / 0.12);
+    backdrop-filter: blur(12px);
+    animation: none !important; /* kill the all-same-time pulse */
+    position: relative;
+    overflow: hidden;
+    min-width: 76px;
+}
+
+/* Stagger individual units' subtle glow */
+.time-unit:nth-child(1) { animation: unitPulse1 4s 0.0s ease-in-out infinite !important; }
+.time-unit:nth-child(3) { animation: unitPulse1 4s 1.0s ease-in-out infinite !important; }
+.time-unit:nth-child(5) { animation: unitPulse1 4s 2.0s ease-in-out infinite !important; }
+.time-unit:nth-child(7) { animation: unitPulse1 4s 3.0s ease-in-out infinite !important; }
+
+@keyframes unitPulse1 {
+    0%, 80%, 100% { box-shadow: none; border-color: oklch(100% 0 0 / 0.12); }
+    40% { box-shadow: 0 0 20px oklch(78% 0.18 82 / 0.4); border-color: oklch(78% 0.18 82 / 0.4); }
+}
+
+.time-value {
+    font-size: clamp(2rem, 4vw, 3rem) !important;
+    color: oklch(97% 0.02 80) !important;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.time-label {
+    font-size: 0.65rem !important;
+    color: oklch(80% 0.06 260 / 0.7) !important;
+    letter-spacing: 0.08em;
+}
+
+/* ============================
+   HERO BADGE — more punch
+   ============================ */
+.hero-badge {
+    background: oklch(78% 0.18 82 / 0.15) !important;
+    color: oklch(84% 0.16 82) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.35);
+    animation: none !important;
+    box-shadow: none !important;
+}
+
+/* Float elements — more visible and varied */
+.float-element {
+    opacity: 0.18;
+}
+.float-element:nth-child(1),
+.float-element:nth-child(6) { opacity: 0.28; font-size: 3rem; }
+
+/* ============================
+   ADVENTURE TEAM SECTION
+   ============================ */
+.adventure-team-section {
+    background: oklch(11% 0.06 262 / 1);
+}
+
+/* Birthday girl: she leads, different visual weight */
+.adventurer-card.birthday-girl {
+    background: oklch(100% 0 0 / 0.09) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.4) !important;
+    box-shadow:
+        0 0 0 1px oklch(78% 0.18 82 / 0.15),
+        0 16px 48px oklch(0% 0 0 / 0.35),
+        inset 0 1px 0 oklch(100% 0 0 / 0.15) !important;
+}
+
+/* Aventurer cards — purposeful glass */
+.adventurer-card {
+    background: oklch(100% 0 0 / 0.06) !important;
+    border: 1px solid oklch(100% 0 0 / 0.1) !important;
+    box-shadow: 0 8px 32px oklch(0% 0 0 / 0.2) !important;
+}
+.adventurer-card:hover {
+    background: oklch(100% 0 0 / 0.10) !important;
+    box-shadow:
+        0 16px 48px oklch(0% 0 0 / 0.3),
+        0 0 0 1px oklch(78% 0.18 82 / 0.25) !important;
+    border-color: oklch(78% 0.18 82 / 0.35) !important;
+}
+
+/* Avatar: larger, cleaner ring */
+.adventurer-avatar {
+    width: 96px !important;
+    height: 96px !important;
+    box-shadow: 0 4px 20px oklch(0% 0 0 / 0.3) !important;
+}
+.birthday-girl .adventurer-avatar {
+    width: 108px !important;
+    height: 108px !important;
+    border: 3px solid oklch(78% 0.18 82) !important;
+    box-shadow:
+        0 0 0 6px oklch(78% 0.18 82 / 0.15),
+        0 8px 28px oklch(0% 0 0 / 0.35) !important;
+    outline: none !important;
+}
+.adventurer-card:hover .adventurer-avatar {
+    transform: scale(1.08) !important;
+    outline: none !important;
+}
+
+/* Name styling */
+.adventurer-name {
+    font-size: 1.3rem !important;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: oklch(97% 0.01 80);
+}
+.adventurer-role {
+    font-size: 0.83rem !important;
+    color: oklch(78% 0.06 260 / 0.65);
+}
+
+/* Confirmed seal — solid, not blurry gradient */
+.confirmed-seal {
+    background: oklch(55% 0.18 155) !important;
+    color: oklch(98% 0.01 155) !important;
+    box-shadow: none !important;
+    font-size: 0.72rem !important;
+    padding: 0.35rem 0.85rem !important;
+    border-radius: 6px !important;
+    animation: none !important;
+    letter-spacing: 0.02em;
+}
+
+.pending-indicator {
+    background: oklch(100% 0 0 / 0.08) !important;
+    border: 1px solid oklch(100% 0 0 / 0.15) !important;
+    border-radius: 6px !important;
+    font-size: 0.72rem !important;
+}
+
+/* ============================
+   JOURNEY SECTION
+   ============================ */
+.journey-section {
+    background: oklch(10.5% 0.065 260 / 1);
+}
+
+.journey-timeline::before {
+    background: linear-gradient(180deg,
+        transparent 0%,
+        oklch(45% 0.20 290) 8%,
+        oklch(78% 0.18 82) 50%,
+        oklch(60% 0.24 340) 92%,
+        transparent 100%) !important;
+    width: 2px !important;
+    box-shadow: 0 0 8px oklch(78% 0.18 82 / 0.35) !important;
+}
+
+.day-number {
+    box-shadow: 0 0 16px oklch(40% 0.18 262 / 0.5), 0 4px 12px oklch(0% 0 0 / 0.3) !important;
+}
+.timeline-day.featured .day-number {
+    width: 68px !important;
+    height: 68px !important;
+    font-size: 2rem !important;
+    box-shadow:
+        0 0 0 4px oklch(78% 0.18 82 / 0.2),
+        0 0 24px oklch(78% 0.18 82 / 0.5),
+        0 6px 20px oklch(0% 0 0 / 0.35) !important;
+}
+
+.day-content {
+    background: oklch(100% 0 0 / 0.06) !important;
+    border: 1px solid oklch(100% 0 0 / 0.1) !important;
+    box-shadow: 0 6px 28px oklch(0% 0 0 / 0.18) !important;
+}
+.day-content:hover {
+    background: oklch(100% 0 0 / 0.10) !important;
+    box-shadow: 0 12px 40px oklch(0% 0 0 / 0.25) !important;
+    transform: translateY(-4px);
+}
+.timeline-day.featured .day-content {
+    border-color: oklch(78% 0.18 82 / 0.25) !important;
+}
+
+.day-title { color: oklch(97% 0.01 80); }
+.day-date  { color: oklch(78% 0.18 82); font-weight: 600; }
+.park-badge {
+    background: oklch(78% 0.18 82 / 0.15) !important;
+    color: oklch(84% 0.16 82) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.3) !important;
+    box-shadow: none !important;
+}
+
+/* ============================
+   CHARACTERS SECTION
+   ============================ */
+.characters-section {
+    background: oklch(12% 0.07 290 / 1);
+}
+
+.characters-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem !important;
+    align-items: start;
+}
+@media (max-width: 680px) {
+    .characters-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Featured cards: gold border, always-on glow */
+.character-card.featured {
+    background: oklch(100% 0 0 / 0.09) !important;
+    border: 1px solid oklch(78% 0.18 82 / 0.3) !important;
+    box-shadow:
+        0 0 0 1px oklch(78% 0.18 82 / 0.08),
+        0 12px 40px oklch(0% 0 0 / 0.25) !important;
+}
+.character-card.featured .character-glow {
+    opacity: 0.12 !important;
+}
+.character-card.featured:hover .character-glow {
+    opacity: 0.45 !important;
+}
+.character-card.featured .character-image .character-avatar {
+    width: 130px !important;
+    height: 130px !important;
+    border: 2px solid oklch(78% 0.18 82 / 0.4) !important;
+}
+.character-card.featured .character-name {
+    font-size: 1.7rem !important;
+}
+
+/* Non-featured: clearly secondary */
+.character-card:not(.featured) {
+    background: oklch(100% 0 0 / 0.05) !important;
+    border: 1px solid oklch(100% 0 0 / 0.08) !important;
+    opacity: 1 !important;
+}
+.character-card:not(.featured) .character-image .character-avatar {
+    width: 90px !important;
+    height: 90px !important;
+}
+.character-card:not(.featured) .character-name {
+    font-size: 1.3rem !important;
+}
+
+/* Character sparkles — less is more */
+.character-sparkles span {
+    animation: characterSparkle 3s ease-in-out infinite !important;
+}
+
+/* ============================
+   QUEST / TRAVEL DETAILS
+   ============================ */
+.quest-details-section {
+    background: oklch(11% 0.06 262 / 1);
+}
+
+.detail-card {
+    background: oklch(100% 0 0 / 0.06) !important;
+    border: 1px solid oklch(100% 0 0 / 0.1) !important;
+    box-shadow: 0 6px 24px oklch(0% 0 0 / 0.15) !important;
+    transition: transform 0.3s cubic-bezier(0,0,0.2,1),
+                box-shadow 0.3s ease,
+                background 0.3s ease;
+}
+.detail-card:hover {
+    background: oklch(100% 0 0 / 0.10) !important;
+    box-shadow: 0 14px 40px oklch(0% 0 0 / 0.25) !important;
+    border-color: oklch(60% 0.20 220 / 0.3) !important;
+    transform: translateY(-8px) !important;
+}
+
+.travel-details {
+    border: 1px solid oklch(100% 0 0 / 0.08) !important;
+    background: oklch(100% 0 0 / 0.04) !important;
+}
+
+/* ============================
+   RSVP SECTION
+   ============================ */
+.rsvp-section {
+    background: oklch(13% 0.08 295 / 1);
+}
+
+.rsvp-card {
+    background: oklch(100% 0 0 / 0.07) !important;
+    border: 1px solid oklch(100% 0 0 / 0.12) !important;
+    box-shadow:
+        0 0 0 1px oklch(100% 0 0 / 0.05),
+        0 24px 80px oklch(0% 0 0 / 0.4) !important;
+}
+
+.scroll-decoration {
+    height: 16px !important;
+    background: linear-gradient(90deg,
+        oklch(78% 0.18 82 / 0.6),
+        oklch(84% 0.20 82),
+        oklch(78% 0.18 82 / 0.6)) !important;
+}
+.scroll-decoration::before,
+.scroll-decoration::after {
+    background: oklch(84% 0.20 82) !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.invitation-title {
+    color: oklch(84% 0.18 82) !important;
+}
+
+.rsvp-button {
+    transition: transform 0.25s cubic-bezier(0,0,0.2,1),
+                box-shadow 0.25s ease !important;
+}
+.rsvp-button:hover {
+    transform: translateY(-3px) scale(1.03) !important;
+}
+
+/* ============================
+   LOADING SCREEN — castle glow
+   ============================ */
+.loading-screen {
+    background: oklch(8% 0.04 262) !important;
+}
+
+/* ============================
+   NAVIGATION
+   ============================ */
+.navbar {
+    background: oklch(9% 0.055 262 / 0.85) !important;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.08) !important;
+}
+
+/* ============================
+   GLOBAL MICRO-INTERACTIONS
    ============================ */
 button, a {
     -webkit-tap-highlight-color: transparent;
 }
+.adventurer-card:active { transform: scale(0.99) !important; }
+.character-card:active  { transform: scale(0.98) !important; }
 
-/* Active states for mobile */
-.adventurer-card:active { transform: scale(0.98); }
-.character-card:active  { transform: scale(0.97); }
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: oklch(100% 0 0 / 0.04); }
+::-webkit-scrollbar-thumb {
+    background: oklch(100% 0 0 / 0.18);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: oklch(100% 0 0 / 0.3); }
 
-/* Better scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+/* ============================
+   FOOTER
+   ============================ */
+footer {
+    border-top: 1px solid oklch(100% 0 0 / 0.08);
+    background: oklch(8% 0.04 262);
+}
