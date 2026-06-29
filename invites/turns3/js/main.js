@@ -1346,6 +1346,47 @@ function initCharacterHover() {
 }
 
 // ===========================
+// FAIRY DUST — polvo de hadas al scroll
+// ===========================
+function initFairyDust() {
+    if (window.innerWidth < 768) return; // solo desktop
+    let lastY = 0;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+            const currentY = window.scrollY;
+            const delta = Math.abs(currentY - lastY);
+
+            if (delta > 8) {
+                const count = Math.min(Math.floor(delta / 12), 4);
+                for (let i = 0; i < count; i++) {
+                    spawnDust();
+                }
+            }
+            lastY = currentY;
+            ticking = false;
+        });
+    }, { passive: true });
+}
+
+function spawnDust() {
+    const el = document.createElement('span');
+    el.className = 'fairy-dust-particle';
+
+    const x = Math.random() * window.innerWidth;
+    const y = window.scrollY + Math.random() * window.innerHeight * 0.7 + window.innerHeight * 0.15;
+    const dx = (Math.random() - 0.5) * 60 + 'px';
+    const dy = -(Math.random() * 80 + 40) + 'px';
+
+    el.style.cssText = `left:${x}px;top:${y}px;--dx:${dx};--dy:${dy};`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1300);
+}
+
+// ===========================
 // INICIALIZACIÓN
 // ===========================
 document.addEventListener('DOMContentLoaded', () => {
@@ -1360,6 +1401,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initCountdownCounter, 600);
     initStickyRSVP();
     initCharacterHover();
+    initFairyDust();
 });
 
 // Inicializar app después del loading (llamado desde LoadingScreen)
